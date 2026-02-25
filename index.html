@@ -42,6 +42,7 @@
         width: 100%;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         border-radius: 8px;
+        position: relative;
       }
       .reveal pre code {
         font-size: 0.78em;
@@ -139,6 +140,32 @@
       .subtitle {
         color: #aaa;
         font-size: 0.8em;
+      }
+      .reveal .copy-code-btn {
+        position: absolute;
+        top: 0.05rem;
+        right: 0.5rem;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.8rem;
+        height: 1.8rem;
+        padding: 0;
+        border: none;
+        border-radius: 0.3rem;
+        background: transparent;
+        color: white;
+        cursor: pointer;
+      }
+      .reveal .copy-code-btn svg {
+        width: 1rem;
+        height: 1rem;
+        stroke: currentColor;
+      }
+      .reveal .copy-code-btn:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
       }
     </style>
   </head>
@@ -1168,6 +1195,88 @@ re.search(r"\d+", "abc 123")</code></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
+      const fallbackCopyText = (text) => {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      };
+
+      const copyCodeText = async (text) => {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+
+        fallbackCopyText(text);
+      };
+
+      const clipboardIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      `;
+
+      const checkIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+      `;
+
+      const xIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      `;
+
+      const addCopyButtons = () => {
+        const codeBlocks = document.querySelectorAll(".reveal pre > code");
+
+        codeBlocks.forEach((codeBlock) => {
+          const pre = codeBlock.parentElement;
+          if (!pre || pre.querySelector(".copy-code-btn")) {
+            return;
+          }
+
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "copy-code-btn";
+          button.innerHTML = clipboardIcon;
+          button.title = "Copy code";
+          button.setAttribute("aria-label", "Copy code to clipboard");
+
+          button.addEventListener("click", async () => {
+            const codeText = codeBlock.textContent ?? "";
+
+            try {
+              await copyCodeText(codeText);
+              button.innerHTML = checkIcon;
+              button.title = "Copied";
+              setTimeout(() => {
+                button.innerHTML = clipboardIcon;
+                button.title = "Copy code";
+              }, 1200);
+            } catch {
+              button.innerHTML = xIcon;
+              button.title = "Copy failed";
+              setTimeout(() => {
+                button.innerHTML = clipboardIcon;
+                button.title = "Copy code";
+              }, 1200);
+            }
+          });
+
+          pre.appendChild(button);
+        });
+      };
+
       Reveal.initialize({
         hash: true,
         slideNumber: "c/t",
@@ -1187,6 +1296,9 @@ re.search(r"\d+", "abc 123")</code></pre>
         el.innerHTML = el.innerHTML.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
         hljs.highlightElement(el);
       });
+
+      Reveal.on("ready", addCopyButtons);
+      Reveal.on("slidechanged", addCopyButtons);
     </script>
   </body>
 </html>
