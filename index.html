@@ -1,2371 +1,1192 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python Regular Expressions — Computer Programming</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css"
     />
-
-    <title>Python Sets</title>
-
-    <link rel="stylesheet" href="dist/reset.css" />
-    <link rel="stylesheet" href="dist/reveal.css" />
-    <link rel="stylesheet" href="dist/theme/serif.css" />
-
-    <!-- Theme used for syntax highlighted code -->
-    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
-
-    <!-- Additional custom styles -->
-    <link rel="stylesheet" href="dist/additional.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
     <style>
-      .reveal .slides section {
-        text-align: left;
-        height: 100%;
-        overflow-y: auto;
-        box-sizing: border-box;
+      :root {
+        --accent: #00d9a3;
+        --accent2: #ff6b6b;
+        --code-bg: #1a1a2e;
       }
-
-      .reveal .slides section > * {
-        margin-left: 0;
-        margin-right: 0;
+      .reveal {
+        font-family: "Segoe UI", "Helvetica Neue", sans-serif;
       }
-
-      .reveal .slides section ul {
-        list-style: disc;
-        padding-left: 1.5em;
+      .reveal h1,
+      .reveal h2,
+      .reveal h3 {
+        color: var(--accent);
+        text-transform: none;
+        letter-spacing: -0.02em;
       }
-
-      .reveal .slides section ul ul {
-        list-style: circle;
+      .reveal h1 {
+        font-size: 2.2em;
       }
-
-      .reveal .slides section ul li {
-        display: list-item;
+      .reveal h2 {
+        font-size: 1.5em;
       }
-
-      .reveal .slides section ol {
-        list-style: decimal;
-        padding-left: 1.5em;
-      }
-
-      .reveal .slides section ol li {
-        display: list-item;
-      }
-
       .reveal pre {
-        position: relative;
+        width: 100%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
       }
-
-      .reveal .copy-code-btn {
-        position: absolute;
-        top: 0.05rem;
-        right: 0.5rem;
-        z-index: 2;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.8rem;
-        height: 1.8rem;
-        padding: 0;
-        border: none;
-        border-radius: 0.3rem;
-        background: transparent;
-        color: white;
-        cursor: pointer;
+      .reveal pre code {
+        font-size: 0.78em;
+        line-height: 1.5;
+        padding: 1em !important;
+        border-radius: 8px;
       }
-
-      .reveal .copy-code-btn svg {
-        width: 1rem;
-        height: 1rem;
-        stroke: currentColor;
+      .reveal code.inline {
+        background: #2d2d5e;
+        padding: 0.1em 0.4em;
+        border-radius: 4px;
+        color: var(--accent);
+        font-size: 0.9em;
       }
-
-      .reveal .copy-code-btn:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 2px;
-      }
-    </style>
-    <style>
-      .tuple-game {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 1rem;
-        border: 2px solid #58cc02;
-        border-radius: 16px;
-        background: rgba(88, 204, 2, 0.08);
-      }
-
-      .game-progress {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-weight: 700;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-      }
-
-      .token-bank,
-      .answer-row {
+      .tag-row {
         display: flex;
         flex-wrap: wrap;
-        min-height: 64px;
-        padding: 0.9rem;
-        border-radius: 12px;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 0.5em;
       }
-
-      .token-bank {
-        gap: 0.65rem;
-        border: 2px dashed #58cc02;
-        background: rgba(255, 255, 255, 0.75);
-      }
-
-      .answer-row {
-        gap: 0.35rem;
-        margin-top: 0.9rem;
-        border: 2px solid #bdbdbd;
-        background: rgba(255, 255, 255, 0.95);
-      }
-
-      .answer-row.empty::before {
-        content: "Tap tokens to build your answer";
-        color: #6b7280;
-        font-size: 0.95rem;
-      }
-
-      .token {
-        margin: 0;
-        padding: 0.5rem 0.9rem;
-        border: 2px solid #d1d5db;
-        border-radius: 999px;
-        background: white;
-        color: #111827;
-        cursor: pointer;
+      .tag {
+        background: #16213e;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        border-radius: 20px;
+        padding: 0.3em 0.9em;
+        font-size: 0.8em;
         font-family: monospace;
-        font-size: 1rem;
-        font-weight: 600;
-        transition:
-          transform 0.12s ease,
-          box-shadow 0.12s ease;
       }
-
-      .token:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 0 #d1d5db;
+      .callout {
+        background: rgba(0, 217, 163, 0.1);
+        border-left: 4px solid var(--accent);
+        border-radius: 6px;
+        padding: 0.6em 1em;
+        margin: 0.5em 0;
+        font-size: 0.85em;
+        text-align: left;
       }
-
-      .token.used {
-        opacity: 0.35;
-        cursor: not-allowed;
+      .warn {
+        background: rgba(255, 107, 107, 0.1);
+        border-left: 4px solid var(--accent2);
+        border-radius: 6px;
+        padding: 0.6em 1em;
+        margin: 0.5em 0;
+        font-size: 0.85em;
+        text-align: left;
       }
-
-      .token.answer-token {
-        padding: 0;
-        border: 2px solid transparent;
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1em;
+        text-align: left;
       }
-
-      .token.answer-token:hover {
-        border-color: #dc2626;
+      .card {
+        background: #16213e;
+        border-radius: 10px;
+        padding: 0.8em;
+        font-size: 0.78em;
       }
-
-      .game-controls {
-        display: flex;
-        gap: 0.75rem;
-        margin-top: 1rem;
+      .card h4 {
+        color: var(--accent);
+        margin: 0 0 0.4em;
+        font-size: 1em;
       }
-
-      .game-btn {
-        border: none;
-        border-radius: 12px;
-        padding: 0.65rem 1rem;
-        font-weight: 700;
-        cursor: pointer;
+      table {
+        font-size: 0.75em;
+        width: 100%;
+        border-collapse: collapse;
       }
-
-      .game-btn.primary {
-        background: #58cc02;
-        color: #ffffff;
+      th {
+        background: #16213e;
+        color: var(--accent);
+        padding: 0.5em 0.8em;
       }
-
-      .game-btn.secondary {
-        background: #e5e7eb;
-        color: #111827;
+      td {
+        padding: 0.4em 0.8em;
+        border-bottom: 1px solid #2d2d5e;
       }
-
-      .game-feedback {
-        min-height: 1.6rem;
-        margin-top: 0.75rem;
-        font-weight: 700;
+      tr:nth-child(even) td {
+        background: rgba(255, 255, 255, 0.03);
       }
-
-      .game-feedback.success {
-        color: #15803d;
+      .big-num {
+        font-size: 3em;
+        color: var(--accent);
+        font-weight: bold;
       }
-
-      .game-feedback.error {
-        color: #b91c1c;
-      }
-
-      .confetti-burst {
+      .slide-num {
         position: fixed;
-        inset: 0;
-        pointer-events: none;
-        overflow: hidden;
-        z-index: 9999;
+        bottom: 10px;
+        right: 16px;
+        font-size: 0.5em;
+        opacity: 0.3;
       }
-
-      .confetti-piece {
-        position: absolute;
-        top: -12px;
-        width: 10px;
-        height: 14px;
-        border-radius: 2px;
-        opacity: 0.95;
-        transform: translateY(0) rotate(0deg);
-        animation: confetti-fall 900ms linear forwards;
-      }
-
-      @keyframes confetti-fall {
-        to {
-          transform: translateY(110vh) rotate(720deg);
-          opacity: 0;
-        }
+      .subtitle {
+        color: #aaa;
+        font-size: 0.8em;
       }
     </style>
   </head>
   <body>
     <div class="reveal">
       <div class="slides">
-        <section>
-          <div class="text-center">
-            <br />
-            <h3>Lesson V</h3>
-            <h1>Python Sets</h1>
-            <h3>Unique Unordered Collections</h3>
-            <br />
-            <p>Jerome Loria</p>
-            <p>February 2026</p>
+        <!-- ===== SLIDE 1: TITLE ===== -->
+        <section
+          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+        >
+          <h1>🐍 Python Regular Expressions</h1>
+          <p class="subtitle">Computer Programming · IT Fundamentals</p>
+          <br />
+          <div class="tag-row">
+            <span class="tag">re module</span>
+            <span class="tag">pattern matching</span>
+            <span class="tag">text processing</span>
+            <span class="tag">IT freshmen</span>
           </div>
+          <br />
+          <p style="color: #666; font-size: 0.6em">30 slides · ~60 minutes</p>
         </section>
 
+        <!-- ===== SLIDE 2: WHAT IS A REGEX? ===== -->
         <section>
-          <br />
-          <h2 class="text-center">What are Sets?</h2>
-          <br />
-          <ul>
-            <li>Unordered, mutable collections of unique elements</li>
-            <li>Defined with <code>set()</code></li>
-            <li>Built-in Python data type</li>
-            <li>Great for membership testing and deduplication</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Creating Sets</h2>
-          <br />
-          <pre
-            style="margin: auto"
-          ><code class="language-python"># Using curly braces
-s1 = {1, 2, 3}
-
-# Using set() constructor
-s2 = set([1, 2, 3])
-
-# Empty set (correct way)
-empty = set()</code></pre>
-          <p class="text-center">
-            <code>{}</code> creates an empty dictionary, not a set.
-          </p>
-        </section>
-
-        <section>
-          <br />
-          <h3 class="text-center">Using a set, translate:</h3>
-
-          <div class="text-center">
-            <span>"</span>
-            <span style="font-style: italic" class="english-set-sentence"></span>
-            <span>"</span>
-          </div>
-
-          <div class="tuple-game" id="set-builder-game">
-            <div class="game-progress">
-              <span id="set-builder-round">Round 1 of 3</span>
-              <span id="set-builder-score">Score: 0</span>
-            </div>
-
-            <div
-              id="set-builder-answer"
-              class="answer-row empty"
-              aria-label="Answer tokens"
-            ></div>
-
-            <div
-              id="set-builder-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="game-controls">
-              <button
-                id="set-builder-check"
-                class="game-btn primary"
-                type="button"
-              >
-                Check
-              </button>
-              <button
-                id="set-builder-clear"
-                class="game-btn secondary"
-                type="button"
-              >
-                Clear
-              </button>
-            </div>
-
-            <p
-              id="set-builder-feedback"
-              class="text-center game-feedback"
-              aria-live="polite"
-            ></p>
-          </div>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Set Characteristics</h2>
-          <br />
-          <ul>
-            <li>Unordered (no indexing)</li>
-            <li>Mutable (can add/remove elements)</li>
-            <li>No duplicate elements</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Valid Set Elements</h2>
-          <br />
-          <p>
-            <strong>Allowed:</strong> <code>int</code>, <code>float</code>,
-            <code>str</code>, <code>tuple</code>
-          </p>
-          <p>
-            <strong>Not allowed:</strong> <code>list</code>, <code>dict</code>,
-            <code>set</code>
+          <h2>🔍 What is a Regular Expression?</h2>
+          <p style="font-size: 0.85em">
+            A
+            <strong style="color: var(--accent)">regular expression</strong>
+            (regex) is a sequence of characters that defines a
+            <em>search pattern</em>.
           </p>
           <br />
-          <pre
-            style="margin: auto"
-          ><code class="language-python">valid = {1, "hello", (1, 2)}</code></pre>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Removing Duplicates</h2>
-          <br />
-          <pre
-            style="margin: auto"
-          ><code class="language-python">numbers = [1, 2, 2, 3, 4, 4]
-unique_numbers = set(numbers)
-print(unique_numbers)</code></pre>
-
-          <br />
-
-          <ul>
-            <li>Converts a list into unique elements</li>
-            <li>Order is not preserved</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Adding Elements</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">s = {1, 2, 3}
-s.add(4)</code></pre>
-          <br />
-          <ul>
-            <li><code>add()</code> inserts one element</li>
-            <li>No effect if the element already exists</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Updating Sets</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">s = {1, 2}
-s.update([3, 4])</code></pre>
-          <br />
-          <ul>
-            <li><code>update()</code> adds multiple elements</li>
-            <li>Accepts any iterable</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h3 class="text-center">Using the update method</code>, translate:</h3>
-
-          <div class="text-center">
-            <span>"</span>
-            <span
-              style="font-style: italic"
-              class="english-update-sentence"
-            ></span>
-            <span>"</span>
+          <div class="two-col">
+            <div class="card">
+              <h4>📌 Used for</h4>
+              <ul>
+                <li>Searching text</li>
+                <li>Validating input (emails, phone numbers)</li>
+                <li>Extracting data</li>
+                <li>Replacing/modifying strings</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>🌍 Used in</h4>
+              <ul>
+                <li>Web development</li>
+                <li>Data science &amp; scraping</li>
+                <li>Cybersecurity</li>
+                <li>Log file analysis</li>
+              </ul>
+            </div>
           </div>
-
-          <div class="tuple-game" id="set-update-game">
-            <div class="game-progress">
-              <span id="set-update-round">Round 1 of 3</span>
-              <span id="set-update-score">Score: 0</span>
-            </div>
-
-            <div
-              id="set-update-answer"
-              class="answer-row empty"
-              aria-label="Answer tokens"
-            ></div>
-
-            <div
-              id="set-update-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="game-controls">
-              <button
-                id="set-update-check"
-                class="game-btn primary"
-                type="button"
-              >
-                Check
-              </button>
-              <button
-                id="set-update-clear"
-                class="game-btn secondary"
-                type="button"
-              >
-                Clear
-              </button>
-            </div>
-
-            <p
-              id="set-update-feedback"
-              class="text-center game-feedback"
-              aria-live="polite"
-            ></p>
+          <br />
+          <div class="callout">
+            💡 Think of regex as a <strong>supercharged search bar</strong> that
+            understands patterns, not just exact words.
           </div>
         </section>
 
+        <!-- ===== SLIDE 3: REAL-WORLD EXAMPLES ===== -->
         <section>
-          <br />
-          <h2 class="text-center">Removing Elements</h2>
-          <br />
-          <pre
-            style="margin: auto"
-          ><code class="language-python">s.remove(2)     # Raises error if not found
-s.discard(3)    # No error if not found
-s.pop()         # Removes arbitrary element
-s.clear()       # Empties the set</code></pre>
+          <h2>🌐 Regex in the Real World</h2>
+          <table>
+            <tr>
+              <th>Use Case</th>
+              <th>Pattern Description</th>
+              <th>Example Match</th>
+            </tr>
+            <tr>
+              <td>Email validation</td>
+              <td>word@word.word</td>
+              <td>alice@school.edu</td>
+            </tr>
+            <tr>
+              <td>Phone number</td>
+              <td>digits with dashes</td>
+              <td>09-123-456-7890</td>
+            </tr>
+            <tr>
+              <td>ZIP / postal code</td>
+              <td>4–5 digits</td>
+              <td>1000 (Manila)</td>
+            </tr>
+            <tr>
+              <td>Password strength</td>
+              <td>mix of chars + length</td>
+              <td>P@ssw0rd!</td>
+            </tr>
+            <tr>
+              <td>Find dates in a log</td>
+              <td>YYYY-MM-DD</td>
+              <td>2024-11-15</td>
+            </tr>
+            <tr>
+              <td>HTML tag stripping</td>
+              <td>&lt;anything&gt;</td>
+              <td>&lt;b&gt;Hello&lt;/b&gt;</td>
+            </tr>
+          </table>
         </section>
 
+        <!-- ===== SLIDE 4: THE re MODULE ===== -->
         <section>
-          <br />
-          <h2 class="text-center">Membership Testing</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">if 2 in s:
-    print("Found")</code></pre>
-          <ul></ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Set Operations Overview</h2>
-          <br />
-          <p>Sets support mathematical operations:</p>
-          <ul>
-            <li>Union</li>
-            <li>Intersection</li>
-            <li>Difference</li>
-            <li>Symmetric Difference</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Union</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">a = {1, 2, 3}
-b = {3, 4, 5}
-
-a | b
-a.union(b)
-
-# {1, 2, 3, 4, 5}</code></pre>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Intersection</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">a &amp; b
-a.intersection(b)
-
-# {3}</code></pre>
-          <p class="text-center">Elements common to both sets.</p>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Difference</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">a - b
-a.difference(b)</code></pre>
-          <p class="text-center">
-            Elements in <code>a</code> but not in <code>b</code>.
+          <h2>📦 The <code class="inline">re</code> Module</h2>
+          <p style="font-size: 0.85em">
+            Python's built-in module for working with regular expressions.
           </p>
-        </section>
+          <pre><code class="language-python">import re   # Always import first!
 
-        <section>
-          <br />
-          <h2 class="text-center">Symmetric Difference</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">a ^ b
-a.symmetric_difference(b)</code></pre>
-          <p class="text-center">Elements in either set, but not both.</p>
-        </section>
+# Basic example
+text = "Hello, my name is Juan!"
+match = re.search(r"Juan", text)
 
-        <section>
-          <br />
-          <h2 class="text-center">Subset and Superset</h2>
-          <br />
-          <pre style="margin: auto"><code class="language-python">a = {1, 2}
-b = {1, 2, 3}
-
-a.issubset(b)
-b.issuperset(a)
-
-a &lt;= b
-b &gt;= a</code></pre>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Frozen Sets</h2>
-          <br />
-          <pre
-            style="margin: auto"
-          ><code class="language-python">fs = frozenset([1, 2, 3])</code></pre>
-          <br />
-          <ul>
-            <li>Immutable version of a set</li>
-            <li>Can be used as dictionary keys</li>
-            <li>Cannot add or remove elements</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Set Comprehensions</h2>
-          <br />
-          <pre
-            style="margin: auto"
-          ><code class="language-python">squares = {x**2 for x in range(5)}</code></pre>
-          <br />
-          <ul>
-            <li>Similar to list comprehensions</li>
-            <li>Produces a set directly</li>
-          </ul>
-        </section>
-
-        <section>
-          <br />
-          <h2 class="text-center">Practical Use Cases</h2>
-          <br>
-          <ul>
-            <li>Removing duplicates</li>
-            <li>Finding common elements between datasets</li>
-            <li>Tracking unique visitors</li>
-          </ul>
-          <br />
-        </section>
-
-        <section>
-          <br /><br /><br /><br /><br />
-          <h2 class="text-center">Thank You!</h2>
-        </section>
-
-        <!-- <section>
-          <br />
-          <h2 class="text-center">Bonus Practice Game (Existing)</h2>
-          <h3 class="text-center">Using a tuple, translate this to Python:</h3>
-          <div class="text-center">
-            <span>"</span>
-            <span style="font-style: italic" class="english-sentence"></span>
-            <span>"</span>
-          </div>
-          <div class="tuple-game" id="tuple-game">
-            <div class="game-progress">
-              <span id="tuple-round">Round 1 of 3</span>
-              <span id="tuple-score">Score: 0</span>
-            </div>
-
-            <div
-              id="tuple-answer"
-              class="answer-row empty"
-              aria-label="Answer tokens"
-            ></div>
-
-            <div
-              id="tuple-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="game-controls">
-              <button id="tuple-check" class="game-btn primary" type="button">
-                Check
-              </button>
-              <button id="tuple-clear" class="game-btn secondary" type="button">
-                Clear
-              </button>
-            </div>
-
-            <p
-              id="tuple-feedback"
-              class="text-center game-feedback"
-              aria-live="polite"
-            ></p>
+if match:
+    print("Found:", match.group())   # Found: Juan
+else:
+    print("Not found")</code></pre>
+          <div class="callout">
+            🔑 The <strong>r"..."</strong> prefix creates a
+            <em>raw string</em> — backslashes are treated literally. Always use
+            raw strings with regex!
           </div>
         </section>
 
+        <!-- ===== SLIDE 5: KEY FUNCTIONS ===== -->
         <section>
-          <br />
-          <h3 class="text-center">Using a single-element tuple, translate:</h3>
-          <div class="text-center">
-            <span>"</span>
-            <span
-              style="font-style: italic"
-              class="english-single-sentence"
-            ></span>
-            <span>"</span>
-          </div>
-          <div class="tuple-game" id="single-tuple-game">
-            <div class="game-progress">
-              <span id="single-tuple-round">Round 1 of 3</span>
-              <span id="single-tuple-score">Score: 0</span>
-            </div>
+          <h2>⚙️ Key Functions in <code class="inline">re</code></h2>
+          <table>
+            <tr>
+              <th>Function</th>
+              <th>What it does</th>
+              <th>Returns</th>
+            </tr>
+            <tr>
+              <td><code>re.search()</code></td>
+              <td>Find first match anywhere</td>
+              <td>Match object or None</td>
+            </tr>
+            <tr>
+              <td><code>re.match()</code></td>
+              <td>Match at start of string only</td>
+              <td>Match object or None</td>
+            </tr>
+            <tr>
+              <td><code>re.findall()</code></td>
+              <td>Find all matches</td>
+              <td>List of strings</td>
+            </tr>
+            <tr>
+              <td><code>re.finditer()</code></td>
+              <td>Find all matches (iterator)</td>
+              <td>Iterator of Match objects</td>
+            </tr>
+            <tr>
+              <td><code>re.sub()</code></td>
+              <td>Replace matches</td>
+              <td>New string</td>
+            </tr>
+            <tr>
+              <td><code>re.split()</code></td>
+              <td>Split by pattern</td>
+              <td>List of strings</td>
+            </tr>
+            <tr>
+              <td><code>re.compile()</code></td>
+              <td>Pre-compile a pattern</td>
+              <td>Pattern object</td>
+            </tr>
+          </table>
+        </section>
 
-            <div
-              id="single-tuple-answer"
-              class="answer-row empty"
-              aria-label="Answer tokens"
-            ></div>
+        <!-- ===== SLIDE 6: LITERAL CHARACTERS ===== -->
+        <section>
+          <h2>🔤 Literal Characters</h2>
+          <p style="font-size: 0.85em">
+            The simplest pattern — match exact characters.
+          </p>
+          <pre><code class="language-python">import re
 
-            <div
-              id="single-tuple-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
+text = "The cat sat on the mat"
 
-            <div class="game-controls">
-              <button
-                id="single-tuple-check"
-                class="game-btn primary"
-                type="button"
-              >
-                Check
-              </button>
-              <button
-                id="single-tuple-clear"
-                class="game-btn secondary"
-                type="button"
-              >
-                Clear
-              </button>
-            </div>
+result = re.findall(r"at", text)
+print(result)  # ['at', 'at', 'at']
 
-            <p
-              id="single-tuple-feedback"
-              class="text-center game-feedback"
-              aria-live="polite"
-            ></p>
+result2 = re.findall(r"cat", text)
+print(result2)  # ['cat']</code></pre>
+          <div class="callout">
+            Regex is <strong>case-sensitive</strong> by default.
+            <code class="inline">"Cat"</code> ≠
+            <code class="inline">"cat"</code>
           </div>
         </section>
 
+        <!-- ===== SLIDE 7: METACHARACTERS ===== -->
         <section>
-          <br />
-          <h3 class="text-center">Using an empty tuple, translate:</h3>
-          <div class="text-center">
-            <span>"</span>
-            <span
-              style="font-style: italic"
-              class="english-empty-sentence"
-            ></span>
-            <span>"</span>
+          <h2>✨ Metacharacters</h2>
+          <p style="font-size: 0.85em">
+            Characters with special meaning in regex:
+          </p>
+          <div class="tag-row" style="font-size: 1.1em">
+            <span class="tag">. ^ $ * + ? { } [ ] \ | ( )</span>
           </div>
-          <div class="tuple-game" id="empty-tuple-game">
-            <div class="game-progress">
-              <span id="empty-tuple-round">Round 1 of 3</span>
-              <span id="empty-tuple-score">Score: 0</span>
-            </div>
-
-            <div
-              id="empty-tuple-answer"
-              class="answer-row empty"
-              aria-label="Answer tokens"
-            ></div>
-
-            <div
-              id="empty-tuple-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="game-controls">
-              <button
-                id="empty-tuple-check"
-                class="game-btn primary"
-                type="button"
-              >
-                Check
-              </button>
-              <button
-                id="empty-tuple-clear"
-                class="game-btn secondary"
-                type="button"
-              >
-                Clear
-              </button>
-            </div>
-
-            <p
-              id="empty-tuple-feedback"
-              class="text-center game-feedback"
-              aria-live="polite"
-            ></p>
+          <br />
+          <table>
+            <tr>
+              <th>Symbol</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td><code>.</code></td>
+              <td>Any character except newline</td>
+            </tr>
+            <tr>
+              <td><code>^</code></td>
+              <td>Start of string</td>
+            </tr>
+            <tr>
+              <td><code>$</code></td>
+              <td>End of string</td>
+            </tr>
+            <tr>
+              <td><code>\</code></td>
+              <td>Escape special character</td>
+            </tr>
+            <tr>
+              <td><code>|</code></td>
+              <td>OR operator</td>
+            </tr>
+            <tr>
+              <td><code>( )</code></td>
+              <td>Grouping</td>
+            </tr>
+          </table>
+          <div class="warn">
+            ⚠️ To match a literal dot, escape it: <code class="inline">\.</code>
           </div>
         </section>
 
+        <!-- ===== SLIDE 8: THE DOT ===== -->
         <section>
-          <br />
-          <h3 class="text-center">Using tuple generation, translate:</h3>
-          <div class="text-center">
-            <span>"</span>
-            <span
-              style="font-style: italic"
-              class="english-generator-sentence"
-            ></span>
-            <span>"</span>
-          </div>
-          <div class="tuple-game" id="generator-tuple-game">
-            <div class="game-progress">
-              <span id="generator-tuple-round">Round 1 of 3</span>
-              <span id="generator-tuple-score">Score: 0</span>
-            </div>
+          <h2>💡 The Dot <code class="inline">.</code></h2>
+          <p style="font-size: 0.85em">
+            Matches <strong>any single character</strong> except a newline.
+          </p>
+          <pre><code class="language-python">import re
 
-            <div
-              id="generator-tuple-answer"
-              class="answer-row empty"
-              aria-label="Answer tokens"
-            ></div>
+words = ["cat", "bat", "hat", "sat", "mat", "rat"]
 
-            <div
-              id="generator-tuple-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
+for w in words:
+    if re.match(r".at", w):
+        print(w, "✓")
 
-            <div class="game-controls">
-              <button
-                id="generator-tuple-check"
-                class="game-btn primary"
-                type="button"
-              >
-                Check
-              </button>
-              <button
-                id="generator-tuple-clear"
-                class="game-btn secondary"
-                type="button"
-              >
-                Clear
-              </button>
-            </div>
+# cat ✓  bat ✓  hat ✓  sat ✓  mat ✓  rat ✓</code></pre>
+          <pre><code class="language-python"># Match any 3-character word ending in 'at'
+text = "cat bat 1at !at"
+print(re.findall(r".at", text))  # ['cat', 'bat', '1at', '!at']</code></pre>
+        </section>
 
-            <p
-              id="generator-tuple-feedback"
-              class="text-center game-feedback"
-              aria-live="polite"
-            ></p>
+        <!-- ===== SLIDE 9: CHARACTER CLASSES ===== -->
+        <section>
+          <h2>🗂️ Character Classes <code class="inline">[ ]</code></h2>
+          <p style="font-size: 0.85em">
+            Match <strong>one character</strong> from a defined set.
+          </p>
+          <pre><code class="language-python">import re
+
+text = "cat bat hat sat"
+
+# Match c, b, or h followed by 'at'
+print(re.findall(r"[cbh]at", text))   # ['cat', 'bat', 'hat']
+
+# Match any lowercase vowel
+print(re.findall(r"[aeiou]", "Hello World"))  # ['e', 'o', 'o']
+
+# Match digits
+print(re.findall(r"[0-9]", "a1b2c3"))  # ['1', '2', '3']
+
+# Negation: match anything NOT a digit
+print(re.findall(r"[^0-9]", "a1b2c3"))  # ['a', 'b', 'c']</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 10: SHORTHAND CLASSES ===== -->
+        <section>
+          <h2>⚡ Shorthand Character Classes</h2>
+          <table>
+            <tr>
+              <th>Shorthand</th>
+              <th>Equivalent</th>
+              <th>Matches</th>
+            </tr>
+            <tr>
+              <td><code>\d</code></td>
+              <td><code>[0-9]</code></td>
+              <td>Any digit</td>
+            </tr>
+            <tr>
+              <td><code>\D</code></td>
+              <td><code>[^0-9]</code></td>
+              <td>Any non-digit</td>
+            </tr>
+            <tr>
+              <td><code>\w</code></td>
+              <td><code>[a-zA-Z0-9_]</code></td>
+              <td>Word character</td>
+            </tr>
+            <tr>
+              <td><code>\W</code></td>
+              <td><code>[^a-zA-Z0-9_]</code></td>
+              <td>Non-word character</td>
+            </tr>
+            <tr>
+              <td><code>\s</code></td>
+              <td><code>[ \t\n\r]</code></td>
+              <td>Whitespace</td>
+            </tr>
+            <tr>
+              <td><code>\S</code></td>
+              <td><code>[^ \t\n\r]</code></td>
+              <td>Non-whitespace</td>
+            </tr>
+          </table>
+          <pre><code class="language-python">text = "My phone is 0917-123-4567"
+print(re.findall(r"\d", text))   # ['0','9','1','7','1','2','3','4','5','6','7']
+print(re.findall(r"\w+", text))  # ['My', 'phone', 'is', '0917', '123', '4567']</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 11: ANCHORS ===== -->
+        <section>
+          <h2>
+            ⚓ Anchors: <code class="inline">^</code> and
+            <code class="inline">$</code>
+          </h2>
+          <p style="font-size: 0.85em">
+            Anchors do not match characters — they match
+            <strong>positions</strong>.
+          </p>
+          <pre><code class="language-python">import re
+
+# ^ matches START of string
+print(re.search(r"^Hello", "Hello World"))  # Match ✓
+print(re.search(r"^World", "Hello World"))  # None ✗
+
+# $ matches END of string
+print(re.search(r"World$", "Hello World"))  # Match ✓
+print(re.search(r"Hello$", "Hello World"))  # None ✗
+
+# Combine both to match EXACT string
+print(re.match(r"^\d{4}$", "2024"))   # Match ✓  (exactly 4 digits)
+print(re.match(r"^\d{4}$", "20245"))  # None ✗   (5 digits)</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 12: QUANTIFIERS ===== -->
+        <section>
+          <h2>🔢 Quantifiers</h2>
+          <p style="font-size: 0.85em">
+            Specify <strong>how many times</strong> a pattern should repeat.
+          </p>
+          <table>
+            <tr>
+              <th>Quantifier</th>
+              <th>Meaning</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><code>*</code></td>
+              <td>0 or more</td>
+              <td><code>ab*c</code> → ac, abc, abbc…</td>
+            </tr>
+            <tr>
+              <td><code>+</code></td>
+              <td>1 or more</td>
+              <td><code>ab+c</code> → abc, abbc… (not ac)</td>
+            </tr>
+            <tr>
+              <td><code>?</code></td>
+              <td>0 or 1 (optional)</td>
+              <td><code>colou?r</code> → color, colour</td>
+            </tr>
+            <tr>
+              <td><code>{n}</code></td>
+              <td>Exactly n times</td>
+              <td><code>\d{4}</code> → 2024</td>
+            </tr>
+            <tr>
+              <td><code>{n,}</code></td>
+              <td>n or more</td>
+              <td><code>\d{3,}</code> → 123, 1234…</td>
+            </tr>
+            <tr>
+              <td><code>{n,m}</code></td>
+              <td>Between n and m</td>
+              <td><code>\d{2,4}</code> → 12, 123, 1234</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- ===== SLIDE 13: QUANTIFIERS IN ACTION ===== -->
+        <section>
+          <h2>🧪 Quantifiers in Action</h2>
+          <pre><code class="language-python">import re
+
+# + : one or more digits
+print(re.findall(r"\d+", "abc123def456"))  # ['123', '456']
+
+# * : zero or more 'a's before 'b'
+print(re.findall(r"a*b", "b ab aab aaab"))  # ['b', 'ab', 'aab', 'aaab']
+
+# ? : optional 'u'
+words = ["color", "colour", "colr"]
+for w in words:
+    if re.match(r"colou?r", w):
+        print(w, "matches!")  # color, colour match
+
+# {2,4}: 2 to 4 word characters
+print(re.findall(r"\w{2,4}", "I am a student"))  # ['am', 'stud', 'ent']</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 14: GREEDY vs LAZY ===== -->
+        <section>
+          <h2>🐢 Greedy vs. Lazy Matching</h2>
+          <p style="font-size: 0.85em">
+            By default, quantifiers are <strong>greedy</strong> — they match as
+            much as possible.
+          </p>
+          <pre><code class="language-python">import re
+
+html = "&lt;b&gt;Hello&lt;/b&gt; and &lt;b&gt;World&lt;/b&gt;"
+
+# Greedy: matches from first < to LAST >
+greedy = re.findall(r"&lt;.+&gt;", html)
+print("Greedy:", greedy)
+# ['&lt;b&gt;Hello&lt;/b&gt; and &lt;b&gt;World&lt;/b&gt;']   ← too much!
+
+# Lazy (add ?): matches shortest possible
+lazy = re.findall(r"&lt;.+?&gt;", html)
+print("Lazy:", lazy)
+# ['&lt;b&gt;', '&lt;/b&gt;', '&lt;b&gt;', '&lt;/b&gt;']   ← just the tags</code></pre>
+          <div class="callout">
+            Add <code class="inline">?</code> after a quantifier to make it
+            <strong>lazy</strong>: <code class="inline">*?</code>,
+            <code class="inline">+?</code>, <code class="inline">{n,m}?</code>
           </div>
         </section>
 
+        <!-- ===== SLIDE 15: GROUPS ===== -->
         <section>
+          <h2>🗃️ Groups <code class="inline">( )</code></h2>
+          <p style="font-size: 0.85em">
+            Parentheses <strong>group</strong> parts of a pattern and
+            <strong>capture</strong> matched text.
+          </p>
+          <pre><code class="language-python">import re
+
+# Extract year, month, day separately
+date = "Today is 2024-11-15"
+match = re.search(r"(\d{4})-(\d{2})-(\d{2})", date)
+
+if match:
+    print("Full match:", match.group(0))   # 2024-11-15
+    print("Year:",       match.group(1))   # 2024
+    print("Month:",      match.group(2))   # 11
+    print("Day:",        match.group(3))   # 15
+
+# Named groups — even cleaner!
+match2 = re.search(r"(?P&lt;year&gt;\d{4})-(?P&lt;month&gt;\d{2})-(?P&lt;day&gt;\d{2})", date)
+print(match2.group("year"))   # 2024
+print(match2.group("month"))  # 11</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 16: ALTERNATION ===== -->
+        <section>
+          <h2>🔀 Alternation <code class="inline">|</code></h2>
+          <p style="font-size: 0.85em">
+            The pipe <code class="inline">|</code> acts as an
+            <strong>OR</strong> operator between patterns.
+          </p>
+          <pre><code class="language-python">import re
+
+# Match 'cat' or 'dog'
+animals = ["I have a cat", "She has a dog", "He has a bird"]
+for sentence in animals:
+    if re.search(r"cat|dog", sentence):
+        print(sentence, "→ has a pet!")
+
+# Match multiple file extensions
+files = ["report.pdf", "photo.jpg", "data.csv", "notes.txt", "hack.exe"]
+for f in files:
+    if re.search(r"\.(pdf|jpg|csv|txt)$", f):
+        print(f, "→ safe file ✓")</code></pre>
+          <div class="callout">
+            Use groups to limit the scope of <code class="inline">|</code>:
+            <code class="inline">gr(a|e)y</code> matches "gray" and "grey".
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 17: re.search vs re.match ===== -->
+        <section>
+          <h2>
+            🔎 <code class="inline">search()</code> vs
+            <code class="inline">match()</code>
+          </h2>
+          <pre><code class="language-python">import re
+
+text = "  Python is awesome"
+
+# match() only checks the BEGINNING
+m1 = re.match(r"Python", text)
+print(m1)   # None — text starts with spaces!
+
+# search() scans the WHOLE string
+m2 = re.search(r"Python", text)
+print(m2)   # &lt;re.Match object; match='Python'&gt;
+
+# match() works if pattern is at start
+m3 = re.match(r"\s+Python", text)
+print(m3.group())   # '  Python' ✓</code></pre>
+          <div class="two-col" style="margin-top: 0.5em">
+            <div class="card">
+              <h4>match()</h4>
+              Use when input must start with pattern (e.g., validating format
+              from pos 0)
+            </div>
+            <div class="card">
+              <h4>search()</h4>
+              Use when pattern can appear anywhere in the string
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 18: findall and finditer ===== -->
+        <section>
+          <h2>
+            📋 <code class="inline">findall()</code> &amp;
+            <code class="inline">finditer()</code>
+          </h2>
+          <pre><code class="language-python">import re
+
+text = "Scores: 85, 90, 78, 92, 88"
+
+# findall → returns a plain list
+scores = re.findall(r"\d+", text)
+print(scores)  # ['85', '90', '78', '92', '88']
+print([int(s) for s in scores])  # convert to ints
+
+# finditer → returns iterator with position info
+for m in re.finditer(r"\d+", text):
+    print(f"Found '{m.group()}' at position {m.start()}–{m.end()}")</code></pre>
+          <pre style="font-size: 0.7em"><samp>Found '85' at position 8–10
+Found '90' at position 12–14
+Found '78' at position 16–18
+...</samp></pre>
+          <div class="callout">
+            Use <code class="inline">finditer()</code> when you need position
+            info; use <code class="inline">findall()</code> when you just need
+            the values.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 19: re.sub ===== -->
+        <section>
+          <h2>✏️ <code class="inline">re.sub()</code> — Find &amp; Replace</h2>
+          <pre><code class="language-python">import re
+
+# Syntax: re.sub(pattern, replacement, string, count=0)
+
+# Censor bad words
+text = "This is spam and more spam!"
+clean = re.sub(r"spam", "****", text)
+print(clean)  # This is **** and more ****!
+
+# Remove all digits
+msg = "My PIN is 1234 and OTP is 5678"
+print(re.sub(r"\d", "*", msg))  # My PIN is **** and OTP is ****
+
+# Format phone numbers: 09171234567 → 0917-123-4567
+phone = "Call 09171234567 now"
+formatted = re.sub(r"(0\d{3})(\d{3})(\d{4})", r"\1-\2-\3", phone)
+print(formatted)  # Call 0917-123-4567 now</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 20: re.split ===== -->
+        <section>
+          <h2>✂️ <code class="inline">re.split()</code> — Split by Pattern</h2>
+          <pre><code class="language-python">import re
+
+# Split by any whitespace (spaces, tabs, newlines)
+text = "one   two\tthree\nfour"
+print(re.split(r"\s+", text))
+# ['one', 'two', 'three', 'four']
+
+# Split by comma, semicolon, or pipe
+csv = "Alice,30;Bob|25,Carol;22"
+print(re.split(r"[,;|]", csv))
+# ['Alice', '30', 'Bob', '25', 'Carol', '22']
+
+# Split a sentence into words and punctuation
+sentence = "Hello, world! How are you?"
+tokens = re.split(r"(\W+)", sentence)
+print(tokens)</code></pre>
+          <div class="callout">
+            Wrapping the delimiter in a group
+            <code class="inline">( )</code> includes it in the output list —
+            useful for tokenization!
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 21: re.compile ===== -->
+        <section>
+          <h2>
+            ⚙️ <code class="inline">re.compile()</code> — Reusable Patterns
+          </h2>
+          <p style="font-size: 0.85em">
+            When you use the same pattern many times,
+            <strong>compile</strong> it for efficiency.
+          </p>
+          <pre><code class="language-python">import re
+
+# Without compile — pattern is re-parsed every call
+for line in open("students.txt"):
+    re.search(r"\d{5}", line)   # slightly slower
+
+# With compile — parsed ONCE, reused many times
+id_pattern = re.compile(r"\d{5}")
+
+lines = ["ID: 12345 — Alice", "ID: 67890 — Bob", "No ID here"]
+for line in lines:
+    m = id_pattern.search(line)
+    if m:
+        print("Found ID:", m.group())
+
+# Compiled patterns have the same methods
+ids = id_pattern.findall("12345 and 67890 and 99999")</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 22: FLAGS ===== -->
+        <section>
+          <h2>🚩 Regex Flags</h2>
+          <p style="font-size: 0.85em">
+            Flags modify how the pattern is applied.
+          </p>
+          <table>
+            <tr>
+              <th>Flag</th>
+              <th>Short</th>
+              <th>Effect</th>
+            </tr>
+            <tr>
+              <td><code>re.IGNORECASE</code></td>
+              <td><code>re.I</code></td>
+              <td>Case-insensitive matching</td>
+            </tr>
+            <tr>
+              <td><code>re.MULTILINE</code></td>
+              <td><code>re.M</code></td>
+              <td><code>^</code>/<code>$</code> match each line</td>
+            </tr>
+            <tr>
+              <td><code>re.DOTALL</code></td>
+              <td><code>re.S</code></td>
+              <td><code>.</code> matches newline too</td>
+            </tr>
+            <tr>
+              <td><code>re.VERBOSE</code></td>
+              <td><code>re.X</code></td>
+              <td>Allow comments &amp; whitespace</td>
+            </tr>
+          </table>
+          <pre><code class="language-python">import re
+
+text = "Hello WORLD hello world"
+
+# IGNORECASE
+print(re.findall(r"hello", text, re.I))
+# ['Hello', 'hello']
+
+# MULTILINE
+lines = "start\nstop\nstart again"
+print(re.findall(r"^start", lines, re.M))
+# ['start', 'start']</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 23: VERBOSE FLAG ===== -->
+        <section>
+          <h2>📝 The <code class="inline">re.VERBOSE</code> Flag</h2>
+          <p style="font-size: 0.85em">
+            Makes complex patterns <strong>readable</strong> with comments and
+            whitespace.
+          </p>
+          <pre><code class="language-python">import re
+
+# Hard to read
+phone_re = re.compile(r"(\+63|0)(\d{3})-?(\d{3})-?(\d{4})")
+
+# Same pattern with re.VERBOSE — much cleaner!
+phone_re = re.compile(r"""
+    (\+63|0)    # country code or leading 0
+    (\d{3})     # area/network code (e.g., 917)
+    -?          # optional dash
+    (\d{3})     # first 3 digits
+    -?          # optional dash
+    (\d{4})     # last 4 digits
+""", re.VERBOSE)
+
+matches = phone_re.findall("Call +63917-123-4567 or 0917-987-6543")
+print(matches)</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 24: PRACTICAL — EMAIL VALIDATION ===== -->
+        <section>
+          <h2>📧 Practice: Email Validation</h2>
+          <pre><code class="language-python">import re
+
+def is_valid_email(email):
+    pattern = re.compile(r"""
+        ^                   # start
+        [a-zA-Z0-9._%+-]+   # username (letters, digits, dots, etc.)
+        @                   # literal @
+        [a-zA-Z0-9.-]+      # domain name
+        \.                  # literal dot
+        [a-zA-Z]{2,}        # top-level domain (2+ letters)
+        $                   # end
+    """, re.VERBOSE)
+    return bool(pattern.match(email))
+
+emails = [
+    "student@school.edu",   # ✓
+    "invalid-email",        # ✗
+    "user@.com",            # ✗
+    "first.last@uni.edu.ph" # ✓
+]
+for e in emails:
+    status = "✓ Valid" if is_valid_email(e) else "✗ Invalid"
+    print(f"{e:<30} {status}")</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 25: PRACTICAL — PASSWORD CHECKER ===== -->
+        <section>
+          <h2>🔐 Practice: Password Strength Checker</h2>
+          <pre><code class="language-python">import re
+
+def check_password(password):
+    errors = []
+    if not re.search(r".{8,}", password):
+        errors.append("At least 8 characters")
+    if not re.search(r"[A-Z]", password):
+        errors.append("At least one uppercase letter")
+    if not re.search(r"[a-z]", password):
+        errors.append("At least one lowercase letter")
+    if not re.search(r"\d", password):
+        errors.append("At least one digit")
+    if not re.search(r"[!@#$%^&*]", password):
+        errors.append("At least one special character")
+    if errors:
+        print("❌ Weak password. Missing:")
+        for e in errors: print("  •", e)
+    else:
+        print("✅ Strong password!")
+
+check_password("hello")         # ❌ many issues
+check_password("P@ssw0rd!")     # ✅</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 26: PRACTICAL — LOG FILE PARSING ===== -->
+        <section>
+          <h2>📋 Practice: Parsing Log Files</h2>
+          <pre><code class="language-python">import re
+
+log = """
+2024-11-15 08:32:11 INFO  User 'alice' logged in from 192.168.1.10
+2024-11-15 08:45:03 ERROR Failed login attempt from 10.0.0.5
+2024-11-15 09:01:55 INFO  User 'bob' logged in from 172.16.0.2
+2024-11-15 09:15:22 WARN  High memory usage detected
+"""
+
+# Extract timestamps
+timestamps = re.findall(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", log)
+print("Timestamps:", timestamps)
+
+# Find all IP addresses
+ips = re.findall(r"\b\d{1,3}(?:\.\d{1,3}){3}\b", log)
+print("IPs found:", ips)
+
+# Find ERROR and WARN lines
+issues = re.findall(r"(ERROR|WARN).+", log)
+print("\nIssues:")
+for i in issues: print(" ", i)</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 27: LOOKAHEAD & LOOKBEHIND (INTRO) ===== -->
+        <section>
+          <h2>👀 Lookahead &amp; Lookbehind</h2>
+          <p style="font-size: 0.8em">
+            <em
+              >Advanced: match based on what surrounds a pattern, without
+              including the surroundings.</em
+            >
+          </p>
+          <table>
+            <tr>
+              <th>Syntax</th>
+              <th>Type</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td><code>(?=...)</code></td>
+              <td>Lookahead</td>
+              <td>Match if followed by …</td>
+            </tr>
+            <tr>
+              <td><code>(?!...)</code></td>
+              <td>Negative lookahead</td>
+              <td>Match if NOT followed by …</td>
+            </tr>
+            <tr>
+              <td><code>(?&lt;=...)</code></td>
+              <td>Lookbehind</td>
+              <td>Match if preceded by …</td>
+            </tr>
+            <tr>
+              <td><code>(?&lt;!...)</code></td>
+              <td>Negative lookbehind</td>
+              <td>Match if NOT preceded by …</td>
+            </tr>
+          </table>
+          <pre><code class="language-python">import re
+
+prices = "apple: 50, banana: 30, mango: 75"
+
+# Get numbers preceded by ': '
+nums = re.findall(r"(?&lt;=: )\d+", prices)
+print(nums)   # ['50', '30', '75']
+
+# Get words followed by ':'
+items = re.findall(r"\w+(?=:)", prices)
+print(items)  # ['apple', 'banana', 'mango']</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 28: COMMON MISTAKES ===== -->
+        <section>
+          <h2>⚠️ Common Mistakes to Avoid</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>❌ Forgetting raw strings</h4>
+              <pre><code class="language-python"># Wrong — \d is an escape seq
+re.findall("\d+", text)
+
+# Right
+re.findall(r"\d+", text)</code></pre>
+            </div>
+            <div class="card">
+              <h4>❌ Greedy traps</h4>
+              <pre><code class="language-python"># Matches too much!
+re.findall(r"&lt;.+&gt;", html)
+
+# Use lazy
+re.findall(r"&lt;.+?&gt;", html)</code></pre>
+            </div>
+            <div class="card">
+              <h4>❌ Unescaped dots</h4>
+              <pre><code class="language-python"># Matches "google_com" too!
+re.match(r"google.com", url)
+
+# Escape the dot
+re.match(r"google\.com", url)</code></pre>
+            </div>
+            <div class="card">
+              <h4>❌ match() vs search()</h4>
+              <pre><code class="language-python"># Won't work if not at start
+re.match(r"\d+", "abc 123")
+
+# Use search() instead
+re.search(r"\d+", "abc 123")</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 29: QUICK REFERENCE CHEATSHEET ===== -->
+        <section>
+          <h2>📌 Regex Quick Reference</h2>
+          <div class="two-col" style="font-size: 0.75em">
+            <div>
+              <table>
+                <tr>
+                  <th colspan="2">Characters</th>
+                </tr>
+                <tr>
+                  <td><code>.</code></td>
+                  <td>Any char (not \n)</td>
+                </tr>
+                <tr>
+                  <td><code>\d \D</code></td>
+                  <td>Digit / Non-digit</td>
+                </tr>
+                <tr>
+                  <td><code>\w \W</code></td>
+                  <td>Word / Non-word</td>
+                </tr>
+                <tr>
+                  <td><code>\s \S</code></td>
+                  <td>Space / Non-space</td>
+                </tr>
+                <tr>
+                  <td><code>[abc]</code></td>
+                  <td>One of a, b, c</td>
+                </tr>
+                <tr>
+                  <td><code>[^abc]</code></td>
+                  <td>Not a, b, or c</td>
+                </tr>
+              </table>
+              <br />
+              <table>
+                <tr>
+                  <th colspan="2">Anchors</th>
+                </tr>
+                <tr>
+                  <td><code>^</code></td>
+                  <td>Start of string/line</td>
+                </tr>
+                <tr>
+                  <td><code>$</code></td>
+                  <td>End of string/line</td>
+                </tr>
+                <tr>
+                  <td><code>\b</code></td>
+                  <td>Word boundary</td>
+                </tr>
+              </table>
+            </div>
+            <div>
+              <table>
+                <tr>
+                  <th colspan="2">Quantifiers</th>
+                </tr>
+                <tr>
+                  <td><code>*</code></td>
+                  <td>0 or more</td>
+                </tr>
+                <tr>
+                  <td><code>+</code></td>
+                  <td>1 or more</td>
+                </tr>
+                <tr>
+                  <td><code>?</code></td>
+                  <td>0 or 1</td>
+                </tr>
+                <tr>
+                  <td><code>{n}</code></td>
+                  <td>Exactly n</td>
+                </tr>
+                <tr>
+                  <td><code>{n,m}</code></td>
+                  <td>n to m</td>
+                </tr>
+                <tr>
+                  <td><code>*? +? ??</code></td>
+                  <td>Lazy versions</td>
+                </tr>
+              </table>
+              <br />
+              <table>
+                <tr>
+                  <th colspan="2">Functions</th>
+                </tr>
+                <tr>
+                  <td><code>search()</code></td>
+                  <td>First match anywhere</td>
+                </tr>
+                <tr>
+                  <td><code>findall()</code></td>
+                  <td>All matches (list)</td>
+                </tr>
+                <tr>
+                  <td><code>sub()</code></td>
+                  <td>Replace matches</td>
+                </tr>
+                <tr>
+                  <td><code>split()</code></td>
+                  <td>Split by pattern</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 30: SUMMARY & NEXT STEPS ===== -->
+        <section
+          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+        >
+          <h2>🎓 Summary &amp; Next Steps</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>✅ What You Learned</h4>
+              <ul style="font-size: 0.9em">
+                <li>What regex is and why it matters</li>
+                <li>The <code>re</code> module functions</li>
+                <li>Metacharacters, character classes</li>
+                <li>Quantifiers (greedy vs lazy)</li>
+                <li>Groups, alternation, anchors</li>
+                <li>Flags: IGNORECASE, MULTILINE, VERBOSE</li>
+                <li>Real-world applications</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>🚀 Practice &amp; Resources</h4>
+              <ul style="font-size: 0.9em">
+                <li><strong>regex101.com</strong> — Live regex tester</li>
+                <li><strong>regexlearn.com</strong> — Interactive exercises</li>
+                <li>
+                  <strong>Python docs</strong> — docs.python.org/3/library/re
+                </li>
+                <li>Build: email validator, form checker, log parser</li>
+                <li>Explore: <code>re.VERBOSE</code> for readable patterns</li>
+              </ul>
+            </div>
+          </div>
           <br />
-          <h3 class="text-center">Using tuple slicing, translate:</h3>
-          <div class="text-center">
-            <span>"</span>
-            <span
-              style="font-style: italic"
-              class="english-slicing-sentence"
-            ></span>
-            <span>"</span>
+          <div class="callout" style="text-align: center; font-size: 1em">
+            🐍 <strong>Regular expressions are a superpower.</strong> Master
+            them and text processing becomes effortless!
           </div>
-          <div class="tuple-game" id="slicing-tuple-game">
-            <div class="game-progress">
-              <span id="slicing-tuple-round">Round 1 of 3</span>
-              <span id="slicing-tuple-score">Score: 0</span>
-            </div>
-
-            <div
-              id="slicing-tuple-answer"
-              class="answer-row empty"
-              aria-label="Answer tokens"
-            ></div>
-
-            <div
-              id="slicing-tuple-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="game-controls">
-              <button
-                id="slicing-tuple-check"
-                class="game-btn primary"
-                type="button"
-              >
-                Check
-              </button>
-              <button
-                id="slicing-tuple-clear"
-                class="game-btn secondary"
-                type="button"
-              >
-                Clear
-              </button>
-            </div>
-
-            <p
-              id="slicing-tuple-feedback"
-              class="text-center game-feedback"
-              aria-live="polite"
-            ></p>
-          </div>
-        </section> -->
+        </section>
       </div>
     </div>
 
-    <script src="dist/reveal.js"></script>
-    <script src="plugin/notes/notes.js"></script>
-    <script src="plugin/markdown/markdown.js"></script>
-    <script src="plugin/highlight/highlight.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
-      // More info about initialization & config:
-      // - https://revealjs.com/initialization/
-      // - https://revealjs.com/config/
-      const fallbackCopyText = (text) => {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed";
-        textArea.style.opacity = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-      };
-
-      const copyCodeText = async (text) => {
-        if (navigator.clipboard?.writeText) {
-          await navigator.clipboard.writeText(text);
-          return;
-        }
-
-        fallbackCopyText(text);
-      };
-
-      const clipboardIcon = `
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-      `;
-
-      const checkIcon = `
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20 6 9 17l-5-5"></path>
-        </svg>
-      `;
-
-      const xIcon = `
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
-        </svg>
-      `;
-
-      const addCopyButtons = () => {
-        const codeBlocks = document.querySelectorAll(".reveal pre > code");
-
-        codeBlocks.forEach((codeBlock) => {
-          const pre = codeBlock.parentElement;
-          if (!pre || pre.querySelector(".copy-code-btn")) {
-            return;
-          }
-
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "copy-code-btn";
-          button.innerHTML = clipboardIcon;
-          button.title = "Copy code";
-          button.setAttribute("aria-label", "Copy code to clipboard");
-
-          button.addEventListener("click", async () => {
-            const codeText = codeBlock.textContent ?? "";
-
-            try {
-              await copyCodeText(codeText);
-              button.innerHTML = checkIcon;
-              button.title = "Copied";
-              setTimeout(() => {
-                button.innerHTML = clipboardIcon;
-                button.title = "Copy code";
-              }, 1200);
-            } catch {
-              button.innerHTML = xIcon;
-              button.title = "Copy failed";
-              setTimeout(() => {
-                button.innerHTML = clipboardIcon;
-                button.title = "Copy code";
-              }, 1200);
-            }
-          });
-
-          pre.appendChild(button);
-        });
-      };
-
       Reveal.initialize({
         hash: true,
-        center: false,
         slideNumber: "c/t",
-
-        // Learn about plugins: https://revealjs.com/plugins/
-        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+        transition: "slide",
+        transitionSpeed: "fast",
+        controls: true,
+        progress: true,
+        center: true,
+        plugins: [],
       });
+      document
+        .querySelectorAll("pre code")
+        .forEach((el) => hljs.highlightElement(el));
 
-      Reveal.on("ready", addCopyButtons);
-      Reveal.on("slidechanged", addCopyButtons);
-    </script>
-
-    <script>
-      const setBuilderRounds = [
-        {
-          prompt: "Concrete, steel, and glass are materials.",
-          target: ["Materials", "=", "{'Concrete',", "'Steel',", "'Glass'}"],
-          tokens: [
-            "Materials",
-            "=",
-            "{'Concrete',",
-            "'Steel',",
-            "'Glass'}",
-            "['Concrete',",
-            "'Steel',",
-            "'Glass']",
-            "==",
-            "()",
-          ],
-        },
-        {
-          prompt: "Speed limit and volume limit are in the active settings.",
-          target: [
-            "Active_Settings",
-            "=",
-            "{'Speed_Limit',",
-            "'Volume_Limit'}",
-          ],
-          tokens: [
-            "Active_Settings",
-            "=",
-            "{'Speed_Limit',",
-            "'Volume_Limit'}",
-            "['Speed_Limit',",
-            "'Volume_Limit']",
-          ],
-        },
-        {
-          prompt: "Room_204 includes WiFi, Bed, and Ocean_View.",
-          target: ["Room_204", "=", "{'WiFi',", "'Bed',", "'Ocean_View'}"],
-          tokens: [
-            "Room_204",
-            "=",
-            "{'WiFi',",
-            "'Bed',",
-            "'Ocean_View'}",
-            "['WiFi',",
-            "'Bed',",
-            "'Ocean_View']",
-            "==",
-          ],
-        },
-      ];
-
-      const setBuilderBank = document.getElementById("set-builder-bank");
-      const setBuilderAnswer = document.getElementById("set-builder-answer");
-      const setBuilderSentence = document.querySelector(".english-set-sentence");
-      const setBuilderRoundText = document.getElementById("set-builder-round");
-      const setBuilderScoreText = document.getElementById("set-builder-score");
-      const setBuilderFeedback = document.getElementById("set-builder-feedback");
-      const setBuilderCheckBtn = document.getElementById("set-builder-check");
-      const setBuilderClearBtn = document.getElementById("set-builder-clear");
-
-      let setBuilderRoundIndex = 0;
-      let setBuilderScore = 0;
-      let setBuilderSelectedIndexes = [];
-
-      const makeSetBuilderTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
-
-      const getSetBuilderShuffledIndexes = (length) => {
-        const indexes = Array.from({ length }, (_, index) => index);
-        for (let index = indexes.length - 1; index > 0; index -= 1) {
-          const randomIndex = Math.floor(Math.random() * (index + 1));
-          [indexes[index], indexes[randomIndex]] = [
-            indexes[randomIndex],
-            indexes[index],
-          ];
-        }
-        return indexes;
-      };
-
-      const updateSetBuilderHeader = () => {
-        setBuilderRoundText.textContent = `Round ${setBuilderRoundIndex + 1} of ${setBuilderRounds.length}`;
-        setBuilderScoreText.textContent = `Score: ${setBuilderScore}`;
-      };
-
-      const updateSetBuilderAnswerPlaceholder = () => {
-        setBuilderAnswer.classList.toggle(
-          "empty",
-          setBuilderSelectedIndexes.length === 0,
-        );
-      };
-
-      const setSetBuilderFeedback = (message, tone = "") => {
-        setBuilderFeedback.textContent = message;
-        setBuilderFeedback.classList.remove("success", "error");
-        if (tone) {
-          setBuilderFeedback.classList.add(tone);
-        }
-      };
-
-      const syncSetBuilderBankState = () => {
-        const active = new Set(setBuilderSelectedIndexes);
-        setBuilderBank.querySelectorAll(".token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderSetBuilderAnswer = () => {
-        const round = setBuilderRounds[setBuilderRoundIndex];
-        setBuilderAnswer.innerHTML = "";
-
-        setBuilderSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeSetBuilderTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            setBuilderSelectedIndexes.splice(answerIndex, 1);
-            renderSetBuilderAnswer();
-            syncSetBuilderBankState();
-            updateSetBuilderAnswerPlaceholder();
-          });
-          setBuilderAnswer.appendChild(token);
-        });
-
-        updateSetBuilderAnswerPlaceholder();
-      };
-
-      const renderSetBuilderRound = () => {
-        const round = setBuilderRounds[setBuilderRoundIndex];
-        setBuilderSelectedIndexes = [];
-        setBuilderBank.innerHTML = "";
-        setBuilderAnswer.innerHTML = "";
-
-        if (setBuilderSentence) {
-          setBuilderSentence.textContent = round.prompt;
-        }
-
-        setSetBuilderFeedback("");
-
-        const shuffledIndexes = getSetBuilderShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const token = makeSetBuilderTokenButton(round.tokens[index], index);
-          token.addEventListener("click", () => {
-            setBuilderSelectedIndexes.push(index);
-            renderSetBuilderAnswer();
-            syncSetBuilderBankState();
-          });
-          setBuilderBank.appendChild(token);
-        });
-
-        updateSetBuilderHeader();
-        syncSetBuilderBankState();
-        updateSetBuilderAnswerPlaceholder();
-      };
-
-      const goToNextSetBuilderRound = () => {
-        if (setBuilderRoundIndex < setBuilderRounds.length - 1) {
-          setBuilderRoundIndex += 1;
-          renderSetBuilderRound();
-          return;
-        }
-
-        setSetBuilderFeedback(
-          `Challenge complete! Final score: ${setBuilderScore}/${setBuilderRounds.length}`,
-          "success",
-        );
-        setBuilderCheckBtn.disabled = true;
-      };
-
-      setBuilderCheckBtn.addEventListener("click", () => {
-        const round = setBuilderRounds[setBuilderRoundIndex];
-        const answerTokens = setBuilderSelectedIndexes.map(
-          (index) => round.tokens[index],
-        );
-
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          setBuilderScore += 1;
-          updateSetBuilderHeader();
-          setSetBuilderFeedback("Great job! Exact set syntax achieved.", "success");
-          launchConfetti();
-          setTimeout(goToNextSetBuilderRound, 750);
-          return;
-        }
-
-        setSetBuilderFeedback("Not quite. Recheck the set syntax and try again.", "error");
+      // Fix HTML entities in code blocks for display
+      document.querySelectorAll("pre code").forEach((el) => {
+        el.innerHTML = el.innerHTML.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+        hljs.highlightElement(el);
       });
-
-      setBuilderClearBtn.addEventListener("click", () => {
-        setBuilderSelectedIndexes = [];
-        renderSetBuilderAnswer();
-        syncSetBuilderBankState();
-        setSetBuilderFeedback("Answer cleared.");
-      });
-
-      renderSetBuilderRound();
-    </script>
-
-    <script>
-      const setUpdateRounds = [
-        {
-          prompt: "Boats C and A are also in the port.",
-          target: ["boats_in_port.update(", '["Boat C",', '"Boat A"]', ")"],
-          tokens: [
-            "boats_in_port.update(",
-            '["Boat C",',
-            '"Boat A"]',
-            ")",
-            "boats_in_port.add(",
-            '["Boat A",',
-          ],
-        },
-        {
-          prompt: "Plate numbers LMN456 and ABC123 were also stolen.",
-          target: [
-            "stolen_plates.update(",
-            '["LMN456",',
-            '"ABC123"]',
-            ")",
-          ],
-          tokens: [
-            "stolen_plates.update(",
-            '["LMN456",',
-            '"ABC123"]',
-            ")",
-            "stolen_plates.add(",
-            '["ABC123",',
-          ],
-        },
-        {
-          prompt: "Van Gogh and Monet are artists as well.",
-          target: ["artists.update(", '["Van Gogh",', '"Monet"]', ")"],
-          tokens: [
-            "artists.update(",
-            '["Van Gogh",',
-            '"Monet"]',
-            ")",
-            "artists.add(",
-            '["Monet",',
-          ],
-        },
-      ];
-
-      const setUpdateBank = document.getElementById("set-update-bank");
-      const setUpdateAnswer = document.getElementById("set-update-answer");
-      const setUpdateSentence = document.querySelector(".english-update-sentence");
-      const setUpdateRoundText = document.getElementById("set-update-round");
-      const setUpdateScoreText = document.getElementById("set-update-score");
-      const setUpdateFeedback = document.getElementById("set-update-feedback");
-      const setUpdateCheckBtn = document.getElementById("set-update-check");
-      const setUpdateClearBtn = document.getElementById("set-update-clear");
-
-      let setUpdateRoundIndex = 0;
-      let setUpdateScore = 0;
-      let setUpdateSelectedIndexes = [];
-
-      const makeSetUpdateTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
-
-      const getSetUpdateShuffledIndexes = (length) => {
-        const indexes = Array.from({ length }, (_, index) => index);
-        for (let index = indexes.length - 1; index > 0; index -= 1) {
-          const randomIndex = Math.floor(Math.random() * (index + 1));
-          [indexes[index], indexes[randomIndex]] = [
-            indexes[randomIndex],
-            indexes[index],
-          ];
-        }
-        return indexes;
-      };
-
-      const updateSetUpdateHeader = () => {
-        setUpdateRoundText.textContent = `Round ${setUpdateRoundIndex + 1} of ${setUpdateRounds.length}`;
-        setUpdateScoreText.textContent = `Score: ${setUpdateScore}`;
-      };
-
-      const updateSetUpdateAnswerPlaceholder = () => {
-        setUpdateAnswer.classList.toggle(
-          "empty",
-          setUpdateSelectedIndexes.length === 0,
-        );
-      };
-
-      const setSetUpdateFeedback = (message, tone = "") => {
-        setUpdateFeedback.textContent = message;
-        setUpdateFeedback.classList.remove("success", "error");
-        if (tone) {
-          setUpdateFeedback.classList.add(tone);
-        }
-      };
-
-      const syncSetUpdateBankState = () => {
-        const active = new Set(setUpdateSelectedIndexes);
-        setUpdateBank.querySelectorAll(".token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderSetUpdateAnswer = () => {
-        const round = setUpdateRounds[setUpdateRoundIndex];
-        setUpdateAnswer.innerHTML = "";
-
-        setUpdateSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeSetUpdateTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            setUpdateSelectedIndexes.splice(answerIndex, 1);
-            renderSetUpdateAnswer();
-            syncSetUpdateBankState();
-            updateSetUpdateAnswerPlaceholder();
-          });
-          setUpdateAnswer.appendChild(token);
-        });
-
-        updateSetUpdateAnswerPlaceholder();
-      };
-
-      const renderSetUpdateRound = () => {
-        const round = setUpdateRounds[setUpdateRoundIndex];
-        setUpdateSelectedIndexes = [];
-        setUpdateBank.innerHTML = "";
-        setUpdateAnswer.innerHTML = "";
-
-        if (setUpdateSentence) {
-          setUpdateSentence.textContent = round.prompt;
-        }
-
-        setSetUpdateFeedback("");
-
-        const shuffledIndexes = getSetUpdateShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const token = makeSetUpdateTokenButton(round.tokens[index], index);
-          token.addEventListener("click", () => {
-            setUpdateSelectedIndexes.push(index);
-            renderSetUpdateAnswer();
-            syncSetUpdateBankState();
-          });
-          setUpdateBank.appendChild(token);
-        });
-
-        updateSetUpdateHeader();
-        syncSetUpdateBankState();
-        updateSetUpdateAnswerPlaceholder();
-      };
-
-      const goToNextSetUpdateRound = () => {
-        if (setUpdateRoundIndex < setUpdateRounds.length - 1) {
-          setUpdateRoundIndex += 1;
-          renderSetUpdateRound();
-          return;
-        }
-
-        setSetUpdateFeedback(
-          `Challenge complete! Final score: ${setUpdateScore}/${setUpdateRounds.length}`,
-          "success",
-        );
-        setUpdateCheckBtn.disabled = true;
-      };
-
-      setUpdateCheckBtn.addEventListener("click", () => {
-        const round = setUpdateRounds[setUpdateRoundIndex];
-        const answerTokens = setUpdateSelectedIndexes.map(
-          (index) => round.tokens[index],
-        );
-
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          setUpdateScore += 1;
-          updateSetUpdateHeader();
-          setSetUpdateFeedback("Perfect! Correct set.update(arg) usage.", "success");
-          launchConfetti();
-          setTimeout(goToNextSetUpdateRound, 750);
-          return;
-        }
-
-        setSetUpdateFeedback(
-          "Not quite. Recheck your update syntax and try again.",
-          "error",
-        );
-      });
-
-      setUpdateClearBtn.addEventListener("click", () => {
-        setUpdateSelectedIndexes = [];
-        renderSetUpdateAnswer();
-        syncSetUpdateBankState();
-        setSetUpdateFeedback("Answer cleared.");
-      });
-
-      renderSetUpdateRound();
-    </script>
-
-    <script>
-      const launchConfetti = () => {
-        const burst = document.createElement("div");
-        burst.className = "confetti-burst";
-        document.body.appendChild(burst);
-
-        const colors = [
-          "#58cc02",
-          "#0ea5e9",
-          "#f59e0b",
-          "#ef4444",
-          "#a855f7",
-          "#22c55e",
-        ];
-
-        for (let index = 0; index < 90; index += 1) {
-          const piece = document.createElement("span");
-          piece.className = "confetti-piece";
-          piece.style.left = `${Math.random() * 100}vw`;
-          piece.style.backgroundColor =
-            colors[Math.floor(Math.random() * colors.length)];
-          piece.style.animationDelay = `${Math.random() * 180}ms`;
-          piece.style.animationDuration = `${750 + Math.random() * 450}ms`;
-          burst.appendChild(piece);
-        }
-
-        setTimeout(() => {
-          burst.remove();
-        }, 1400);
-      };
-
-      const tupleRounds = [
-        {
-          prompt: "The target's coordinates are (10, 20).",
-          target: ["target_coordinates", "=", "(10,", "20)"],
-          tokens: [
-            "target_coordinates",
-            "=",
-            "(10,",
-            "20)",
-            "[10,",
-            "20]",
-            "==",
-          ],
-        },
-        {
-          prompt: "School days are Mondays to Fridays.",
-          target: [
-            "school_days",
-            "=",
-            '("Mon",',
-            '"Tue",',
-            '"Wed",',
-            '"Thu",',
-            '"Fri")',
-          ],
-          tokens: [
-            "school_days",
-            "=",
-            '("Mon",',
-            '"Tue",',
-            '"Wed",',
-            '"Thu",',
-            '"Fri")',
-            '["Mon",',
-            '"Tue",',
-            '"Wed",',
-            '"Thu",',
-            '"Fri"]',
-            "==",
-          ],
-        },
-        {
-          prompt: "The crime scene coordinates are 14.5995, 120.9842.",
-          target: ["crime_scene_coords", "=", "(14.5995,", "120.9842)"],
-          tokens: [
-            "crime_scene_coords",
-            "=",
-            "(14.5995,",
-            "120.9842)",
-            "[14.5995,",
-            "120.9842]",
-            "==",
-          ],
-        },
-      ];
-
-      const bank = document.getElementById("tuple-bank");
-      const answer = document.getElementById("tuple-answer");
-      const englishSentence = document.querySelector(".english-sentence");
-      const roundText = document.getElementById("tuple-round");
-      const scoreText = document.getElementById("tuple-score");
-      const feedback = document.getElementById("tuple-feedback");
-      const checkBtn = document.getElementById("tuple-check");
-      const clearBtn = document.getElementById("tuple-clear");
-
-      let currentRoundIndex = 0;
-      let score = 0;
-      let selectedIndexes = [];
-
-      const makeTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
-
-      const getShuffledIndexes = (length) => {
-        const indexes = Array.from({ length }, (_, index) => index);
-        for (let index = indexes.length - 1; index > 0; index -= 1) {
-          const randomIndex = Math.floor(Math.random() * (index + 1));
-          [indexes[index], indexes[randomIndex]] = [
-            indexes[randomIndex],
-            indexes[index],
-          ];
-        }
-        return indexes;
-      };
-
-      const updateHeader = () => {
-        roundText.textContent = `Round ${currentRoundIndex + 1} of ${tupleRounds.length}`;
-        scoreText.textContent = `Score: ${score}`;
-      };
-
-      const updateAnswerPlaceholder = () => {
-        answer.classList.toggle("empty", selectedIndexes.length === 0);
-      };
-
-      const setFeedback = (message, tone = "") => {
-        feedback.textContent = message;
-        feedback.classList.remove("success", "error");
-        if (tone) {
-          feedback.classList.add(tone);
-        }
-      };
-
-      const syncBankState = () => {
-        const active = new Set(selectedIndexes);
-        bank.querySelectorAll(".token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderAnswer = () => {
-        const round = tupleRounds[currentRoundIndex];
-        answer.innerHTML = "";
-
-        selectedIndexes.forEach((index, answerIndex) => {
-          const token = makeTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            selectedIndexes.splice(answerIndex, 1);
-            renderAnswer();
-            syncBankState();
-            updateAnswerPlaceholder();
-          });
-          answer.appendChild(token);
-        });
-
-        updateAnswerPlaceholder();
-      };
-
-      const renderRound = () => {
-        const round = tupleRounds[currentRoundIndex];
-        selectedIndexes = [];
-        bank.innerHTML = "";
-        answer.innerHTML = "";
-        if (englishSentence) {
-          englishSentence.textContent = round.prompt;
-        }
-        setFeedback("");
-
-        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const text = round.tokens[index];
-          const token = makeTokenButton(text, index);
-          token.addEventListener("click", () => {
-            selectedIndexes.push(index);
-            renderAnswer();
-            syncBankState();
-          });
-          bank.appendChild(token);
-        });
-
-        updateHeader();
-        syncBankState();
-        updateAnswerPlaceholder();
-      };
-
-      const goToNextRound = () => {
-        if (currentRoundIndex < tupleRounds.length - 1) {
-          currentRoundIndex += 1;
-          renderRound();
-          return;
-        }
-
-        setFeedback(
-          `Challenge complete! Final score: ${score}/${tupleRounds.length}`,
-          "success",
-        );
-        checkBtn.disabled = true;
-      };
-
-      checkBtn.addEventListener("click", () => {
-        const round = tupleRounds[currentRoundIndex];
-        const answerTokens = selectedIndexes.map(
-          (index) => round.tokens[index],
-        );
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          score += 1;
-          updateHeader();
-          setFeedback("Nice work! Correct answer.", "success");
-          launchConfetti();
-          setTimeout(goToNextRound, 750);
-          return;
-        }
-
-        setFeedback("Not quite. Recheck, then try again.", "error");
-      });
-
-      clearBtn.addEventListener("click", () => {
-        selectedIndexes = [];
-        renderAnswer();
-        syncBankState();
-        setFeedback("Answer cleared.");
-      });
-
-      renderRound();
-    </script>
-
-    <script>
-      const singleTupleRounds = [
-        {
-          prompt: "The only magic number is 7.",
-          target: ["magic_numbers", "=", "(7,", ")"],
-          tokens: ["magic_numbers", "=", "(7", "(7,", ")", "[7,", "]", "=="],
-        },
-        {
-          prompt: "The only favorite color is red.",
-          target: ["favorite_colors", "=", '"red",'],
-          tokens: ["favorite_colors", "=", '"red"', '"red",'],
-        },
-        {
-          prompt: "Your only enemy is yourself.",
-          target: ["enemies", "=", '("self",)'],
-          tokens: ["enemies", "=", '("self",)', '("self")', "[self,]", "=="],
-        },
-      ];
-
-      const singleBank = document.getElementById("single-tuple-bank");
-      const singleAnswer = document.getElementById("single-tuple-answer");
-      const singleEnglishSentence = document.querySelector(
-        ".english-single-sentence",
-      );
-      const singleRoundText = document.getElementById("single-tuple-round");
-      const singleScoreText = document.getElementById("single-tuple-score");
-      const singleFeedback = document.getElementById("single-tuple-feedback");
-      const singleCheckBtn = document.getElementById("single-tuple-check");
-      const singleClearBtn = document.getElementById("single-tuple-clear");
-
-      let singleCurrentRoundIndex = 0;
-      let singleScore = 0;
-      let singleSelectedIndexes = [];
-
-      const updateSingleHeader = () => {
-        singleRoundText.textContent = `Round ${singleCurrentRoundIndex + 1} of ${singleTupleRounds.length}`;
-        singleScoreText.textContent = `Score: ${singleScore}`;
-      };
-
-      const updateSingleAnswerPlaceholder = () => {
-        singleAnswer.classList.toggle(
-          "empty",
-          singleSelectedIndexes.length === 0,
-        );
-      };
-
-      const setSingleFeedback = (message, tone = "") => {
-        singleFeedback.textContent = message;
-        singleFeedback.classList.remove("success", "error");
-        if (tone) {
-          singleFeedback.classList.add(tone);
-        }
-      };
-
-      const syncSingleBankState = () => {
-        const active = new Set(singleSelectedIndexes);
-        singleBank.querySelectorAll(".token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderSingleAnswer = () => {
-        const round = singleTupleRounds[singleCurrentRoundIndex];
-        singleAnswer.innerHTML = "";
-
-        singleSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            singleSelectedIndexes.splice(answerIndex, 1);
-            renderSingleAnswer();
-            syncSingleBankState();
-            updateSingleAnswerPlaceholder();
-          });
-          singleAnswer.appendChild(token);
-        });
-
-        updateSingleAnswerPlaceholder();
-      };
-
-      const renderSingleRound = () => {
-        const round = singleTupleRounds[singleCurrentRoundIndex];
-        singleSelectedIndexes = [];
-        singleBank.innerHTML = "";
-        singleAnswer.innerHTML = "";
-        if (singleEnglishSentence) {
-          singleEnglishSentence.textContent = round.prompt;
-        }
-        setSingleFeedback("");
-
-        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const text = round.tokens[index];
-          const token = makeTokenButton(text, index);
-          token.addEventListener("click", () => {
-            singleSelectedIndexes.push(index);
-            renderSingleAnswer();
-            syncSingleBankState();
-          });
-          singleBank.appendChild(token);
-        });
-
-        updateSingleHeader();
-        syncSingleBankState();
-        updateSingleAnswerPlaceholder();
-      };
-
-      const goToNextSingleRound = () => {
-        if (singleCurrentRoundIndex < singleTupleRounds.length - 1) {
-          singleCurrentRoundIndex += 1;
-          renderSingleRound();
-          return;
-        }
-
-        setSingleFeedback(
-          `Challenge complete! Final score: ${singleScore}/${singleTupleRounds.length}`,
-          "success",
-        );
-        singleCheckBtn.disabled = true;
-      };
-
-      singleCheckBtn.addEventListener("click", () => {
-        const round = singleTupleRounds[singleCurrentRoundIndex];
-        const answerTokens = singleSelectedIndexes.map(
-          (index) => round.tokens[index],
-        );
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          singleScore += 1;
-          updateSingleHeader();
-          setSingleFeedback(
-            "Great! That trailing comma makes it a tuple.",
-            "success",
-          );
-          launchConfetti();
-          setTimeout(goToNextSingleRound, 750);
-          return;
-        }
-
-        setSingleFeedback(
-          "Not quite. Please recheck, then try again.",
-          "error",
-        );
-      });
-
-      singleClearBtn.addEventListener("click", () => {
-        singleSelectedIndexes = [];
-        renderSingleAnswer();
-        syncSingleBankState();
-        setSingleFeedback("Answer cleared.");
-      });
-
-      renderSingleRound();
-    </script>
-
-    <script>
-      const emptyTupleRounds = [
-        {
-          prompt: "There are no clues.",
-          target: ["clues", "=", "()"],
-          tokens: ["clues", "=", "()", "[]", "{}", ","],
-        },
-        {
-          prompt: "There's no place like home.",
-          target: ["places_like_home", "=", "()"],
-          tokens: ["places_like_home", "=", "()", "[]", "None"],
-        },
-        {
-          prompt: "Wala akong pake.",
-          target: ["pake_ko", "=", "()"],
-          tokens: ["pake_ko", "=", "()", "[]", "(,)", "=="],
-        },
-      ];
-
-      const emptyBank = document.getElementById("empty-tuple-bank");
-      const emptyAnswer = document.getElementById("empty-tuple-answer");
-      const emptyEnglishSentence = document.querySelector(
-        ".english-empty-sentence",
-      );
-      const emptyRoundText = document.getElementById("empty-tuple-round");
-      const emptyScoreText = document.getElementById("empty-tuple-score");
-      const emptyFeedback = document.getElementById("empty-tuple-feedback");
-      const emptyCheckBtn = document.getElementById("empty-tuple-check");
-      const emptyClearBtn = document.getElementById("empty-tuple-clear");
-
-      let emptyCurrentRoundIndex = 0;
-      let emptyScore = 0;
-      let emptySelectedIndexes = [];
-
-      const updateEmptyHeader = () => {
-        emptyRoundText.textContent = `Round ${emptyCurrentRoundIndex + 1} of ${emptyTupleRounds.length}`;
-        emptyScoreText.textContent = `Score: ${emptyScore}`;
-      };
-
-      const updateEmptyAnswerPlaceholder = () => {
-        emptyAnswer.classList.toggle(
-          "empty",
-          emptySelectedIndexes.length === 0,
-        );
-      };
-
-      const setEmptyFeedback = (message, tone = "") => {
-        emptyFeedback.textContent = message;
-        emptyFeedback.classList.remove("success", "error");
-        if (tone) {
-          emptyFeedback.classList.add(tone);
-        }
-      };
-
-      const syncEmptyBankState = () => {
-        const active = new Set(emptySelectedIndexes);
-        emptyBank.querySelectorAll(".token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderEmptyAnswer = () => {
-        const round = emptyTupleRounds[emptyCurrentRoundIndex];
-        emptyAnswer.innerHTML = "";
-
-        emptySelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            emptySelectedIndexes.splice(answerIndex, 1);
-            renderEmptyAnswer();
-            syncEmptyBankState();
-            updateEmptyAnswerPlaceholder();
-          });
-          emptyAnswer.appendChild(token);
-        });
-
-        updateEmptyAnswerPlaceholder();
-      };
-
-      const renderEmptyRound = () => {
-        const round = emptyTupleRounds[emptyCurrentRoundIndex];
-        emptySelectedIndexes = [];
-        emptyBank.innerHTML = "";
-        emptyAnswer.innerHTML = "";
-        if (emptyEnglishSentence) {
-          emptyEnglishSentence.textContent = round.prompt;
-        }
-        setEmptyFeedback("");
-
-        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const text = round.tokens[index];
-          const token = makeTokenButton(text, index);
-          token.addEventListener("click", () => {
-            emptySelectedIndexes.push(index);
-            renderEmptyAnswer();
-            syncEmptyBankState();
-          });
-          emptyBank.appendChild(token);
-        });
-
-        updateEmptyHeader();
-        syncEmptyBankState();
-        updateEmptyAnswerPlaceholder();
-      };
-
-      const goToNextEmptyRound = () => {
-        if (emptyCurrentRoundIndex < emptyTupleRounds.length - 1) {
-          emptyCurrentRoundIndex += 1;
-          renderEmptyRound();
-          return;
-        }
-
-        setEmptyFeedback(
-          `Challenge complete! Final score: ${emptyScore}/${emptyTupleRounds.length}`,
-          "success",
-        );
-        emptyCheckBtn.disabled = true;
-      };
-
-      emptyCheckBtn.addEventListener("click", () => {
-        const round = emptyTupleRounds[emptyCurrentRoundIndex];
-        const answerTokens = emptySelectedIndexes.map(
-          (index) => round.tokens[index],
-        );
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          emptyScore += 1;
-          updateEmptyHeader();
-          setEmptyFeedback("Correct! Keep it up!.", "success");
-          launchConfetti();
-          setTimeout(goToNextEmptyRound, 750);
-          return;
-        }
-
-        setEmptyFeedback("Not quite. Please recheck, then try again.", "error");
-      });
-
-      emptyClearBtn.addEventListener("click", () => {
-        emptySelectedIndexes = [];
-        renderEmptyAnswer();
-        syncEmptyBankState();
-        setEmptyFeedback("Answer cleared.");
-      });
-
-      renderEmptyRound();
-    </script>
-
-    <script>
-      const slicingTupleRounds = [
-        {
-          prompt: "Get the middle three clues from clues.",
-          target: ["middle_clues", "=", "clues[1:4]"],
-          tokens: [
-            "middle_clues",
-            "=",
-            "clues[1:4]",
-            "clues[1,4]",
-            "clues[:4]",
-            "clues[1:]",
-            "==",
-          ],
-        },
-        {
-          prompt: "Get the first two suspects from suspects.",
-          target: ["first_two", "=", "suspects[:2]"],
-          tokens: [
-            "first_two",
-            "=",
-            "suspects[:2]",
-            "suspects[2:]",
-            "suspects[0:3]",
-            "suspects[:1]",
-            "==",
-          ],
-        },
-        {
-          prompt: "Get the last two checkpoints from checkpoints.",
-          target: ["last_two", "=", "checkpoints[-2:]"],
-          tokens: [
-            "last_two",
-            "=",
-            "checkpoints[-2:]",
-            "checkpoints[:2]",
-            "checkpoints[-2]",
-            "checkpoints[2:]",
-            "==",
-          ],
-        },
-      ];
-
-      const slicingBank = document.getElementById("slicing-tuple-bank");
-      const slicingAnswer = document.getElementById("slicing-tuple-answer");
-      const slicingEnglishSentence = document.querySelector(
-        ".english-slicing-sentence",
-      );
-      const slicingRoundText = document.getElementById("slicing-tuple-round");
-      const slicingScoreText = document.getElementById("slicing-tuple-score");
-      const slicingFeedback = document.getElementById("slicing-tuple-feedback");
-      const slicingCheckBtn = document.getElementById("slicing-tuple-check");
-      const slicingClearBtn = document.getElementById("slicing-tuple-clear");
-
-      let slicingCurrentRoundIndex = 0;
-      let slicingScore = 0;
-      let slicingSelectedIndexes = [];
-
-      const updateSlicingHeader = () => {
-        slicingRoundText.textContent = `Round ${slicingCurrentRoundIndex + 1} of ${slicingTupleRounds.length}`;
-        slicingScoreText.textContent = `Score: ${slicingScore}`;
-      };
-
-      const updateSlicingAnswerPlaceholder = () => {
-        slicingAnswer.classList.toggle(
-          "empty",
-          slicingSelectedIndexes.length === 0,
-        );
-      };
-
-      const setSlicingFeedback = (message, tone = "") => {
-        slicingFeedback.textContent = message;
-        slicingFeedback.classList.remove("success", "error");
-        if (tone) {
-          slicingFeedback.classList.add(tone);
-        }
-      };
-
-      const syncSlicingBankState = () => {
-        const active = new Set(slicingSelectedIndexes);
-        slicingBank.querySelectorAll(".token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderSlicingAnswer = () => {
-        const round = slicingTupleRounds[slicingCurrentRoundIndex];
-        slicingAnswer.innerHTML = "";
-
-        slicingSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            slicingSelectedIndexes.splice(answerIndex, 1);
-            renderSlicingAnswer();
-            syncSlicingBankState();
-            updateSlicingAnswerPlaceholder();
-          });
-          slicingAnswer.appendChild(token);
-        });
-
-        updateSlicingAnswerPlaceholder();
-      };
-
-      const renderSlicingRound = () => {
-        const round = slicingTupleRounds[slicingCurrentRoundIndex];
-        slicingSelectedIndexes = [];
-        slicingBank.innerHTML = "";
-        slicingAnswer.innerHTML = "";
-        if (slicingEnglishSentence) {
-          slicingEnglishSentence.textContent = round.prompt;
-        }
-        setSlicingFeedback("");
-
-        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const text = round.tokens[index];
-          const token = makeTokenButton(text, index);
-          token.addEventListener("click", () => {
-            slicingSelectedIndexes.push(index);
-            renderSlicingAnswer();
-            syncSlicingBankState();
-          });
-          slicingBank.appendChild(token);
-        });
-
-        updateSlicingHeader();
-        syncSlicingBankState();
-        updateSlicingAnswerPlaceholder();
-      };
-
-      const goToNextSlicingRound = () => {
-        if (slicingCurrentRoundIndex < slicingTupleRounds.length - 1) {
-          slicingCurrentRoundIndex += 1;
-          renderSlicingRound();
-          return;
-        }
-
-        setSlicingFeedback(
-          `Challenge complete! Final score: ${slicingScore}/${slicingTupleRounds.length}`,
-          "success",
-        );
-        slicingCheckBtn.disabled = true;
-      };
-
-      slicingCheckBtn.addEventListener("click", () => {
-        const round = slicingTupleRounds[slicingCurrentRoundIndex];
-        const answerTokens = slicingSelectedIndexes.map(
-          (index) => round.tokens[index],
-        );
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          slicingScore += 1;
-          updateSlicingHeader();
-          setSlicingFeedback("Perfect slice! Nicely done.", "success");
-          launchConfetti();
-          setTimeout(goToNextSlicingRound, 750);
-          return;
-        }
-
-        setSlicingFeedback(
-          "Not quite. Recheck your slice and try again.",
-          "error",
-        );
-      });
-
-      slicingClearBtn.addEventListener("click", () => {
-        slicingSelectedIndexes = [];
-        renderSlicingAnswer();
-        syncSlicingBankState();
-        setSlicingFeedback("Answer cleared.");
-      });
-
-      renderSlicingRound();
-    </script>
-
-    <script>
-      const generatorTupleRounds = [
-        {
-          prompt: "Squares from 0 to 4.",
-          target: [
-            "squares",
-            "=",
-            "tuple(",
-            "x**2",
-            "for",
-            "x",
-            "in",
-            "range(5)",
-            ")",
-          ],
-          tokens: [
-            "squares",
-            "=",
-            "tuple(",
-            "x**2",
-            "for",
-            "x",
-            "in",
-            "range(5)",
-            ")",
-            "[",
-            "]",
-            "list(",
-          ],
-        },
-        {
-          prompt: "Uppercase each letter in the word tuple.",
-          target: [
-            "caps",
-            "=",
-            "tuple(",
-            "ch.upper()",
-            "for",
-            "ch",
-            "in",
-            '"tuple"',
-            ")",
-          ],
-          tokens: [
-            "caps",
-            "=",
-            "tuple(",
-            "ch.upper()",
-            "for",
-            "ch",
-            "in",
-            '"tuple"',
-            ")",
-            "set(",
-            "append",
-            "==",
-          ],
-        },
-        {
-          prompt: "Take each number from 1 to 3 and add 10.",
-          target: [
-            "plus_ten",
-            "=",
-            "tuple(",
-            "n+10",
-            "for",
-            "n",
-            "in",
-            "range(1,",
-            "4)",
-            ")",
-          ],
-          tokens: [
-            "plus_ten",
-            "=",
-            "tuple(",
-            "n+10",
-            "for",
-            "n",
-            "in",
-            "range(1,",
-            "4)",
-            ")",
-            "{",
-            "}",
-            "range(4)",
-          ],
-        },
-      ];
-
-      const generatorBank = document.getElementById("generator-tuple-bank");
-      const generatorAnswer = document.getElementById("generator-tuple-answer");
-      const generatorEnglishSentence = document.querySelector(
-        ".english-generator-sentence",
-      );
-      const generatorRoundText = document.getElementById(
-        "generator-tuple-round",
-      );
-      const generatorScoreText = document.getElementById(
-        "generator-tuple-score",
-      );
-      const generatorFeedback = document.getElementById(
-        "generator-tuple-feedback",
-      );
-      const generatorCheckBtn = document.getElementById(
-        "generator-tuple-check",
-      );
-      const generatorClearBtn = document.getElementById(
-        "generator-tuple-clear",
-      );
-
-      let generatorCurrentRoundIndex = 0;
-      let generatorScore = 0;
-      let generatorSelectedIndexes = [];
-
-      const updateGeneratorHeader = () => {
-        generatorRoundText.textContent = `Round ${generatorCurrentRoundIndex + 1} of ${generatorTupleRounds.length}`;
-        generatorScoreText.textContent = `Score: ${generatorScore}`;
-      };
-
-      const updateGeneratorAnswerPlaceholder = () => {
-        generatorAnswer.classList.toggle(
-          "empty",
-          generatorSelectedIndexes.length === 0,
-        );
-      };
-
-      const setGeneratorFeedback = (message, tone = "") => {
-        generatorFeedback.textContent = message;
-        generatorFeedback.classList.remove("success", "error");
-        if (tone) {
-          generatorFeedback.classList.add(tone);
-        }
-      };
-
-      const syncGeneratorBankState = () => {
-        const active = new Set(generatorSelectedIndexes);
-        generatorBank.querySelectorAll(".token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderGeneratorAnswer = () => {
-        const round = generatorTupleRounds[generatorCurrentRoundIndex];
-        generatorAnswer.innerHTML = "";
-
-        generatorSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            generatorSelectedIndexes.splice(answerIndex, 1);
-            renderGeneratorAnswer();
-            syncGeneratorBankState();
-            updateGeneratorAnswerPlaceholder();
-          });
-          generatorAnswer.appendChild(token);
-        });
-
-        updateGeneratorAnswerPlaceholder();
-      };
-
-      const renderGeneratorRound = () => {
-        const round = generatorTupleRounds[generatorCurrentRoundIndex];
-        generatorSelectedIndexes = [];
-        generatorBank.innerHTML = "";
-        generatorAnswer.innerHTML = "";
-        if (generatorEnglishSentence) {
-          generatorEnglishSentence.textContent = round.prompt;
-        }
-        setGeneratorFeedback("");
-
-        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const text = round.tokens[index];
-          const token = makeTokenButton(text, index);
-          token.addEventListener("click", () => {
-            generatorSelectedIndexes.push(index);
-            renderGeneratorAnswer();
-            syncGeneratorBankState();
-          });
-          generatorBank.appendChild(token);
-        });
-
-        updateGeneratorHeader();
-        syncGeneratorBankState();
-        updateGeneratorAnswerPlaceholder();
-      };
-
-      const goToNextGeneratorRound = () => {
-        if (generatorCurrentRoundIndex < generatorTupleRounds.length - 1) {
-          generatorCurrentRoundIndex += 1;
-          renderGeneratorRound();
-          return;
-        }
-
-        setGeneratorFeedback(
-          `Challenge complete! Final score: ${generatorScore}/${generatorTupleRounds.length}`,
-          "success",
-        );
-        generatorCheckBtn.disabled = true;
-      };
-
-      generatorCheckBtn.addEventListener("click", () => {
-        const round = generatorTupleRounds[generatorCurrentRoundIndex];
-        const answerTokens = generatorSelectedIndexes.map(
-          (index) => round.tokens[index],
-        );
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          generatorScore += 1;
-          updateGeneratorHeader();
-          setGeneratorFeedback(
-            "Excellent! Generator tuple created.",
-            "success",
-          );
-          launchConfetti();
-          setTimeout(goToNextGeneratorRound, 750);
-          return;
-        }
-
-        setGeneratorFeedback("Not quite. Recheck, then try again.", "error");
-      });
-
-      generatorClearBtn.addEventListener("click", () => {
-        generatorSelectedIndexes = [];
-        renderGeneratorAnswer();
-        syncGeneratorBankState();
-        setGeneratorFeedback("Answer cleared.");
-      });
-
-      renderGeneratorRound();
     </script>
   </body>
 </html>
