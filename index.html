@@ -176,17 +176,17 @@
         <section
           data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
         >
-          <h1>🐍 Python Regular Expressions</h1>
-          <p class="subtitle">Computer Programming · IT Fundamentals</p>
+          <h1>Regular Expressions</h1>
+          <p class="subtitle">Lesson VI</p>
           <br />
           <div class="tag-row">
             <span class="tag">re module</span>
             <span class="tag">pattern matching</span>
             <span class="tag">text processing</span>
-            <span class="tag">IT freshmen</span>
           </div>
           <br />
-          <p style="color: #666; font-size: 0.6em">30 slides · ~60 minutes</p>
+          <p style="color: #666; font-size: 0.6em">Jerome Loria</p>
+          <p style="color: #666; font-size: 0.6em">March 2026</p>
         </section>
 
         <!-- ===== SLIDE 2: WHAT IS A REGEX? ===== -->
@@ -366,9 +366,9 @@ print(result2)  # ['cat']</code></pre>
           <p style="font-size: 0.85em">
             Characters with special meaning in regex:
           </p>
-          <div class="tag-row" style="font-size: 1.1em">
+          <!-- <div class="tag-row" style="font-size: 1.1em">
             <span class="tag">. ^ $ * + ? { } [ ] \ | ( )</span>
-          </div>
+          </div> -->
           <br />
           <table>
             <tr>
@@ -585,7 +585,7 @@ print(re.findall(r"\w{2,4}", "I am a student"))  # ['am', 'stud', 'ent']</code><
         </section>
 
         <!-- ===== SLIDE 14: GREEDY vs LAZY ===== -->
-        <section>
+        <!-- <section>
           <h2>🐢 Greedy vs. Lazy Matching</h2>
           <p style="font-size: 0.85em">
             By default, quantifiers are <strong>greedy</strong> — they match as
@@ -609,7 +609,7 @@ print("Lazy:", lazy)
             <strong>lazy</strong>: <code class="inline">*?</code>,
             <code class="inline">+?</code>, <code class="inline">{n,m}?</code>
           </div>
-        </section>
+        </section> -->
 
         <!-- ===== SLIDE 15: GROUPS ===== -->
         <section>
@@ -668,9 +668,7 @@ for f in files:
             🔎 <code class="inline">search()</code> vs
             <code class="inline">match()</code>
           </h2>
-          <pre><code class="language-python">import re
-
-text = "  Python is awesome"
+          <pre><code class="language-python">text = "  Python is awesome"
 
 # match() only checks the BEGINNING
 m1 = re.match(r"Python", text)
@@ -717,7 +715,7 @@ for m in re.finditer(r"\d+", text):
           <pre style="font-size: 0.7em"><samp>Found '85' at position 8–10
 Found '90' at position 12–14
 Found '78' at position 16–18
-...</samp></pre>
+</samp></pre>
           <div class="callout">
             Use <code class="inline">finditer()</code> when you need position
             info; use <code class="inline">findall()</code> when you just need
@@ -750,9 +748,7 @@ print(formatted)  # Call 0917-123-4567 now</code></pre>
         <!-- ===== SLIDE 20: re.split ===== -->
         <section>
           <h2>✂️ <code class="inline">re.split()</code> — Split by Pattern</h2>
-          <pre><code class="language-python">import re
-
-# Split by any whitespace (spaces, tabs, newlines)
+          <pre><code class="language-python"># Split by any whitespace (spaces, tabs, newlines)
 text = "one   two\tthree\nfour"
 print(re.split(r"\s+", text))
 # ['one', 'two', 'three', 'four']
@@ -959,10 +955,9 @@ for i in issues: print(" ", i)</code></pre>
         <section>
           <h2>👀 Lookahead &amp; Lookbehind</h2>
           <p style="font-size: 0.8em">
-            <em
-              >Advanced: match based on what surrounds a pattern, without
-              including the surroundings.</em
-            >
+            <!-- <em
+              >Match based on what surrounds a pattern, without the surroundings.</em
+            > -->
           </p>
           <table>
             <tr>
@@ -991,9 +986,7 @@ for i in issues: print(" ", i)</code></pre>
               <td>Match if NOT preceded by …</td>
             </tr>
           </table>
-          <pre><code class="language-python">import re
-
-prices = "apple: 50, banana: 30, mango: 75"
+          <pre><code class="language-python">prices = "apple: 50, banana: 30, mango: 75"
 
 # Get numbers preceded by ': '
 nums = re.findall(r"(?&lt;=: )\d+", prices)
@@ -1016,14 +1009,14 @@ re.findall("\d+", text)
 # Right
 re.findall(r"\d+", text)</code></pre>
             </div>
-            <div class="card">
+            <!-- <div class="card">
               <h4>❌ Greedy traps</h4>
               <pre><code class="language-python"># Matches too much!
 re.findall(r"&lt;.+&gt;", html)
 
 # Use lazy
 re.findall(r"&lt;.+?&gt;", html)</code></pre>
-            </div>
+            </div> -->
             <div class="card">
               <h4>❌ Unescaped dots</h4>
               <pre><code class="language-python"># Matches "google_com" too!
@@ -1156,9 +1149,9 @@ re.search(r"\d+", "abc 123")</code></pre>
         <section
           data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
         >
-          <h2>🎓 Summary &amp; Next Steps</h2>
+          <h2>🎓 Recommended Next Steps</h2>
           <div class="two-col">
-            <div class="card">
+            <!-- <div class="card">
               <h4>✅ What You Learned</h4>
               <ul style="font-size: 0.9em">
                 <li>What regex is and why it matters</li>
@@ -1169,7 +1162,7 @@ re.search(r"\d+", "abc 123")</code></pre>
                 <li>Flags: IGNORECASE, MULTILINE, VERBOSE</li>
                 <li>Real-world applications</li>
               </ul>
-            </div>
+            </div> -->
             <div class="card">
               <h4>🚀 Practice &amp; Resources</h4>
               <ul style="font-size: 0.9em">
@@ -1184,10 +1177,10 @@ re.search(r"\d+", "abc 123")</code></pre>
             </div>
           </div>
           <br />
-          <div class="callout" style="text-align: center; font-size: 1em">
+          <!-- <div class="callout" style="text-align: center; font-size: 1em">
             🐍 <strong>Regular expressions are a superpower.</strong> Master
             them and text processing becomes effortless!
-          </div>
+          </div> -->
         </section>
       </div>
     </div>
