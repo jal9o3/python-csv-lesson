@@ -167,6 +167,130 @@
         outline: 2px solid currentColor;
         outline-offset: 2px;
       }
+      .regex-game {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 1rem;
+        border: 2px solid var(--accent);
+        border-radius: 16px;
+        background: rgba(0, 217, 163, 0.08);
+      }
+      .regex-game-progress {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 0.7em;
+        margin-bottom: 0.8rem;
+      }
+      .regex-token-bank,
+      .regex-answer-row {
+        display: flex;
+        flex-wrap: wrap;
+        min-height: 62px;
+        padding: 0.75rem;
+        border-radius: 12px;
+      }
+      .regex-token-bank {
+        gap: 0.5rem;
+        border: 2px dashed var(--accent);
+        background: rgba(255, 255, 255, 0.95);
+      }
+      .regex-answer-row {
+        gap: 0.35rem;
+        margin-top: 0.8rem;
+        border: 2px solid #2d2d5e;
+        background: rgba(255, 255, 255, 0.98);
+      }
+      .regex-answer-row.empty::before {
+        content: "Tap tokens to build your re.search() call";
+        color: #555;
+        font-size: 0.8em;
+      }
+      .regex-token {
+        margin: 0;
+        padding: 0.45rem 0.75rem;
+        border: 2px solid #d1d5db;
+        border-radius: 999px;
+        background: white;
+        color: #111827;
+        cursor: pointer;
+        font-family: monospace;
+        font-size: 0.75em;
+        font-weight: 600;
+        transition: transform 120ms ease;
+      }
+      .regex-token:hover {
+        transform: translateY(-1px);
+      }
+      .regex-token.used {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .regex-token.answer-token {
+        padding: 0;
+        border: 2px solid transparent;
+      }
+      .regex-token.answer-token:hover {
+        border-color: var(--accent2);
+      }
+      .regex-game-controls {
+        display: flex;
+        gap: 0.7rem;
+        margin-top: 0.8rem;
+      }
+      .regex-game-btn {
+        border: none;
+        border-radius: 12px;
+        padding: 0.5rem 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.7em;
+      }
+      .regex-game-btn.primary {
+        background: var(--accent);
+        color: #0f172a;
+      }
+      .regex-game-btn.secondary {
+        background: #e5e7eb;
+        color: #111827;
+      }
+      .regex-game-feedback {
+        min-height: 1.4rem;
+        margin-top: 0.65rem;
+        font-weight: 700;
+        font-size: 0.75em;
+        text-align: center;
+      }
+      .regex-game-feedback.success {
+        color: #4ade80;
+      }
+      .regex-game-feedback.error {
+        color: #f87171;
+      }
+      .regex-confetti-burst {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 9999;
+      }
+      .regex-confetti-piece {
+        position: absolute;
+        top: -12px;
+        width: 10px;
+        height: 14px;
+        border-radius: 2px;
+        opacity: 0.95;
+        transform: translateY(0) rotate(0deg);
+        animation: regex-confetti-fall 900ms linear forwards;
+      }
+      @keyframes regex-confetti-fall {
+        to {
+          transform: translateY(105vh) rotate(720deg);
+          opacity: 0.15;
+        }
+      }
     </style>
   </head>
   <body>
@@ -288,6 +412,47 @@ else:
             🔑 The <strong>r"..."</strong> prefix creates a
             <em>raw string</em> — backslashes are treated literally. Always use
             raw strings with regex!
+          </div>
+        </section>
+
+        <section>
+          <!-- <h3>🎯 Build the Exact <code class="inline">re.search(args)</code> Call</h3> -->
+          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
+            Using <code class="inline">re.search()</code>, translate:
+          </p>
+
+          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
+            <span style="font-style: italic" id="search-game-prompt"></span>
+          </div>
+
+          <div class="regex-game" id="search-builder-game">
+            <div class="regex-game-progress">
+              <span id="search-game-round">Round 1 of 3</span>
+              <span id="search-game-score">Score: 0</span>
+            </div>
+
+            <div
+              id="search-game-answer"
+              class="regex-answer-row empty"
+              aria-label="Selected answer tokens"
+            ></div>
+
+            <div
+              id="search-game-bank"
+              class="regex-token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="regex-game-controls">
+              <button id="search-game-check" class="regex-game-btn primary" type="button">
+                Check
+              </button>
+              <button id="search-game-clear" class="regex-game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+
+            <p id="search-game-feedback" class="regex-game-feedback" aria-live="polite"></p>
           </div>
         </section>
 
@@ -1269,6 +1434,234 @@ re.search(r"\d+", "abc 123")</code></pre>
           pre.appendChild(button);
         });
       };
+
+      const launchRegexConfetti = () => {
+        const burst = document.createElement("div");
+        burst.className = "regex-confetti-burst";
+        document.body.appendChild(burst);
+
+        const colors = ["#00d9a3", "#ff6b6b", "#facc15", "#60a5fa", "#e879f9"];
+
+        for (let index = 0; index < 85; index += 1) {
+          const piece = document.createElement("div");
+          piece.className = "regex-confetti-piece";
+          piece.style.left = `${Math.random() * 100}%`;
+          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.animationDelay = `${Math.random() * 200}ms`;
+          piece.style.animationDuration = `${700 + Math.random() * 600}ms`;
+          burst.appendChild(piece);
+        }
+
+        setTimeout(() => {
+          burst.remove();
+        }, 1500);
+      };
+
+      const searchGameRounds = [
+        {
+          prompt: "Find 'Juan' inside text and store the result in match.",
+          target: ["match", "=", "re.search(", 'r"Juan",', "text", ")"],
+          tokens: [
+            "match",
+            "=",
+            "re.search(",
+            'r"Juan",',
+            "text",
+            ")",
+            "re.match(",
+            'r"juan",',
+            "re.findall(",
+          ],
+        },
+        {
+          prompt: "Search for exactly three digits in id_text and save to found.",
+          target: ["found", "=", "re.search(", 'r"\\d{3}",', "id_text", ")"],
+          tokens: [
+            "found",
+            "=",
+            "re.search(",
+            'r"\\d{3}",',
+            "id_text",
+            ")",
+            "re.match(",
+            'r"\\d+",',
+            "ids",
+          ],
+        },
+        {
+          prompt: "Find the word 'error' in log_line using a case-insensitive search.",
+          target: [
+            "hit",
+            "=",
+            "re.search(",
+            'r"error",',
+            "log_line,",
+            "re.I",
+            ")",
+          ],
+          tokens: [
+            "hit",
+            "=",
+            "re.search(",
+            'r"error",',
+            "log_line,",
+            "re.I",
+            ")",
+            "re.M",
+            "re.findall(",
+          ],
+        },
+      ];
+
+      const searchGameBank = document.getElementById("search-game-bank");
+      const searchGameAnswer = document.getElementById("search-game-answer");
+      const searchGamePrompt = document.getElementById("search-game-prompt");
+      const searchGameRoundText = document.getElementById("search-game-round");
+      const searchGameScoreText = document.getElementById("search-game-score");
+      const searchGameFeedback = document.getElementById("search-game-feedback");
+      const searchGameCheckBtn = document.getElementById("search-game-check");
+      const searchGameClearBtn = document.getElementById("search-game-clear");
+
+      let searchGameRoundIndex = 0;
+      let searchGameScore = 0;
+      let searchGameSelectedIndexes = [];
+
+      const makeSearchGameTokenButton = (text, index) => {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "regex-token";
+        token.textContent = text;
+        token.dataset.index = String(index);
+        return token;
+      };
+
+      const getSearchGameShuffledIndexes = (length) => {
+        const indexes = Array.from({ length }, (_, index) => index);
+        for (let index = indexes.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [indexes[index], indexes[randomIndex]] = [indexes[randomIndex], indexes[index]];
+        }
+        return indexes;
+      };
+
+      const updateSearchGameHeader = () => {
+        searchGameRoundText.textContent = `Round ${searchGameRoundIndex + 1} of ${searchGameRounds.length}`;
+        searchGameScoreText.textContent = `Score: ${searchGameScore}`;
+      };
+
+      const updateSearchGameAnswerPlaceholder = () => {
+        searchGameAnswer.classList.toggle("empty", searchGameSelectedIndexes.length === 0);
+      };
+
+      const setSearchGameFeedback = (message, tone = "") => {
+        searchGameFeedback.textContent = message;
+        searchGameFeedback.classList.remove("success", "error");
+        if (tone) {
+          searchGameFeedback.classList.add(tone);
+        }
+      };
+
+      const syncSearchGameBankState = () => {
+        const active = new Set(searchGameSelectedIndexes);
+        searchGameBank.querySelectorAll(".regex-token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderSearchGameAnswer = () => {
+        const round = searchGameRounds[searchGameRoundIndex];
+        searchGameAnswer.innerHTML = "";
+
+        searchGameSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeSearchGameTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            searchGameSelectedIndexes.splice(answerIndex, 1);
+            renderSearchGameAnswer();
+            syncSearchGameBankState();
+            updateSearchGameAnswerPlaceholder();
+          });
+          searchGameAnswer.appendChild(token);
+        });
+
+        updateSearchGameAnswerPlaceholder();
+      };
+
+      const renderSearchGameRound = () => {
+        const round = searchGameRounds[searchGameRoundIndex];
+        searchGameSelectedIndexes = [];
+        searchGameBank.innerHTML = "";
+        searchGameAnswer.innerHTML = "";
+
+        if (searchGamePrompt) {
+          searchGamePrompt.textContent = round.prompt;
+        }
+
+        setSearchGameFeedback("");
+
+        const shuffledIndexes = getSearchGameShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const token = makeSearchGameTokenButton(round.tokens[index], index);
+          token.addEventListener("click", () => {
+            searchGameSelectedIndexes.push(index);
+            renderSearchGameAnswer();
+            syncSearchGameBankState();
+          });
+          searchGameBank.appendChild(token);
+        });
+
+        updateSearchGameHeader();
+        syncSearchGameBankState();
+        updateSearchGameAnswerPlaceholder();
+      };
+
+      const goToNextSearchGameRound = () => {
+        if (searchGameRoundIndex < searchGameRounds.length - 1) {
+          searchGameRoundIndex += 1;
+          renderSearchGameRound();
+          return;
+        }
+
+        setSearchGameFeedback(
+          `Challenge complete! Final score: ${searchGameScore}/${searchGameRounds.length}`,
+          "success",
+        );
+        searchGameCheckBtn.disabled = true;
+      };
+
+      searchGameCheckBtn.addEventListener("click", () => {
+        const round = searchGameRounds[searchGameRoundIndex];
+        const answerTokens = searchGameSelectedIndexes.map((index) => round.tokens[index]);
+
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          searchGameScore += 1;
+          updateSearchGameHeader();
+          setSearchGameFeedback("Great! That's a correct re.search() call.", "success");
+          launchRegexConfetti();
+          setTimeout(goToNextSearchGameRound, 750);
+          return;
+        }
+
+        setSearchGameFeedback("Not quite. Recheck token order and arguments.", "error");
+      });
+
+      searchGameClearBtn.addEventListener("click", () => {
+        searchGameSelectedIndexes = [];
+        renderSearchGameAnswer();
+        syncSearchGameBankState();
+        setSearchGameFeedback("Answer cleared.");
+      });
+
+      renderSearchGameRound();
 
       Reveal.initialize({
         hash: true,
