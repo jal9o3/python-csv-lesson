@@ -1,0 +1,2942 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>Python Sets</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/serif.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+    <!-- Additional custom styles -->
+    <link rel="stylesheet" href="dist/additional.css" />
+    <style>
+      .reveal .slides section {
+        text-align: left;
+        height: 100%;
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+
+      .reveal .slides section > * {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .reveal .slides section ul {
+        list-style: disc;
+        padding-left: 1.5em;
+      }
+
+      .reveal .slides section ul ul {
+        list-style: circle;
+      }
+
+      .reveal .slides section ul li {
+        display: list-item;
+      }
+
+      .reveal .slides section ol {
+        list-style: decimal;
+        padding-left: 1.5em;
+      }
+
+      .reveal .slides section ol li {
+        display: list-item;
+      }
+
+      .reveal pre {
+        position: relative;
+      }
+
+      .reveal .copy-code-btn {
+        position: absolute;
+        top: 0.05rem;
+        right: 0.5rem;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.8rem;
+        height: 1.8rem;
+        padding: 0;
+        border: none;
+        border-radius: 0.3rem;
+        background: transparent;
+        color: white;
+        cursor: pointer;
+      }
+
+      .reveal .copy-code-btn svg {
+        width: 1rem;
+        height: 1rem;
+        stroke: currentColor;
+      }
+
+      .reveal .copy-code-btn:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+      }
+    </style>
+    <style>
+      .tuple-game {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 1rem;
+        border: 2px solid #58cc02;
+        border-radius: 16px;
+        background: rgba(88, 204, 2, 0.08);
+      }
+
+      .game-progress {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .token-bank,
+      .answer-row {
+        display: flex;
+        flex-wrap: wrap;
+        min-height: 64px;
+        padding: 0.9rem;
+        border-radius: 12px;
+      }
+
+      .token-bank {
+        gap: 0.65rem;
+        border: 2px dashed #58cc02;
+        background: rgba(255, 255, 255, 0.75);
+      }
+
+      .answer-row {
+        gap: 0.35rem;
+        margin-top: 0.9rem;
+        border: 2px solid #bdbdbd;
+        background: rgba(255, 255, 255, 0.95);
+      }
+
+      .answer-row.empty::before {
+        content: "Tap tokens to build your answer";
+        color: #6b7280;
+        font-size: 0.95rem;
+      }
+
+      .token {
+        margin: 0;
+        padding: 0.5rem 0.9rem;
+        border: 2px solid #d1d5db;
+        border-radius: 999px;
+        background: white;
+        color: #111827;
+        cursor: pointer;
+        font-family: monospace;
+        font-size: 1rem;
+        font-weight: 600;
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
+      }
+
+      .token:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 0 #d1d5db;
+      }
+
+      .token.used {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      .token.answer-token {
+        padding: 0;
+        border: 2px solid transparent;
+      }
+
+      .token.answer-token:hover {
+        border-color: #dc2626;
+      }
+
+      .game-controls {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .game-btn {
+        border: none;
+        border-radius: 12px;
+        padding: 0.65rem 1rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .game-btn.primary {
+        background: #58cc02;
+        color: #ffffff;
+      }
+
+      .game-btn.secondary {
+        background: #e5e7eb;
+        color: #111827;
+      }
+
+      .game-feedback {
+        min-height: 1.6rem;
+        margin-top: 0.75rem;
+        font-weight: 700;
+      }
+
+      .game-feedback.success {
+        color: #15803d;
+      }
+
+      .game-feedback.error {
+        color: #b91c1c;
+      }
+
+      .confetti-burst {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 9999;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        top: -12px;
+        width: 10px;
+        height: 14px;
+        border-radius: 2px;
+        opacity: 0.95;
+        transform: translateY(0) rotate(0deg);
+        animation: confetti-fall 900ms linear forwards;
+      }
+
+      @keyframes confetti-fall {
+        to {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <div class="text-center">
+            <br />
+            <h3>Lesson V</h3>
+            <h1>Python Sets</h1>
+            <h3>Unique Unordered Collections</h3>
+            <br />
+            <p>Jerome Loria</p>
+            <p>February 2026</p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">What are Sets?</h2>
+          <br />
+          <ul>
+            <li>Unordered, mutable collections of unique elements</li>
+            <li>Defined with <code>set()</code></li>
+            <li>Built-in Python data type</li>
+            <li>Great for membership testing and deduplication</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Creating Sets</h2>
+          <br />
+          <pre
+            style="margin: auto"
+          ><code class="language-python"># Using curly braces
+s1 = {1, 2, 3}
+
+# Using set() constructor
+s2 = set([1, 2, 3])
+
+# Empty set (correct way)
+empty = set()</code></pre>
+          <p class="text-center">
+            <code>{}</code> creates an empty dictionary, not a set.
+          </p>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Using a set, translate:</h3>
+
+          <div class="text-center">
+            <span>"</span>
+            <span style="font-style: italic" class="english-set-sentence"></span>
+            <span>"</span>
+          </div>
+
+          <div class="tuple-game" id="set-builder-game">
+            <div class="game-progress">
+              <span id="set-builder-round">Round 1 of 3</span>
+              <span id="set-builder-score">Score: 0</span>
+            </div>
+
+            <div
+              id="set-builder-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="set-builder-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button
+                id="set-builder-check"
+                class="game-btn primary"
+                type="button"
+              >
+                Check
+              </button>
+              <button
+                id="set-builder-clear"
+                class="game-btn secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="set-builder-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Set Characteristics</h2>
+          <br />
+          <ul>
+            <li>Unordered (no indexing)</li>
+            <li>Mutable (can add/remove elements)</li>
+            <li>No duplicate elements</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Valid Set Elements</h2>
+          <br />
+          <p>
+            <strong>Allowed:</strong> <code>int</code>, <code>float</code>,
+            <code>str</code>, <code>tuple</code>
+          </p>
+          <p>
+            <strong>Not allowed:</strong> <code>list</code>, <code>dict</code>,
+            <code>set</code>
+          </p>
+          <br />
+          <pre
+            style="margin: auto"
+          ><code class="language-python">valid = {1, "hello", (1, 2)}</code></pre>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Removing Duplicates</h2>
+          <br />
+          <pre
+            style="margin: auto"
+          ><code class="language-python">numbers = [1, 2, 2, 3, 4, 4]
+unique_numbers = set(numbers)
+print(unique_numbers)</code></pre>
+
+          <br />
+
+          <ul>
+            <li>Converts a list into unique elements</li>
+            <li>Order is not preserved</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Adding Elements</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">s = {1, 2, 3}
+s.add(4)</code></pre>
+          <br />
+          <ul>
+            <li><code>add()</code> inserts one element</li>
+            <li>No effect if the element already exists</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Updating Sets</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">s = {1, 2}
+s.update([3, 4])</code></pre>
+          <br />
+          <ul>
+            <li><code>update()</code> adds multiple elements</li>
+            <li>Accepts any iterable</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Using the update method</code>, translate:</h3>
+
+          <div class="text-center">
+            <span>"</span>
+            <span
+              style="font-style: italic"
+              class="english-update-sentence"
+            ></span>
+            <span>"</span>
+          </div>
+
+          <div class="tuple-game" id="set-update-game">
+            <div class="game-progress">
+              <span id="set-update-round">Round 1 of 3</span>
+              <span id="set-update-score">Score: 0</span>
+            </div>
+
+            <div
+              id="set-update-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="set-update-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button
+                id="set-update-check"
+                class="game-btn primary"
+                type="button"
+              >
+                Check
+              </button>
+              <button
+                id="set-update-clear"
+                class="game-btn secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="set-update-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Removing Elements</h2>
+          <br />
+          <pre
+            style="margin: auto"
+          ><code class="language-python">s.remove(2)     # Raises error if not found
+s.discard(3)    # No error if not found
+s.pop()         # Removes arbitrary element
+s.clear()       # Empties the set</code></pre>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Membership Testing</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">if 2 in s:
+    print("Found")</code></pre>
+          <ul></ul>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Set Operations Overview</h2>
+          <br />
+          <p>Sets support mathematical operations:</p>
+          <ul>
+            <li>Union</li>
+            <li>Intersection</li>
+            <li>Difference</li>
+            <li>Symmetric Difference</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Union</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">a = {1, 2, 3}
+b = {3, 4, 5}
+
+a | b
+a.union(b)
+
+# {1, 2, 3, 4, 5}</code></pre>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Intersection</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">a &amp; b
+a.intersection(b)
+
+# {3}</code></pre>
+          <p class="text-center">Elements common to both sets.</p>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Difference</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">a - b
+a.difference(b)</code></pre>
+          <p class="text-center">
+            Elements in <code>a</code> but not in <code>b</code>.
+          </p>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Symmetric Difference</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">a ^ b
+a.symmetric_difference(b)</code></pre>
+          <p class="text-center">Elements in either set, but not both.</p>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Use set operations to express:</h3>
+
+          <div class="text-center">
+            <span style="font-style: italic" class="english-ops-sentence"></span>
+          </div>
+
+          <div class="tuple-game" id="set-ops-game">
+            <div class="game-progress">
+              <span id="set-ops-round">Round 1 of 6</span>
+              <span id="set-ops-score">Score: 0</span>
+            </div>
+
+            <div
+              id="set-ops-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="set-ops-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button id="set-ops-check" class="game-btn primary" type="button">
+                Check
+              </button>
+              <button id="set-ops-clear" class="game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="set-ops-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Subset and Superset</h2>
+          <br />
+          <pre style="margin: auto"><code class="language-python">a = {1, 2}
+b = {1, 2, 3}
+
+a.issubset(b)
+b.issuperset(a)
+
+a &lt;= b
+b &gt;= a</code></pre>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Frozen Sets</h2>
+          <br />
+          <pre
+            style="margin: auto"
+          ><code class="language-python">fs = frozenset([1, 2, 3])</code></pre>
+          <br />
+          <ul>
+            <li>Immutable version of a set</li>
+            <li>Can be used as dictionary keys</li>
+            <li>Cannot add or remove elements</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Set Comprehensions</h2>
+          <br />
+          <pre
+            style="margin: auto"
+          ><code class="language-python">squares = {x**2 for x in range(5)}</code></pre>
+          <br />
+          <ul>
+            <li>Similar to list comprehensions</li>
+            <li>Produces a set directly</li>
+          </ul>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Using set comprehensions, translate:</h3>
+
+          <div class="text-center">
+            <span style="font-style: italic" class="english-comp-sentence"></span>
+          </div>
+
+          <div class="tuple-game" id="set-comp-game">
+            <div class="game-progress">
+              <span id="set-comp-round">Round 1 of 3</span>
+              <span id="set-comp-score">Score: 0</span>
+            </div>
+
+            <div
+              id="set-comp-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="set-comp-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button id="set-comp-check" class="game-btn primary" type="button">
+                Check
+              </button>
+              <button id="set-comp-clear" class="game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="set-comp-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h2 class="text-center">Practical Use Cases</h2>
+          <br>
+          <ul>
+            <li>Removing duplicates</li>
+            <li>Finding common elements between datasets</li>
+            <li>Tracking unique visitors</li>
+          </ul>
+          <br />
+        </section>
+
+        <section>
+          <br /><br /><br /><br /><br />
+          <h2 class="text-center">Thank You!</h2>
+        </section>
+
+        <!-- <section>
+          <br />
+          <h2 class="text-center">Bonus Practice Game (Existing)</h2>
+          <h3 class="text-center">Using a tuple, translate this to Python:</h3>
+          <div class="text-center">
+            <span>"</span>
+            <span style="font-style: italic" class="english-sentence"></span>
+            <span>"</span>
+          </div>
+          <div class="tuple-game" id="tuple-game">
+            <div class="game-progress">
+              <span id="tuple-round">Round 1 of 3</span>
+              <span id="tuple-score">Score: 0</span>
+            </div>
+
+            <div
+              id="tuple-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="tuple-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button id="tuple-check" class="game-btn primary" type="button">
+                Check
+              </button>
+              <button id="tuple-clear" class="game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="tuple-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Using a single-element tuple, translate:</h3>
+          <div class="text-center">
+            <span>"</span>
+            <span
+              style="font-style: italic"
+              class="english-single-sentence"
+            ></span>
+            <span>"</span>
+          </div>
+          <div class="tuple-game" id="single-tuple-game">
+            <div class="game-progress">
+              <span id="single-tuple-round">Round 1 of 3</span>
+              <span id="single-tuple-score">Score: 0</span>
+            </div>
+
+            <div
+              id="single-tuple-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="single-tuple-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button
+                id="single-tuple-check"
+                class="game-btn primary"
+                type="button"
+              >
+                Check
+              </button>
+              <button
+                id="single-tuple-clear"
+                class="game-btn secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="single-tuple-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Using an empty tuple, translate:</h3>
+          <div class="text-center">
+            <span>"</span>
+            <span
+              style="font-style: italic"
+              class="english-empty-sentence"
+            ></span>
+            <span>"</span>
+          </div>
+          <div class="tuple-game" id="empty-tuple-game">
+            <div class="game-progress">
+              <span id="empty-tuple-round">Round 1 of 3</span>
+              <span id="empty-tuple-score">Score: 0</span>
+            </div>
+
+            <div
+              id="empty-tuple-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="empty-tuple-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button
+                id="empty-tuple-check"
+                class="game-btn primary"
+                type="button"
+              >
+                Check
+              </button>
+              <button
+                id="empty-tuple-clear"
+                class="game-btn secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="empty-tuple-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Using tuple generation, translate:</h3>
+          <div class="text-center">
+            <span>"</span>
+            <span
+              style="font-style: italic"
+              class="english-generator-sentence"
+            ></span>
+            <span>"</span>
+          </div>
+          <div class="tuple-game" id="generator-tuple-game">
+            <div class="game-progress">
+              <span id="generator-tuple-round">Round 1 of 3</span>
+              <span id="generator-tuple-score">Score: 0</span>
+            </div>
+
+            <div
+              id="generator-tuple-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="generator-tuple-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button
+                id="generator-tuple-check"
+                class="game-btn primary"
+                type="button"
+              >
+                Check
+              </button>
+              <button
+                id="generator-tuple-clear"
+                class="game-btn secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="generator-tuple-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section>
+
+        <section>
+          <br />
+          <h3 class="text-center">Using tuple slicing, translate:</h3>
+          <div class="text-center">
+            <span>"</span>
+            <span
+              style="font-style: italic"
+              class="english-slicing-sentence"
+            ></span>
+            <span>"</span>
+          </div>
+          <div class="tuple-game" id="slicing-tuple-game">
+            <div class="game-progress">
+              <span id="slicing-tuple-round">Round 1 of 3</span>
+              <span id="slicing-tuple-score">Score: 0</span>
+            </div>
+
+            <div
+              id="slicing-tuple-answer"
+              class="answer-row empty"
+              aria-label="Answer tokens"
+            ></div>
+
+            <div
+              id="slicing-tuple-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="game-controls">
+              <button
+                id="slicing-tuple-check"
+                class="game-btn primary"
+                type="button"
+              >
+                Check
+              </button>
+              <button
+                id="slicing-tuple-clear"
+                class="game-btn secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <p
+              id="slicing-tuple-feedback"
+              class="text-center game-feedback"
+              aria-live="polite"
+            ></p>
+          </div>
+        </section> -->
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      const fallbackCopyText = (text) => {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      };
+
+      const copyCodeText = async (text) => {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+
+        fallbackCopyText(text);
+      };
+
+      const clipboardIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      `;
+
+      const checkIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+      `;
+
+      const xIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      `;
+
+      const addCopyButtons = () => {
+        const codeBlocks = document.querySelectorAll(".reveal pre > code");
+
+        codeBlocks.forEach((codeBlock) => {
+          const pre = codeBlock.parentElement;
+          if (!pre || pre.querySelector(".copy-code-btn")) {
+            return;
+          }
+
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "copy-code-btn";
+          button.innerHTML = clipboardIcon;
+          button.title = "Copy code";
+          button.setAttribute("aria-label", "Copy code to clipboard");
+
+          button.addEventListener("click", async () => {
+            const codeText = codeBlock.textContent ?? "";
+
+            try {
+              await copyCodeText(codeText);
+              button.innerHTML = checkIcon;
+              button.title = "Copied";
+              setTimeout(() => {
+                button.innerHTML = clipboardIcon;
+                button.title = "Copy code";
+              }, 1200);
+            } catch {
+              button.innerHTML = xIcon;
+              button.title = "Copy failed";
+              setTimeout(() => {
+                button.innerHTML = clipboardIcon;
+                button.title = "Copy code";
+              }, 1200);
+            }
+          });
+
+          pre.appendChild(button);
+        });
+      };
+
+      Reveal.initialize({
+        hash: true,
+        center: false,
+        slideNumber: "c/t",
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+
+      Reveal.on("ready", addCopyButtons);
+      Reveal.on("slidechanged", addCopyButtons);
+    </script>
+
+    <script>
+      const setBuilderRounds = [
+        {
+          prompt: "Concrete, steel, and glass are materials.",
+          target: ["Materials", "=", "{'Concrete',", "'Steel',", "'Glass'}"],
+          tokens: [
+            "Materials",
+            "=",
+            "{'Concrete',",
+            "'Steel',",
+            "'Glass'}",
+            "['Concrete',",
+            "'Steel',",
+            "'Glass']",
+            "==",
+            "()",
+          ],
+        },
+        {
+          prompt: "Speed limit and volume limit are in the active settings.",
+          target: [
+            "Active_Settings",
+            "=",
+            "{'Speed_Limit',",
+            "'Volume_Limit'}",
+          ],
+          tokens: [
+            "Active_Settings",
+            "=",
+            "{'Speed_Limit',",
+            "'Volume_Limit'}",
+            "['Speed_Limit',",
+            "'Volume_Limit']",
+          ],
+        },
+        {
+          prompt: "Room_204 includes WiFi, Bed, and Ocean_View.",
+          target: ["Room_204", "=", "{'WiFi',", "'Bed',", "'Ocean_View'}"],
+          tokens: [
+            "Room_204",
+            "=",
+            "{'WiFi',",
+            "'Bed',",
+            "'Ocean_View'}",
+            "['WiFi',",
+            "'Bed',",
+            "'Ocean_View']",
+            "==",
+          ],
+        },
+      ];
+
+      const setBuilderBank = document.getElementById("set-builder-bank");
+      const setBuilderAnswer = document.getElementById("set-builder-answer");
+      const setBuilderSentence = document.querySelector(".english-set-sentence");
+      const setBuilderRoundText = document.getElementById("set-builder-round");
+      const setBuilderScoreText = document.getElementById("set-builder-score");
+      const setBuilderFeedback = document.getElementById("set-builder-feedback");
+      const setBuilderCheckBtn = document.getElementById("set-builder-check");
+      const setBuilderClearBtn = document.getElementById("set-builder-clear");
+
+      let setBuilderRoundIndex = 0;
+      let setBuilderScore = 0;
+      let setBuilderSelectedIndexes = [];
+
+      const makeSetBuilderTokenButton = (text, index) => {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "token";
+        token.textContent = text;
+        token.dataset.index = String(index);
+        return token;
+      };
+
+      const getSetBuilderShuffledIndexes = (length) => {
+        const indexes = Array.from({ length }, (_, index) => index);
+        for (let index = indexes.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [indexes[index], indexes[randomIndex]] = [
+            indexes[randomIndex],
+            indexes[index],
+          ];
+        }
+        return indexes;
+      };
+
+      const updateSetBuilderHeader = () => {
+        setBuilderRoundText.textContent = `Round ${setBuilderRoundIndex + 1} of ${setBuilderRounds.length}`;
+        setBuilderScoreText.textContent = `Score: ${setBuilderScore}`;
+      };
+
+      const updateSetBuilderAnswerPlaceholder = () => {
+        setBuilderAnswer.classList.toggle(
+          "empty",
+          setBuilderSelectedIndexes.length === 0,
+        );
+      };
+
+      const setSetBuilderFeedback = (message, tone = "") => {
+        setBuilderFeedback.textContent = message;
+        setBuilderFeedback.classList.remove("success", "error");
+        if (tone) {
+          setBuilderFeedback.classList.add(tone);
+        }
+      };
+
+      const syncSetBuilderBankState = () => {
+        const active = new Set(setBuilderSelectedIndexes);
+        setBuilderBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderSetBuilderAnswer = () => {
+        const round = setBuilderRounds[setBuilderRoundIndex];
+        setBuilderAnswer.innerHTML = "";
+
+        setBuilderSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeSetBuilderTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            setBuilderSelectedIndexes.splice(answerIndex, 1);
+            renderSetBuilderAnswer();
+            syncSetBuilderBankState();
+            updateSetBuilderAnswerPlaceholder();
+          });
+          setBuilderAnswer.appendChild(token);
+        });
+
+        updateSetBuilderAnswerPlaceholder();
+      };
+
+      const renderSetBuilderRound = () => {
+        const round = setBuilderRounds[setBuilderRoundIndex];
+        setBuilderSelectedIndexes = [];
+        setBuilderBank.innerHTML = "";
+        setBuilderAnswer.innerHTML = "";
+
+        if (setBuilderSentence) {
+          setBuilderSentence.textContent = round.prompt;
+        }
+
+        setSetBuilderFeedback("");
+
+        const shuffledIndexes = getSetBuilderShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const token = makeSetBuilderTokenButton(round.tokens[index], index);
+          token.addEventListener("click", () => {
+            setBuilderSelectedIndexes.push(index);
+            renderSetBuilderAnswer();
+            syncSetBuilderBankState();
+          });
+          setBuilderBank.appendChild(token);
+        });
+
+        updateSetBuilderHeader();
+        syncSetBuilderBankState();
+        updateSetBuilderAnswerPlaceholder();
+      };
+
+      const goToNextSetBuilderRound = () => {
+        if (setBuilderRoundIndex < setBuilderRounds.length - 1) {
+          setBuilderRoundIndex += 1;
+          renderSetBuilderRound();
+          return;
+        }
+
+        setSetBuilderFeedback(
+          `Challenge complete! Final score: ${setBuilderScore}/${setBuilderRounds.length}`,
+          "success",
+        );
+        setBuilderCheckBtn.disabled = true;
+      };
+
+      setBuilderCheckBtn.addEventListener("click", () => {
+        const round = setBuilderRounds[setBuilderRoundIndex];
+        const answerTokens = setBuilderSelectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          setBuilderScore += 1;
+          updateSetBuilderHeader();
+          setSetBuilderFeedback("Great job! Exact set syntax achieved.", "success");
+          launchConfetti();
+          setTimeout(goToNextSetBuilderRound, 750);
+          return;
+        }
+
+        setSetBuilderFeedback("Not quite. Recheck the set syntax and try again.", "error");
+      });
+
+      setBuilderClearBtn.addEventListener("click", () => {
+        setBuilderSelectedIndexes = [];
+        renderSetBuilderAnswer();
+        syncSetBuilderBankState();
+        setSetBuilderFeedback("Answer cleared.");
+      });
+
+      renderSetBuilderRound();
+    </script>
+
+    <script>
+      const setUpdateRounds = [
+        {
+          prompt: "Boats C and A are also in the port.",
+          target: ["boats_in_port.update(", '["Boat C",', '"Boat A"]', ")"],
+          tokens: [
+            "boats_in_port.update(",
+            '["Boat C",',
+            '"Boat A"]',
+            ")",
+            "boats_in_port.add(",
+            '["Boat A",',
+          ],
+        },
+        {
+          prompt: "Plate numbers LMN456 and ABC123 were also stolen.",
+          target: [
+            "stolen_plates.update(",
+            '["LMN456",',
+            '"ABC123"]',
+            ")",
+          ],
+          tokens: [
+            "stolen_plates.update(",
+            '["LMN456",',
+            '"ABC123"]',
+            ")",
+            "stolen_plates.add(",
+            '["ABC123",',
+          ],
+        },
+        {
+          prompt: "Van Gogh and Monet are artists as well.",
+          target: ["artists.update(", '["Van Gogh",', '"Monet"]', ")"],
+          tokens: [
+            "artists.update(",
+            '["Van Gogh",',
+            '"Monet"]',
+            ")",
+            "artists.add(",
+            '["Monet",',
+          ],
+        },
+      ];
+
+      const setUpdateBank = document.getElementById("set-update-bank");
+      const setUpdateAnswer = document.getElementById("set-update-answer");
+      const setUpdateSentence = document.querySelector(".english-update-sentence");
+      const setUpdateRoundText = document.getElementById("set-update-round");
+      const setUpdateScoreText = document.getElementById("set-update-score");
+      const setUpdateFeedback = document.getElementById("set-update-feedback");
+      const setUpdateCheckBtn = document.getElementById("set-update-check");
+      const setUpdateClearBtn = document.getElementById("set-update-clear");
+
+      let setUpdateRoundIndex = 0;
+      let setUpdateScore = 0;
+      let setUpdateSelectedIndexes = [];
+
+      const makeSetUpdateTokenButton = (text, index) => {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "token";
+        token.textContent = text;
+        token.dataset.index = String(index);
+        return token;
+      };
+
+      const getSetUpdateShuffledIndexes = (length) => {
+        const indexes = Array.from({ length }, (_, index) => index);
+        for (let index = indexes.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [indexes[index], indexes[randomIndex]] = [
+            indexes[randomIndex],
+            indexes[index],
+          ];
+        }
+        return indexes;
+      };
+
+      const updateSetUpdateHeader = () => {
+        setUpdateRoundText.textContent = `Round ${setUpdateRoundIndex + 1} of ${setUpdateRounds.length}`;
+        setUpdateScoreText.textContent = `Score: ${setUpdateScore}`;
+      };
+
+      const updateSetUpdateAnswerPlaceholder = () => {
+        setUpdateAnswer.classList.toggle(
+          "empty",
+          setUpdateSelectedIndexes.length === 0,
+        );
+      };
+
+      const setSetUpdateFeedback = (message, tone = "") => {
+        setUpdateFeedback.textContent = message;
+        setUpdateFeedback.classList.remove("success", "error");
+        if (tone) {
+          setUpdateFeedback.classList.add(tone);
+        }
+      };
+
+      const syncSetUpdateBankState = () => {
+        const active = new Set(setUpdateSelectedIndexes);
+        setUpdateBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderSetUpdateAnswer = () => {
+        const round = setUpdateRounds[setUpdateRoundIndex];
+        setUpdateAnswer.innerHTML = "";
+
+        setUpdateSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeSetUpdateTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            setUpdateSelectedIndexes.splice(answerIndex, 1);
+            renderSetUpdateAnswer();
+            syncSetUpdateBankState();
+            updateSetUpdateAnswerPlaceholder();
+          });
+          setUpdateAnswer.appendChild(token);
+        });
+
+        updateSetUpdateAnswerPlaceholder();
+      };
+
+      const renderSetUpdateRound = () => {
+        const round = setUpdateRounds[setUpdateRoundIndex];
+        setUpdateSelectedIndexes = [];
+        setUpdateBank.innerHTML = "";
+        setUpdateAnswer.innerHTML = "";
+
+        if (setUpdateSentence) {
+          setUpdateSentence.textContent = round.prompt;
+        }
+
+        setSetUpdateFeedback("");
+
+        const shuffledIndexes = getSetUpdateShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const token = makeSetUpdateTokenButton(round.tokens[index], index);
+          token.addEventListener("click", () => {
+            setUpdateSelectedIndexes.push(index);
+            renderSetUpdateAnswer();
+            syncSetUpdateBankState();
+          });
+          setUpdateBank.appendChild(token);
+        });
+
+        updateSetUpdateHeader();
+        syncSetUpdateBankState();
+        updateSetUpdateAnswerPlaceholder();
+      };
+
+      const goToNextSetUpdateRound = () => {
+        if (setUpdateRoundIndex < setUpdateRounds.length - 1) {
+          setUpdateRoundIndex += 1;
+          renderSetUpdateRound();
+          return;
+        }
+
+        setSetUpdateFeedback(
+          `Challenge complete! Final score: ${setUpdateScore}/${setUpdateRounds.length}`,
+          "success",
+        );
+        setUpdateCheckBtn.disabled = true;
+      };
+
+      setUpdateCheckBtn.addEventListener("click", () => {
+        const round = setUpdateRounds[setUpdateRoundIndex];
+        const answerTokens = setUpdateSelectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          setUpdateScore += 1;
+          updateSetUpdateHeader();
+          setSetUpdateFeedback("Perfect! Correct set.update(arg) usage.", "success");
+          launchConfetti();
+          setTimeout(goToNextSetUpdateRound, 750);
+          return;
+        }
+
+        setSetUpdateFeedback(
+          "Not quite. Recheck your update syntax and try again.",
+          "error",
+        );
+      });
+
+      setUpdateClearBtn.addEventListener("click", () => {
+        setUpdateSelectedIndexes = [];
+        renderSetUpdateAnswer();
+        syncSetUpdateBankState();
+        setSetUpdateFeedback("Answer cleared.");
+      });
+
+      renderSetUpdateRound();
+    </script>
+
+    <script>
+      const setOpsRounds = [
+        {
+          prompt: "Students both in Computer Programming and HCI.",
+          target: [
+            "both_subjects",
+            "=",
+            "comprog_students.intersection(",
+            "hci_students",
+            ")",
+          ],
+          tokens: [
+            "both_subjects",
+            "=",
+            "comprog_students.intersection(",
+            "hci_students",
+            ")",
+            "comprog_students.union(",
+          ],
+        },
+        {
+          prompt: "Non-submitting enrolled students are marked as missing.",
+          target: ["missing", "=", "enrolled.difference(", "submitted", ")"],
+          tokens: [
+            "missing",
+            "=",
+            "enrolled.difference(",
+            "submitted",
+            ")",
+            "enrolled.intersection(",
+            "enrolled.union(",
+          ],
+        },
+        {
+          prompt: "Ideal rooms both have a sea-view and non-smoking.",
+          target: ["ideal_rooms", "=", "sea_view", "&", "non_smoking"],
+          tokens: [
+            "ideal_rooms",
+            "=",
+            "sea_view",
+            "&",
+            "non_smoking",
+            "|",
+            "^",
+          ],
+        },
+        {
+          prompt: "Nurses and physicians are all part of the care team.",
+          target: ["care_team", "=", "nurses", "|", "physicians"],
+          tokens: ["care_team", "=", "nurses", "|", "physicians", "&", "-"],
+        },
+        {
+          prompt: "Handover issues are those not present in both shifts.",
+          target: [
+            "handover_issues",
+            "=",
+            "day_shift_patients",
+            "^",
+            "night_shift_patients",
+          ],
+          tokens: [
+            "handover_issues",
+            "=",
+            "day_shift_patients",
+            "^",
+            "night_shift_patients",
+            "|",
+            "&",
+          ],
+        },
+      ];
+
+      const setOpsBank = document.getElementById("set-ops-bank");
+      const setOpsAnswer = document.getElementById("set-ops-answer");
+      const setOpsSentence = document.querySelector(".english-ops-sentence");
+      const setOpsRoundText = document.getElementById("set-ops-round");
+      const setOpsScoreText = document.getElementById("set-ops-score");
+      const setOpsFeedback = document.getElementById("set-ops-feedback");
+      const setOpsCheckBtn = document.getElementById("set-ops-check");
+      const setOpsClearBtn = document.getElementById("set-ops-clear");
+
+      let setOpsRoundIndex = 0;
+      let setOpsScore = 0;
+      let setOpsSelectedIndexes = [];
+
+      const makeSetOpsTokenButton = (text, index) => {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "token";
+        token.textContent = text;
+        token.dataset.index = String(index);
+        return token;
+      };
+
+      const getSetOpsShuffledIndexes = (length) => {
+        const indexes = Array.from({ length }, (_, index) => index);
+        for (let index = indexes.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [indexes[index], indexes[randomIndex]] = [
+            indexes[randomIndex],
+            indexes[index],
+          ];
+        }
+        return indexes;
+      };
+
+      const updateSetOpsHeader = () => {
+        setOpsRoundText.textContent = `Round ${setOpsRoundIndex + 1} of ${setOpsRounds.length}`;
+        setOpsScoreText.textContent = `Score: ${setOpsScore}`;
+      };
+
+      const updateSetOpsAnswerPlaceholder = () => {
+        setOpsAnswer.classList.toggle("empty", setOpsSelectedIndexes.length === 0);
+      };
+
+      const setSetOpsFeedback = (message, tone = "") => {
+        setOpsFeedback.textContent = message;
+        setOpsFeedback.classList.remove("success", "error");
+        if (tone) {
+          setOpsFeedback.classList.add(tone);
+        }
+      };
+
+      const syncSetOpsBankState = () => {
+        const active = new Set(setOpsSelectedIndexes);
+        setOpsBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderSetOpsAnswer = () => {
+        const round = setOpsRounds[setOpsRoundIndex];
+        setOpsAnswer.innerHTML = "";
+
+        setOpsSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeSetOpsTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            setOpsSelectedIndexes.splice(answerIndex, 1);
+            renderSetOpsAnswer();
+            syncSetOpsBankState();
+            updateSetOpsAnswerPlaceholder();
+          });
+          setOpsAnswer.appendChild(token);
+        });
+
+        updateSetOpsAnswerPlaceholder();
+      };
+
+      const renderSetOpsRound = () => {
+        const round = setOpsRounds[setOpsRoundIndex];
+        setOpsSelectedIndexes = [];
+        setOpsBank.innerHTML = "";
+        setOpsAnswer.innerHTML = "";
+
+        if (setOpsSentence) {
+          setOpsSentence.textContent = round.prompt;
+        }
+
+        setSetOpsFeedback("");
+
+        const shuffledIndexes = getSetOpsShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const token = makeSetOpsTokenButton(round.tokens[index], index);
+          token.addEventListener("click", () => {
+            setOpsSelectedIndexes.push(index);
+            renderSetOpsAnswer();
+            syncSetOpsBankState();
+          });
+          setOpsBank.appendChild(token);
+        });
+
+        updateSetOpsHeader();
+        syncSetOpsBankState();
+        updateSetOpsAnswerPlaceholder();
+      };
+
+      const goToNextSetOpsRound = () => {
+        if (setOpsRoundIndex < setOpsRounds.length - 1) {
+          setOpsRoundIndex += 1;
+          renderSetOpsRound();
+          return;
+        }
+
+        setSetOpsFeedback(
+          `Challenge complete! Final score: ${setOpsScore}/${setOpsRounds.length}`,
+          "success",
+        );
+        setOpsCheckBtn.disabled = true;
+      };
+
+      setOpsCheckBtn.addEventListener("click", () => {
+        const round = setOpsRounds[setOpsRoundIndex];
+        const answerTokens = setOpsSelectedIndexes.map((index) => round.tokens[index]);
+
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          setOpsScore += 1;
+          updateSetOpsHeader();
+          setSetOpsFeedback("Nice! Exact set operation syntax.", "success");
+          launchConfetti();
+          setTimeout(goToNextSetOpsRound, 750);
+          return;
+        }
+
+        setSetOpsFeedback("Not quite. Recheck operators, methods, and order.", "error");
+      });
+
+      setOpsClearBtn.addEventListener("click", () => {
+        setOpsSelectedIndexes = [];
+        renderSetOpsAnswer();
+        syncSetOpsBankState();
+        setSetOpsFeedback("Answer cleared.");
+      });
+
+      renderSetOpsRound();
+    </script>
+
+    <script>
+      const setCompRounds = [
+        {
+          prompt: "Keep only scores that are at least 1000.",
+          target: [
+            "high_scores",
+            "=",
+            "{score",
+            "for",
+            "score",
+            "in",
+            "scores",
+            "if",
+            "score",
+            ">=",
+            "1000}",
+          ],
+          tokens: [
+            "high_scores",
+            "=",
+            "{score",
+            "for",
+            "score",
+            "in",
+            "scores",
+            "if",
+            "score",
+            ">=",
+            "1000}"
+          ],
+        },
+        {
+          prompt: "Keep only room areas greater than 300.",
+          target: [
+            "large_rooms",
+            "=",
+            "{area",
+            "for",
+            "area",
+            "in",
+            "areas",
+            "if",
+            "area",
+            ">",
+            "300}",
+          ],
+          tokens: [
+            "large_rooms",
+            "=",
+            "{area",
+            "for",
+            "area",
+            "in",
+            "areas",
+            "if",
+            "area",
+            ">",
+            "300}",
+            "<",
+            ">=",
+            "301}",
+          ],
+        },
+        {
+          prompt: "Keep only floors that are above ground level.",
+          target: [
+            "above_ground",
+            "=",
+            "{floor",
+            "for",
+            "floor",
+            "in",
+            "floors",
+            "if",
+            "floor",
+            ">",
+            "0}",
+          ],
+          tokens: [
+            "above_ground",
+            "=",
+            "{floor",
+            "for",
+            "floor",
+            "in",
+            "floors",
+            "if",
+            "floor",
+            ">",
+            "0}",
+            "<",
+            "<=",
+            "0}",
+          ],
+        },
+      ];
+
+      const setCompBank = document.getElementById("set-comp-bank");
+      const setCompAnswer = document.getElementById("set-comp-answer");
+      const setCompSentence = document.querySelector(".english-comp-sentence");
+      const setCompRoundText = document.getElementById("set-comp-round");
+      const setCompScoreText = document.getElementById("set-comp-score");
+      const setCompFeedback = document.getElementById("set-comp-feedback");
+      const setCompCheckBtn = document.getElementById("set-comp-check");
+      const setCompClearBtn = document.getElementById("set-comp-clear");
+
+      let setCompRoundIndex = 0;
+      let setCompScore = 0;
+      let setCompSelectedIndexes = [];
+
+      const makeSetCompTokenButton = (text, index) => {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "token";
+        token.textContent = text;
+        token.dataset.index = String(index);
+        return token;
+      };
+
+      const getSetCompShuffledIndexes = (length) => {
+        const indexes = Array.from({ length }, (_, index) => index);
+        for (let index = indexes.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [indexes[index], indexes[randomIndex]] = [
+            indexes[randomIndex],
+            indexes[index],
+          ];
+        }
+        return indexes;
+      };
+
+      const updateSetCompHeader = () => {
+        setCompRoundText.textContent = `Round ${setCompRoundIndex + 1} of ${setCompRounds.length}`;
+        setCompScoreText.textContent = `Score: ${setCompScore}`;
+      };
+
+      const updateSetCompAnswerPlaceholder = () => {
+        setCompAnswer.classList.toggle("empty", setCompSelectedIndexes.length === 0);
+      };
+
+      const setSetCompFeedback = (message, tone = "") => {
+        setCompFeedback.textContent = message;
+        setCompFeedback.classList.remove("success", "error");
+        if (tone) {
+          setCompFeedback.classList.add(tone);
+        }
+      };
+
+      const syncSetCompBankState = () => {
+        const active = new Set(setCompSelectedIndexes);
+        setCompBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderSetCompAnswer = () => {
+        const round = setCompRounds[setCompRoundIndex];
+        setCompAnswer.innerHTML = "";
+
+        setCompSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeSetCompTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            setCompSelectedIndexes.splice(answerIndex, 1);
+            renderSetCompAnswer();
+            syncSetCompBankState();
+            updateSetCompAnswerPlaceholder();
+          });
+          setCompAnswer.appendChild(token);
+        });
+
+        updateSetCompAnswerPlaceholder();
+      };
+
+      const renderSetCompRound = () => {
+        const round = setCompRounds[setCompRoundIndex];
+        setCompSelectedIndexes = [];
+        setCompBank.innerHTML = "";
+        setCompAnswer.innerHTML = "";
+
+        if (setCompSentence) {
+          setCompSentence.textContent = round.prompt;
+        }
+
+        setSetCompFeedback("");
+
+        const shuffledIndexes = getSetCompShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const token = makeSetCompTokenButton(round.tokens[index], index);
+          token.addEventListener("click", () => {
+            setCompSelectedIndexes.push(index);
+            renderSetCompAnswer();
+            syncSetCompBankState();
+          });
+          setCompBank.appendChild(token);
+        });
+
+        updateSetCompHeader();
+        syncSetCompBankState();
+        updateSetCompAnswerPlaceholder();
+      };
+
+      const goToNextSetCompRound = () => {
+        if (setCompRoundIndex < setCompRounds.length - 1) {
+          setCompRoundIndex += 1;
+          renderSetCompRound();
+          return;
+        }
+
+        setSetCompFeedback(
+          `Challenge complete! Final score: ${setCompScore}/${setCompRounds.length}`,
+          "success",
+        );
+        setCompCheckBtn.disabled = true;
+      };
+
+      setCompCheckBtn.addEventListener("click", () => {
+        const round = setCompRounds[setCompRoundIndex];
+        const answerTokens = setCompSelectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          setCompScore += 1;
+          updateSetCompHeader();
+          setSetCompFeedback(
+            "Great syntax! That set comprehension is correct.",
+            "success",
+          );
+          launchConfetti();
+          setTimeout(goToNextSetCompRound, 750);
+          return;
+        }
+
+        setSetCompFeedback(
+          "Not quite. Check variable names, condition, and braces.",
+          "error",
+        );
+      });
+
+      setCompClearBtn.addEventListener("click", () => {
+        setCompSelectedIndexes = [];
+        renderSetCompAnswer();
+        syncSetCompBankState();
+        setSetCompFeedback("Answer cleared.");
+      });
+
+      renderSetCompRound();
+    </script>
+
+    <script>
+      const launchConfetti = () => {
+        const burst = document.createElement("div");
+        burst.className = "confetti-burst";
+        document.body.appendChild(burst);
+
+        const colors = [
+          "#58cc02",
+          "#0ea5e9",
+          "#f59e0b",
+          "#ef4444",
+          "#a855f7",
+          "#22c55e",
+        ];
+
+        for (let index = 0; index < 90; index += 1) {
+          const piece = document.createElement("span");
+          piece.className = "confetti-piece";
+          piece.style.left = `${Math.random() * 100}vw`;
+          piece.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+          piece.style.animationDelay = `${Math.random() * 180}ms`;
+          piece.style.animationDuration = `${750 + Math.random() * 450}ms`;
+          burst.appendChild(piece);
+        }
+
+        setTimeout(() => {
+          burst.remove();
+        }, 1400);
+      };
+
+      const tupleRounds = [
+        {
+          prompt: "The target's coordinates are (10, 20).",
+          target: ["target_coordinates", "=", "(10,", "20)"],
+          tokens: [
+            "target_coordinates",
+            "=",
+            "(10,",
+            "20)",
+            "[10,",
+            "20]",
+            "==",
+          ],
+        },
+        {
+          prompt: "School days are Mondays to Fridays.",
+          target: [
+            "school_days",
+            "=",
+            '("Mon",',
+            '"Tue",',
+            '"Wed",',
+            '"Thu",',
+            '"Fri")',
+          ],
+          tokens: [
+            "school_days",
+            "=",
+            '("Mon",',
+            '"Tue",',
+            '"Wed",',
+            '"Thu",',
+            '"Fri")',
+            '["Mon",',
+            '"Tue",',
+            '"Wed",',
+            '"Thu",',
+            '"Fri"]',
+            "==",
+          ],
+        },
+        {
+          prompt: "The crime scene coordinates are 14.5995, 120.9842.",
+          target: ["crime_scene_coords", "=", "(14.5995,", "120.9842)"],
+          tokens: [
+            "crime_scene_coords",
+            "=",
+            "(14.5995,",
+            "120.9842)",
+            "[14.5995,",
+            "120.9842]",
+            "==",
+          ],
+        },
+      ];
+
+      const bank = document.getElementById("tuple-bank");
+      const answer = document.getElementById("tuple-answer");
+      const englishSentence = document.querySelector(".english-sentence");
+      const roundText = document.getElementById("tuple-round");
+      const scoreText = document.getElementById("tuple-score");
+      const feedback = document.getElementById("tuple-feedback");
+      const checkBtn = document.getElementById("tuple-check");
+      const clearBtn = document.getElementById("tuple-clear");
+
+      let currentRoundIndex = 0;
+      let score = 0;
+      let selectedIndexes = [];
+
+      const makeTokenButton = (text, index) => {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "token";
+        token.textContent = text;
+        token.dataset.index = String(index);
+        return token;
+      };
+
+      const getShuffledIndexes = (length) => {
+        const indexes = Array.from({ length }, (_, index) => index);
+        for (let index = indexes.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [indexes[index], indexes[randomIndex]] = [
+            indexes[randomIndex],
+            indexes[index],
+          ];
+        }
+        return indexes;
+      };
+
+      const updateHeader = () => {
+        roundText.textContent = `Round ${currentRoundIndex + 1} of ${tupleRounds.length}`;
+        scoreText.textContent = `Score: ${score}`;
+      };
+
+      const updateAnswerPlaceholder = () => {
+        answer.classList.toggle("empty", selectedIndexes.length === 0);
+      };
+
+      const setFeedback = (message, tone = "") => {
+        feedback.textContent = message;
+        feedback.classList.remove("success", "error");
+        if (tone) {
+          feedback.classList.add(tone);
+        }
+      };
+
+      const syncBankState = () => {
+        const active = new Set(selectedIndexes);
+        bank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderAnswer = () => {
+        const round = tupleRounds[currentRoundIndex];
+        answer.innerHTML = "";
+
+        selectedIndexes.forEach((index, answerIndex) => {
+          const token = makeTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            selectedIndexes.splice(answerIndex, 1);
+            renderAnswer();
+            syncBankState();
+            updateAnswerPlaceholder();
+          });
+          answer.appendChild(token);
+        });
+
+        updateAnswerPlaceholder();
+      };
+
+      const renderRound = () => {
+        const round = tupleRounds[currentRoundIndex];
+        selectedIndexes = [];
+        bank.innerHTML = "";
+        answer.innerHTML = "";
+        if (englishSentence) {
+          englishSentence.textContent = round.prompt;
+        }
+        setFeedback("");
+
+        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const text = round.tokens[index];
+          const token = makeTokenButton(text, index);
+          token.addEventListener("click", () => {
+            selectedIndexes.push(index);
+            renderAnswer();
+            syncBankState();
+          });
+          bank.appendChild(token);
+        });
+
+        updateHeader();
+        syncBankState();
+        updateAnswerPlaceholder();
+      };
+
+      const goToNextRound = () => {
+        if (currentRoundIndex < tupleRounds.length - 1) {
+          currentRoundIndex += 1;
+          renderRound();
+          return;
+        }
+
+        setFeedback(
+          `Challenge complete! Final score: ${score}/${tupleRounds.length}`,
+          "success",
+        );
+        checkBtn.disabled = true;
+      };
+
+      checkBtn.addEventListener("click", () => {
+        const round = tupleRounds[currentRoundIndex];
+        const answerTokens = selectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          score += 1;
+          updateHeader();
+          setFeedback("Nice work! Correct answer.", "success");
+          launchConfetti();
+          setTimeout(goToNextRound, 750);
+          return;
+        }
+
+        setFeedback("Not quite. Recheck, then try again.", "error");
+      });
+
+      clearBtn.addEventListener("click", () => {
+        selectedIndexes = [];
+        renderAnswer();
+        syncBankState();
+        setFeedback("Answer cleared.");
+      });
+
+      renderRound();
+    </script>
+
+    <script>
+      const singleTupleRounds = [
+        {
+          prompt: "The only magic number is 7.",
+          target: ["magic_numbers", "=", "(7,", ")"],
+          tokens: ["magic_numbers", "=", "(7", "(7,", ")", "[7,", "]", "=="],
+        },
+        {
+          prompt: "The only favorite color is red.",
+          target: ["favorite_colors", "=", '"red",'],
+          tokens: ["favorite_colors", "=", '"red"', '"red",'],
+        },
+        {
+          prompt: "Your only enemy is yourself.",
+          target: ["enemies", "=", '("self",)'],
+          tokens: ["enemies", "=", '("self",)', '("self")', "[self,]", "=="],
+        },
+      ];
+
+      const singleBank = document.getElementById("single-tuple-bank");
+      const singleAnswer = document.getElementById("single-tuple-answer");
+      const singleEnglishSentence = document.querySelector(
+        ".english-single-sentence",
+      );
+      const singleRoundText = document.getElementById("single-tuple-round");
+      const singleScoreText = document.getElementById("single-tuple-score");
+      const singleFeedback = document.getElementById("single-tuple-feedback");
+      const singleCheckBtn = document.getElementById("single-tuple-check");
+      const singleClearBtn = document.getElementById("single-tuple-clear");
+
+      let singleCurrentRoundIndex = 0;
+      let singleScore = 0;
+      let singleSelectedIndexes = [];
+
+      const updateSingleHeader = () => {
+        singleRoundText.textContent = `Round ${singleCurrentRoundIndex + 1} of ${singleTupleRounds.length}`;
+        singleScoreText.textContent = `Score: ${singleScore}`;
+      };
+
+      const updateSingleAnswerPlaceholder = () => {
+        singleAnswer.classList.toggle(
+          "empty",
+          singleSelectedIndexes.length === 0,
+        );
+      };
+
+      const setSingleFeedback = (message, tone = "") => {
+        singleFeedback.textContent = message;
+        singleFeedback.classList.remove("success", "error");
+        if (tone) {
+          singleFeedback.classList.add(tone);
+        }
+      };
+
+      const syncSingleBankState = () => {
+        const active = new Set(singleSelectedIndexes);
+        singleBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderSingleAnswer = () => {
+        const round = singleTupleRounds[singleCurrentRoundIndex];
+        singleAnswer.innerHTML = "";
+
+        singleSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            singleSelectedIndexes.splice(answerIndex, 1);
+            renderSingleAnswer();
+            syncSingleBankState();
+            updateSingleAnswerPlaceholder();
+          });
+          singleAnswer.appendChild(token);
+        });
+
+        updateSingleAnswerPlaceholder();
+      };
+
+      const renderSingleRound = () => {
+        const round = singleTupleRounds[singleCurrentRoundIndex];
+        singleSelectedIndexes = [];
+        singleBank.innerHTML = "";
+        singleAnswer.innerHTML = "";
+        if (singleEnglishSentence) {
+          singleEnglishSentence.textContent = round.prompt;
+        }
+        setSingleFeedback("");
+
+        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const text = round.tokens[index];
+          const token = makeTokenButton(text, index);
+          token.addEventListener("click", () => {
+            singleSelectedIndexes.push(index);
+            renderSingleAnswer();
+            syncSingleBankState();
+          });
+          singleBank.appendChild(token);
+        });
+
+        updateSingleHeader();
+        syncSingleBankState();
+        updateSingleAnswerPlaceholder();
+      };
+
+      const goToNextSingleRound = () => {
+        if (singleCurrentRoundIndex < singleTupleRounds.length - 1) {
+          singleCurrentRoundIndex += 1;
+          renderSingleRound();
+          return;
+        }
+
+        setSingleFeedback(
+          `Challenge complete! Final score: ${singleScore}/${singleTupleRounds.length}`,
+          "success",
+        );
+        singleCheckBtn.disabled = true;
+      };
+
+      singleCheckBtn.addEventListener("click", () => {
+        const round = singleTupleRounds[singleCurrentRoundIndex];
+        const answerTokens = singleSelectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          singleScore += 1;
+          updateSingleHeader();
+          setSingleFeedback(
+            "Great! That trailing comma makes it a tuple.",
+            "success",
+          );
+          launchConfetti();
+          setTimeout(goToNextSingleRound, 750);
+          return;
+        }
+
+        setSingleFeedback(
+          "Not quite. Please recheck, then try again.",
+          "error",
+        );
+      });
+
+      singleClearBtn.addEventListener("click", () => {
+        singleSelectedIndexes = [];
+        renderSingleAnswer();
+        syncSingleBankState();
+        setSingleFeedback("Answer cleared.");
+      });
+
+      renderSingleRound();
+    </script>
+
+    <script>
+      const emptyTupleRounds = [
+        {
+          prompt: "There are no clues.",
+          target: ["clues", "=", "()"],
+          tokens: ["clues", "=", "()", "[]", "{}", ","],
+        },
+        {
+          prompt: "There's no place like home.",
+          target: ["places_like_home", "=", "()"],
+          tokens: ["places_like_home", "=", "()", "[]", "None"],
+        },
+        {
+          prompt: "Wala akong pake.",
+          target: ["pake_ko", "=", "()"],
+          tokens: ["pake_ko", "=", "()", "[]", "(,)", "=="],
+        },
+      ];
+
+      const emptyBank = document.getElementById("empty-tuple-bank");
+      const emptyAnswer = document.getElementById("empty-tuple-answer");
+      const emptyEnglishSentence = document.querySelector(
+        ".english-empty-sentence",
+      );
+      const emptyRoundText = document.getElementById("empty-tuple-round");
+      const emptyScoreText = document.getElementById("empty-tuple-score");
+      const emptyFeedback = document.getElementById("empty-tuple-feedback");
+      const emptyCheckBtn = document.getElementById("empty-tuple-check");
+      const emptyClearBtn = document.getElementById("empty-tuple-clear");
+
+      let emptyCurrentRoundIndex = 0;
+      let emptyScore = 0;
+      let emptySelectedIndexes = [];
+
+      const updateEmptyHeader = () => {
+        emptyRoundText.textContent = `Round ${emptyCurrentRoundIndex + 1} of ${emptyTupleRounds.length}`;
+        emptyScoreText.textContent = `Score: ${emptyScore}`;
+      };
+
+      const updateEmptyAnswerPlaceholder = () => {
+        emptyAnswer.classList.toggle(
+          "empty",
+          emptySelectedIndexes.length === 0,
+        );
+      };
+
+      const setEmptyFeedback = (message, tone = "") => {
+        emptyFeedback.textContent = message;
+        emptyFeedback.classList.remove("success", "error");
+        if (tone) {
+          emptyFeedback.classList.add(tone);
+        }
+      };
+
+      const syncEmptyBankState = () => {
+        const active = new Set(emptySelectedIndexes);
+        emptyBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderEmptyAnswer = () => {
+        const round = emptyTupleRounds[emptyCurrentRoundIndex];
+        emptyAnswer.innerHTML = "";
+
+        emptySelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            emptySelectedIndexes.splice(answerIndex, 1);
+            renderEmptyAnswer();
+            syncEmptyBankState();
+            updateEmptyAnswerPlaceholder();
+          });
+          emptyAnswer.appendChild(token);
+        });
+
+        updateEmptyAnswerPlaceholder();
+      };
+
+      const renderEmptyRound = () => {
+        const round = emptyTupleRounds[emptyCurrentRoundIndex];
+        emptySelectedIndexes = [];
+        emptyBank.innerHTML = "";
+        emptyAnswer.innerHTML = "";
+        if (emptyEnglishSentence) {
+          emptyEnglishSentence.textContent = round.prompt;
+        }
+        setEmptyFeedback("");
+
+        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const text = round.tokens[index];
+          const token = makeTokenButton(text, index);
+          token.addEventListener("click", () => {
+            emptySelectedIndexes.push(index);
+            renderEmptyAnswer();
+            syncEmptyBankState();
+          });
+          emptyBank.appendChild(token);
+        });
+
+        updateEmptyHeader();
+        syncEmptyBankState();
+        updateEmptyAnswerPlaceholder();
+      };
+
+      const goToNextEmptyRound = () => {
+        if (emptyCurrentRoundIndex < emptyTupleRounds.length - 1) {
+          emptyCurrentRoundIndex += 1;
+          renderEmptyRound();
+          return;
+        }
+
+        setEmptyFeedback(
+          `Challenge complete! Final score: ${emptyScore}/${emptyTupleRounds.length}`,
+          "success",
+        );
+        emptyCheckBtn.disabled = true;
+      };
+
+      emptyCheckBtn.addEventListener("click", () => {
+        const round = emptyTupleRounds[emptyCurrentRoundIndex];
+        const answerTokens = emptySelectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          emptyScore += 1;
+          updateEmptyHeader();
+          setEmptyFeedback("Correct! Keep it up!.", "success");
+          launchConfetti();
+          setTimeout(goToNextEmptyRound, 750);
+          return;
+        }
+
+        setEmptyFeedback("Not quite. Please recheck, then try again.", "error");
+      });
+
+      emptyClearBtn.addEventListener("click", () => {
+        emptySelectedIndexes = [];
+        renderEmptyAnswer();
+        syncEmptyBankState();
+        setEmptyFeedback("Answer cleared.");
+      });
+
+      renderEmptyRound();
+    </script>
+
+    <script>
+      const slicingTupleRounds = [
+        {
+          prompt: "Get the middle three clues from clues.",
+          target: ["middle_clues", "=", "clues[1:4]"],
+          tokens: [
+            "middle_clues",
+            "=",
+            "clues[1:4]",
+            "clues[1,4]",
+            "clues[:4]",
+            "clues[1:]",
+            "==",
+          ],
+        },
+        {
+          prompt: "Get the first two suspects from suspects.",
+          target: ["first_two", "=", "suspects[:2]"],
+          tokens: [
+            "first_two",
+            "=",
+            "suspects[:2]",
+            "suspects[2:]",
+            "suspects[0:3]",
+            "suspects[:1]",
+            "==",
+          ],
+        },
+        {
+          prompt: "Get the last two checkpoints from checkpoints.",
+          target: ["last_two", "=", "checkpoints[-2:]"],
+          tokens: [
+            "last_two",
+            "=",
+            "checkpoints[-2:]",
+            "checkpoints[:2]",
+            "checkpoints[-2]",
+            "checkpoints[2:]",
+            "==",
+          ],
+        },
+      ];
+
+      const slicingBank = document.getElementById("slicing-tuple-bank");
+      const slicingAnswer = document.getElementById("slicing-tuple-answer");
+      const slicingEnglishSentence = document.querySelector(
+        ".english-slicing-sentence",
+      );
+      const slicingRoundText = document.getElementById("slicing-tuple-round");
+      const slicingScoreText = document.getElementById("slicing-tuple-score");
+      const slicingFeedback = document.getElementById("slicing-tuple-feedback");
+      const slicingCheckBtn = document.getElementById("slicing-tuple-check");
+      const slicingClearBtn = document.getElementById("slicing-tuple-clear");
+
+      let slicingCurrentRoundIndex = 0;
+      let slicingScore = 0;
+      let slicingSelectedIndexes = [];
+
+      const updateSlicingHeader = () => {
+        slicingRoundText.textContent = `Round ${slicingCurrentRoundIndex + 1} of ${slicingTupleRounds.length}`;
+        slicingScoreText.textContent = `Score: ${slicingScore}`;
+      };
+
+      const updateSlicingAnswerPlaceholder = () => {
+        slicingAnswer.classList.toggle(
+          "empty",
+          slicingSelectedIndexes.length === 0,
+        );
+      };
+
+      const setSlicingFeedback = (message, tone = "") => {
+        slicingFeedback.textContent = message;
+        slicingFeedback.classList.remove("success", "error");
+        if (tone) {
+          slicingFeedback.classList.add(tone);
+        }
+      };
+
+      const syncSlicingBankState = () => {
+        const active = new Set(slicingSelectedIndexes);
+        slicingBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderSlicingAnswer = () => {
+        const round = slicingTupleRounds[slicingCurrentRoundIndex];
+        slicingAnswer.innerHTML = "";
+
+        slicingSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            slicingSelectedIndexes.splice(answerIndex, 1);
+            renderSlicingAnswer();
+            syncSlicingBankState();
+            updateSlicingAnswerPlaceholder();
+          });
+          slicingAnswer.appendChild(token);
+        });
+
+        updateSlicingAnswerPlaceholder();
+      };
+
+      const renderSlicingRound = () => {
+        const round = slicingTupleRounds[slicingCurrentRoundIndex];
+        slicingSelectedIndexes = [];
+        slicingBank.innerHTML = "";
+        slicingAnswer.innerHTML = "";
+        if (slicingEnglishSentence) {
+          slicingEnglishSentence.textContent = round.prompt;
+        }
+        setSlicingFeedback("");
+
+        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const text = round.tokens[index];
+          const token = makeTokenButton(text, index);
+          token.addEventListener("click", () => {
+            slicingSelectedIndexes.push(index);
+            renderSlicingAnswer();
+            syncSlicingBankState();
+          });
+          slicingBank.appendChild(token);
+        });
+
+        updateSlicingHeader();
+        syncSlicingBankState();
+        updateSlicingAnswerPlaceholder();
+      };
+
+      const goToNextSlicingRound = () => {
+        if (slicingCurrentRoundIndex < slicingTupleRounds.length - 1) {
+          slicingCurrentRoundIndex += 1;
+          renderSlicingRound();
+          return;
+        }
+
+        setSlicingFeedback(
+          `Challenge complete! Final score: ${slicingScore}/${slicingTupleRounds.length}`,
+          "success",
+        );
+        slicingCheckBtn.disabled = true;
+      };
+
+      slicingCheckBtn.addEventListener("click", () => {
+        const round = slicingTupleRounds[slicingCurrentRoundIndex];
+        const answerTokens = slicingSelectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          slicingScore += 1;
+          updateSlicingHeader();
+          setSlicingFeedback("Perfect slice! Nicely done.", "success");
+          launchConfetti();
+          setTimeout(goToNextSlicingRound, 750);
+          return;
+        }
+
+        setSlicingFeedback(
+          "Not quite. Recheck your slice and try again.",
+          "error",
+        );
+      });
+
+      slicingClearBtn.addEventListener("click", () => {
+        slicingSelectedIndexes = [];
+        renderSlicingAnswer();
+        syncSlicingBankState();
+        setSlicingFeedback("Answer cleared.");
+      });
+
+      renderSlicingRound();
+    </script>
+
+    <script>
+      const generatorTupleRounds = [
+        {
+          prompt: "Squares from 0 to 4.",
+          target: [
+            "squares",
+            "=",
+            "tuple(",
+            "x**2",
+            "for",
+            "x",
+            "in",
+            "range(5)",
+            ")",
+          ],
+          tokens: [
+            "squares",
+            "=",
+            "tuple(",
+            "x**2",
+            "for",
+            "x",
+            "in",
+            "range(5)",
+            ")",
+            "[",
+            "]",
+            "list(",
+          ],
+        },
+        {
+          prompt: "Uppercase each letter in the word tuple.",
+          target: [
+            "caps",
+            "=",
+            "tuple(",
+            "ch.upper()",
+            "for",
+            "ch",
+            "in",
+            '"tuple"',
+            ")",
+          ],
+          tokens: [
+            "caps",
+            "=",
+            "tuple(",
+            "ch.upper()",
+            "for",
+            "ch",
+            "in",
+            '"tuple"',
+            ")",
+            "set(",
+            "append",
+            "==",
+          ],
+        },
+        {
+          prompt: "Take each number from 1 to 3 and add 10.",
+          target: [
+            "plus_ten",
+            "=",
+            "tuple(",
+            "n+10",
+            "for",
+            "n",
+            "in",
+            "range(1,",
+            "4)",
+            ")",
+          ],
+          tokens: [
+            "plus_ten",
+            "=",
+            "tuple(",
+            "n+10",
+            "for",
+            "n",
+            "in",
+            "range(1,",
+            "4)",
+            ")",
+            "{",
+            "}",
+            "range(4)",
+          ],
+        },
+      ];
+
+      const generatorBank = document.getElementById("generator-tuple-bank");
+      const generatorAnswer = document.getElementById("generator-tuple-answer");
+      const generatorEnglishSentence = document.querySelector(
+        ".english-generator-sentence",
+      );
+      const generatorRoundText = document.getElementById(
+        "generator-tuple-round",
+      );
+      const generatorScoreText = document.getElementById(
+        "generator-tuple-score",
+      );
+      const generatorFeedback = document.getElementById(
+        "generator-tuple-feedback",
+      );
+      const generatorCheckBtn = document.getElementById(
+        "generator-tuple-check",
+      );
+      const generatorClearBtn = document.getElementById(
+        "generator-tuple-clear",
+      );
+
+      let generatorCurrentRoundIndex = 0;
+      let generatorScore = 0;
+      let generatorSelectedIndexes = [];
+
+      const updateGeneratorHeader = () => {
+        generatorRoundText.textContent = `Round ${generatorCurrentRoundIndex + 1} of ${generatorTupleRounds.length}`;
+        generatorScoreText.textContent = `Score: ${generatorScore}`;
+      };
+
+      const updateGeneratorAnswerPlaceholder = () => {
+        generatorAnswer.classList.toggle(
+          "empty",
+          generatorSelectedIndexes.length === 0,
+        );
+      };
+
+      const setGeneratorFeedback = (message, tone = "") => {
+        generatorFeedback.textContent = message;
+        generatorFeedback.classList.remove("success", "error");
+        if (tone) {
+          generatorFeedback.classList.add(tone);
+        }
+      };
+
+      const syncGeneratorBankState = () => {
+        const active = new Set(generatorSelectedIndexes);
+        generatorBank.querySelectorAll(".token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderGeneratorAnswer = () => {
+        const round = generatorTupleRounds[generatorCurrentRoundIndex];
+        generatorAnswer.innerHTML = "";
+
+        generatorSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            generatorSelectedIndexes.splice(answerIndex, 1);
+            renderGeneratorAnswer();
+            syncGeneratorBankState();
+            updateGeneratorAnswerPlaceholder();
+          });
+          generatorAnswer.appendChild(token);
+        });
+
+        updateGeneratorAnswerPlaceholder();
+      };
+
+      const renderGeneratorRound = () => {
+        const round = generatorTupleRounds[generatorCurrentRoundIndex];
+        generatorSelectedIndexes = [];
+        generatorBank.innerHTML = "";
+        generatorAnswer.innerHTML = "";
+        if (generatorEnglishSentence) {
+          generatorEnglishSentence.textContent = round.prompt;
+        }
+        setGeneratorFeedback("");
+
+        const shuffledIndexes = getShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const text = round.tokens[index];
+          const token = makeTokenButton(text, index);
+          token.addEventListener("click", () => {
+            generatorSelectedIndexes.push(index);
+            renderGeneratorAnswer();
+            syncGeneratorBankState();
+          });
+          generatorBank.appendChild(token);
+        });
+
+        updateGeneratorHeader();
+        syncGeneratorBankState();
+        updateGeneratorAnswerPlaceholder();
+      };
+
+      const goToNextGeneratorRound = () => {
+        if (generatorCurrentRoundIndex < generatorTupleRounds.length - 1) {
+          generatorCurrentRoundIndex += 1;
+          renderGeneratorRound();
+          return;
+        }
+
+        setGeneratorFeedback(
+          `Challenge complete! Final score: ${generatorScore}/${generatorTupleRounds.length}`,
+          "success",
+        );
+        generatorCheckBtn.disabled = true;
+      };
+
+      generatorCheckBtn.addEventListener("click", () => {
+        const round = generatorTupleRounds[generatorCurrentRoundIndex];
+        const answerTokens = generatorSelectedIndexes.map(
+          (index) => round.tokens[index],
+        );
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          generatorScore += 1;
+          updateGeneratorHeader();
+          setGeneratorFeedback(
+            "Excellent! Generator tuple created.",
+            "success",
+          );
+          launchConfetti();
+          setTimeout(goToNextGeneratorRound, 750);
+          return;
+        }
+
+        setGeneratorFeedback("Not quite. Recheck, then try again.", "error");
+      });
+
+      generatorClearBtn.addEventListener("click", () => {
+        generatorSelectedIndexes = [];
+        renderGeneratorAnswer();
+        syncGeneratorBankState();
+        setGeneratorFeedback("Answer cleared.");
+      });
+
+      renderGeneratorRound();
+    </script>
+  </body>
+</html>
