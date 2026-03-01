@@ -872,6 +872,47 @@ for w in words:
 print(re.findall(r"\w{2,4}", "I am a student"))  # ['am', 'stud', 'ent']</code></pre>
         </section>
 
+        <section>
+          <p style="font-size: 0.75em; margin-bottom: 0.35rem">
+            Using anchors <code class="inline">^</code>
+            <code class="inline">$</code> and quantifiers, translate:
+          </p>
+
+          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
+            <span style="font-style: italic" id="anchor-game-prompt"></span>
+          </div>
+
+          <div class="regex-game" id="anchor-builder-game">
+            <div class="regex-game-progress">
+              <span id="anchor-game-round">Round 1 of 3</span>
+              <span id="anchor-game-score">Score: 0</span>
+            </div>
+
+            <div
+              id="anchor-game-answer"
+              class="regex-answer-row empty"
+              aria-label="Selected answer tokens"
+            ></div>
+
+            <div
+              id="anchor-game-bank"
+              class="regex-token-bank"
+              aria-label="Available tokens"
+            ></div>
+
+            <div class="regex-game-controls">
+              <button id="anchor-game-check" class="regex-game-btn primary" type="button">
+                Check
+              </button>
+              <button id="anchor-game-clear" class="regex-game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+
+            <p id="anchor-game-feedback" class="regex-game-feedback" aria-live="polite"></p>
+          </div>
+        </section>
+
         <!-- ===== SLIDE 14: GREEDY vs LAZY ===== -->
         <!-- <section>
           <h2>🐢 Greedy vs. Lazy Matching</h2>
@@ -2169,6 +2210,205 @@ re.search(r"\d+", "abc 123")</code></pre>
       });
 
       renderDotGameRound();
+
+      const anchorGameRounds = [
+        {
+          prompt:
+            "Education IT: Validate that student_id is exactly 8 digits and save to id_check.",
+          target: ["id_check", "=", "re.match(", 'r"^\\d{8}$",', "student_id", ")"],
+          tokens: [
+            "id_check",
+            "=",
+            "re.match(",
+            'r"^\\d{8}$",',
+            "student_id",
+            ")",
+            "re.search(",
+            'r"\\d{8}",',
+            "student_ids",
+          ],
+        },
+        {
+          prompt:
+            "Agriculture IT: Validate that soil_code follows AG- plus exactly 4 digits and save to soil_ok.",
+          target: ["soil_ok", "=", "re.match(", 'r"^AG-\\d{4}$",', "soil_code", ")"],
+          tokens: [
+            "soil_ok",
+            "=",
+            "re.match(",
+            'r"^AG-\\d{4}$",',
+            "soil_code",
+            ")",
+            "re.findall(",
+            'r"AG-\\d+",',
+            "soil_codes",
+          ],
+        },
+        {
+          prompt:
+            "Funerary IT: Validate that case_code follows FUN- plus exactly 5 digits and save to memorial_hit.",
+          target: [
+            "memorial_hit",
+            "=",
+            "re.match(",
+            'r"^FUN-\\d{5}$",',
+            "case_code",
+            ")",
+          ],
+          tokens: [
+            "memorial_hit",
+            "=",
+            "re.match(",
+            'r"^FUN-\\d{5}$",',
+            "case_code",
+            ")",
+            "re.search(",
+            'r"FUN-\\d{5}",',
+            "cases",
+          ],
+        },
+      ];
+
+      const anchorGameBank = document.getElementById("anchor-game-bank");
+      const anchorGameAnswer = document.getElementById("anchor-game-answer");
+      const anchorGamePrompt = document.getElementById("anchor-game-prompt");
+      const anchorGameRoundText = document.getElementById("anchor-game-round");
+      const anchorGameScoreText = document.getElementById("anchor-game-score");
+      const anchorGameFeedback = document.getElementById("anchor-game-feedback");
+      const anchorGameCheckBtn = document.getElementById("anchor-game-check");
+      const anchorGameClearBtn = document.getElementById("anchor-game-clear");
+
+      let anchorGameRoundIndex = 0;
+      let anchorGameScore = 0;
+      let anchorGameSelectedIndexes = [];
+
+      const makeAnchorGameTokenButton = (text, index) => {
+        const token = document.createElement("button");
+        token.type = "button";
+        token.className = "regex-token";
+        token.textContent = text;
+        token.dataset.index = String(index);
+        return token;
+      };
+
+      const updateAnchorGameHeader = () => {
+        anchorGameRoundText.textContent = `Round ${anchorGameRoundIndex + 1} of ${anchorGameRounds.length}`;
+        anchorGameScoreText.textContent = `Score: ${anchorGameScore}`;
+      };
+
+      const updateAnchorGameAnswerPlaceholder = () => {
+        anchorGameAnswer.classList.toggle("empty", anchorGameSelectedIndexes.length === 0);
+      };
+
+      const setAnchorGameFeedback = (message, tone = "") => {
+        anchorGameFeedback.textContent = message;
+        anchorGameFeedback.classList.remove("success", "error");
+        if (tone) {
+          anchorGameFeedback.classList.add(tone);
+        }
+      };
+
+      const syncAnchorGameBankState = () => {
+        const active = new Set(anchorGameSelectedIndexes);
+        anchorGameBank.querySelectorAll(".regex-token").forEach((tokenEl) => {
+          const index = Number(tokenEl.dataset.index);
+          const used = active.has(index);
+          tokenEl.classList.toggle("used", used);
+          tokenEl.disabled = used;
+        });
+      };
+
+      const renderAnchorGameAnswer = () => {
+        const round = anchorGameRounds[anchorGameRoundIndex];
+        anchorGameAnswer.innerHTML = "";
+
+        anchorGameSelectedIndexes.forEach((index, answerIndex) => {
+          const token = makeAnchorGameTokenButton(round.tokens[index], index);
+          token.classList.add("answer-token");
+          token.title = "Tap to remove";
+          token.addEventListener("click", () => {
+            anchorGameSelectedIndexes.splice(answerIndex, 1);
+            renderAnchorGameAnswer();
+            syncAnchorGameBankState();
+            updateAnchorGameAnswerPlaceholder();
+          });
+          anchorGameAnswer.appendChild(token);
+        });
+
+        updateAnchorGameAnswerPlaceholder();
+      };
+
+      const renderAnchorGameRound = () => {
+        const round = anchorGameRounds[anchorGameRoundIndex];
+        anchorGameSelectedIndexes = [];
+        anchorGameBank.innerHTML = "";
+        anchorGameAnswer.innerHTML = "";
+
+        if (anchorGamePrompt) {
+          anchorGamePrompt.textContent = round.prompt;
+        }
+
+        setAnchorGameFeedback("");
+
+        const shuffledIndexes = getSearchGameShuffledIndexes(round.tokens.length);
+
+        shuffledIndexes.forEach((index) => {
+          const token = makeAnchorGameTokenButton(round.tokens[index], index);
+          token.addEventListener("click", () => {
+            anchorGameSelectedIndexes.push(index);
+            renderAnchorGameAnswer();
+            syncAnchorGameBankState();
+          });
+          anchorGameBank.appendChild(token);
+        });
+
+        updateAnchorGameHeader();
+        syncAnchorGameBankState();
+        updateAnchorGameAnswerPlaceholder();
+      };
+
+      const goToNextAnchorGameRound = () => {
+        if (anchorGameRoundIndex < anchorGameRounds.length - 1) {
+          anchorGameRoundIndex += 1;
+          renderAnchorGameRound();
+          return;
+        }
+
+        setAnchorGameFeedback(
+          `Challenge complete! Final score: ${anchorGameScore}/${anchorGameRounds.length}`,
+          "success",
+        );
+        anchorGameCheckBtn.disabled = true;
+      };
+
+      anchorGameCheckBtn.addEventListener("click", () => {
+        const round = anchorGameRounds[anchorGameRoundIndex];
+        const answerTokens = anchorGameSelectedIndexes.map((index) => round.tokens[index]);
+
+        const correct =
+          answerTokens.length === round.target.length &&
+          answerTokens.every((token, index) => token === round.target[index]);
+
+        if (correct) {
+          anchorGameScore += 1;
+          updateAnchorGameHeader();
+          setAnchorGameFeedback("Excellent! Anchors and quantifier pattern are correct.", "success");
+          launchRegexConfetti();
+          setTimeout(goToNextAnchorGameRound, 750);
+          return;
+        }
+
+        setAnchorGameFeedback("Not quite. Check ^, $, quantifier count, and argument order.", "error");
+      });
+
+      anchorGameClearBtn.addEventListener("click", () => {
+        anchorGameSelectedIndexes = [];
+        renderAnchorGameAnswer();
+        syncAnchorGameBankState();
+        setAnchorGameFeedback("Answer cleared.");
+      });
+
+      renderAnchorGameRound();
 
       const classGameRounds = [
         {
