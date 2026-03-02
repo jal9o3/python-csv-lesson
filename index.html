@@ -918,33 +918,6 @@ print(re.findall(r"\w{2,4}", "I am a student"))  # ['am', 'stud', 'ent']</code><
           </div>
         </section>
 
-        <!-- ===== SLIDE 14: GREEDY vs LAZY ===== -->
-        <!-- <section>
-          <h2>🐢 Greedy vs. Lazy Matching</h2>
-          <p style="font-size: 0.85em">
-            By default, quantifiers are <strong>greedy</strong> — they match as
-            much as possible.
-          </p>
-          <pre><code class="language-python">import re
-
-html = "&lt;b&gt;Hello&lt;/b&gt; and &lt;b&gt;World&lt;/b&gt;"
-
-# Greedy: matches from first < to LAST >
-greedy = re.findall(r"&lt;.+&gt;", html)
-print("Greedy:", greedy)
-# ['&lt;b&gt;Hello&lt;/b&gt; and &lt;b&gt;World&lt;/b&gt;']   ← too much!
-
-# Lazy (add ?): matches shortest possible
-lazy = re.findall(r"&lt;.+?&gt;", html)
-print("Lazy:", lazy)
-# ['&lt;b&gt;', '&lt;/b&gt;', '&lt;b&gt;', '&lt;/b&gt;']   ← just the tags</code></pre>
-          <div class="callout">
-            Add <code class="inline">?</code> after a quantifier to make it
-            <strong>lazy</strong>: <code class="inline">*?</code>,
-            <code class="inline">+?</code>, <code class="inline">{n,m}?</code>
-          </div>
-        </section> -->
-
         <!-- ===== SLIDE 15: GROUPS ===== -->
         <section>
           <h2>🗃️ Groups <code class="inline">( )</code></h2>
