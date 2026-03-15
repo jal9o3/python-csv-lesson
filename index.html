@@ -412,10 +412,10 @@
         <!-- ===== SLIDE 3: WHAT IS OOP? ===== -->
         <section>
           <h2>💡 What is Object-Oriented Programming?</h2>
-          <p style="font-size: 0.85em">
+          <!-- <p style="font-size: 0.85em">
             OOP is a programming paradigm based on
             <strong style="color: var(--accent)">objects</strong>.
-          </p>
+          </p> -->
           <br />
           <div class="two-col">
             <div class="card">
@@ -430,9 +430,9 @@
             </div>
           </div>
           <br />
-          <div class="callout">
+          <!-- <div class="callout">
             OOP helps organize code into <strong>reusable, modular structures</strong>.
-          </div>
+          </div> -->
         </section>
 
         <!-- ===== SLIDE 4: REAL WORLD ANALOGY ===== -->
@@ -559,9 +559,9 @@ print(type(my_dog))   # &lt;class '__main__.Dog'&gt;</code></pre>
             <strong>constructor method</strong>. It runs
             <em>automatically</em> when a new object is created.
           </p>
-          <pre><code class="language-python">dog1 = Dog("Buddy", 3)
+          <pre><code class="language-python">dog1 = Dog("Bantay", 3)
 # __init__ runs here automatically
-# sets dog1.name = "Buddy", dog1.age = 3</code></pre>
+# sets dog1.name = "Bantay", dog1.age = 3</code></pre>
           <div class="callout">
             Think of <code class="inline">__init__</code> as setup instructions
             that run every time a new object is born.
@@ -571,9 +571,9 @@ print(type(my_dog))   # &lt;class '__main__.Dog'&gt;</code></pre>
         <!-- ===== SLIDE 10: ACCESSING ATTRIBUTES ===== -->
         <section>
           <h2>🔍 Accessing Attributes</h2>
-          <pre><code class="language-python">dog1 = Dog("Buddy", 3)
+          <pre><code class="language-python">dog1 = Dog("Bantay", 3)
 
-print(dog1.name)   # Buddy
+print(dog1.name)   # Bantay
 print(dog1.age)    # 3</code></pre>
           <div class="callout">
             Use <strong>dot notation</strong>:
@@ -614,8 +614,8 @@ print(dog1.age)    # 3</code></pre>
         <!-- ===== SLIDE 12: USING METHODS ===== -->
         <section>
           <h2>▶️ Using Methods</h2>
-          <pre><code class="language-python">dog1 = Dog("Buddy")
-dog1.bark()   # Buddy says Woof!</code></pre>
+          <pre><code class="language-python">dog1 = Dog("Bantay")
+dog1.bark()   # Bantay says Woof!</code></pre>
           <div class="callout">
             Use dot notation to call methods:
             <code class="inline">object.method()</code>
@@ -645,9 +645,9 @@ dog1.bark()   # Buddy says Woof!</code></pre>
 
 cat1 = Cat("Luna")
 cat1.speak()</code></pre>
-          <p style="font-size: 0.82em; margin: 0.6em 0 0">
+          <!-- <p style="font-size: 0.82em; margin: 0.6em 0 0">
             What will the output be?
-          </p>
+          </p> -->
           <div class="mcq-options">
             <button class="mcq-btn" data-correct="false">A. Luna says Woof</button>
             <button class="mcq-btn" data-correct="true">B. Luna says Meow</button>
@@ -734,11 +734,11 @@ print(b1.author)   # J.K. Rowling</code></pre>
           <p style="font-size: 0.85em">
             One class can create <strong>many objects</strong>.
           </p>
-          <pre><code class="language-python">dog1 = Dog("Buddy")
+          <pre><code class="language-python">dog1 = Dog("Bantay")
 dog2 = Dog("Max")
 dog3 = Dog("Bella")
 
-dog1.bark()   # Buddy says Woof!
+dog1.bark()   # Bantay says Woof!
 dog2.bark()   # Max says Woof!
 dog3.bark()   # Bella says Woof!</code></pre>
           <div class="callout">
@@ -760,7 +760,7 @@ dog3.bark()   # Bella says Woof!</code></pre>
             </tr>
             <tr>
               <td><code>dog1</code></td>
-              <td>Buddy</td>
+              <td>Bantay</td>
             </tr>
             <tr>
               <td><code>dog2</code></td>
@@ -792,9 +792,9 @@ dog3.bark()   # Bella says Woof!</code></pre>
     def greet(self):
         print("Hello, I am " + self.name)
 
-dog1 = Dog("Buddy")
+dog1 = Dog("Bantay")
 dog1.bark()    # Woof!
-dog1.greet()   # Hello, I am Buddy</code></pre>
+dog1.greet()   # Hello, I am Bantay</code></pre>
         </section>
 
         <!-- ===== SLIDE 20: GAME 4 — CLASS DESIGN CHALLENGE (TOKEN BUILDER) ===== -->
@@ -848,9 +848,9 @@ dog1.greet()   # Hello, I am Buddy</code></pre>
     def show_score(self):
         print(self.name, self.score)
 
-p1 = Player("Paulo")
+p1 = Player("Bella")
 p1.add_score(50)
-p1.show_score()    # Paulo 50</code></pre>
+p1.show_score()    # Bella 50</code></pre>
         </section>
 
         <!-- ===== SLIDE 22: GAME 5 — TRUE OR FALSE ===== -->
@@ -1325,16 +1325,16 @@ car1.drive()   # The car is driving</code></pre>
         [
           {
             prompt:
-              "Game App: Create a Player object with name 'Paulo'. Store it in p1.",
-            target: ["p1", "=", "Player(", '"Paulo"', ")"],
+              "Game App: Create a Player object with name 'Bella'. Store it in p1.",
+            target: ["p1", "=", "Player(", '"Bella"', ")"],
             tokens: [
               "p1",
               "=",
               "Player(",
-              '"Paulo"',
+              '"Bella"',
               ")",
               "p2",
-              '"paulo"',
+              '"Bella"',
               "player(",
               "Player",
             ],
