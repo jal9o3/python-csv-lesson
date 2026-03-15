@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python Regular Expressions — Computer Programming</title>
+    <title>Classes and Objects in Python — Computer Programming</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css"
@@ -130,18 +130,6 @@
       tr:nth-child(even) td {
         background: rgba(255, 255, 255, 0.03);
       }
-      .big-num {
-        font-size: 3em;
-        color: var(--accent);
-        font-weight: bold;
-      }
-      .slide-num {
-        position: fixed;
-        bottom: 10px;
-        right: 16px;
-        font-size: 0.5em;
-        opacity: 0.3;
-      }
       .subtitle {
         color: #aaa;
         font-size: 0.8em;
@@ -172,7 +160,8 @@
         outline: 2px solid currentColor;
         outline-offset: 2px;
       }
-      .regex-game {
+      /* ===== Token Builder Game ===== */
+      .token-game {
         max-width: 920px;
         margin: 0 auto;
         padding: 1rem;
@@ -180,7 +169,7 @@
         border-radius: 16px;
         background: rgba(0, 217, 163, 0.08);
       }
-      .regex-game-progress {
+      .token-game-progress {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -188,31 +177,31 @@
         font-size: 0.7em;
         margin-bottom: 0.8rem;
       }
-      .regex-token-bank,
-      .regex-answer-row {
+      .token-bank,
+      .token-answer-row {
         display: flex;
         flex-wrap: wrap;
         min-height: 62px;
         padding: 0.75rem;
         border-radius: 12px;
       }
-      .regex-token-bank {
+      .token-bank {
         gap: 0.5rem;
         border: 2px dashed var(--accent);
         background: rgba(255, 255, 255, 0.95);
       }
-      .regex-answer-row {
+      .token-answer-row {
         gap: 0.35rem;
         margin-top: 0.8rem;
         border: 2px solid #2d2d5e;
         background: rgba(255, 255, 255, 0.98);
       }
-      .regex-answer-row.empty::before {
-        content: "Tap tokens to build your re.search() call";
+      .token-answer-row.empty::before {
+        content: "Tap tokens to build your Python statement";
         color: #555;
         font-size: 0.8em;
       }
-      .regex-token {
+      .token {
         margin: 0;
         padding: 0.45rem 0.75rem;
         border: 2px solid #d1d5db;
@@ -225,27 +214,27 @@
         font-weight: 600;
         transition: transform 120ms ease;
       }
-      .regex-token:hover {
+      .token:hover {
         transform: translateY(-1px);
       }
-      .regex-token.used {
+      .token.used {
         opacity: 0.35;
         cursor: not-allowed;
       }
-      .regex-token.answer-token {
+      .token.answer-token {
         padding: 0;
         font-size: 0.68em;
         border: 2px solid transparent;
       }
-      .regex-token.answer-token:hover {
+      .token.answer-token:hover {
         border-color: var(--accent2);
       }
-      .regex-game-controls {
+      .token-game-controls {
         display: flex;
         gap: 0.7rem;
         margin-top: 0.8rem;
       }
-      .regex-game-btn {
+      .token-game-btn {
         border: none;
         border-radius: 12px;
         padding: 0.5rem 0.9rem;
@@ -253,35 +242,120 @@
         cursor: pointer;
         font-size: 0.7em;
       }
-      .regex-game-btn.primary {
+      .token-game-btn.primary {
         background: var(--accent);
         color: #0f172a;
       }
-      .regex-game-btn.secondary {
+      .token-game-btn.secondary {
         background: #e5e7eb;
         color: #111827;
       }
-      .regex-game-feedback {
+      .token-game-feedback {
         min-height: 1.4rem;
         margin-top: 0.65rem;
         font-weight: 700;
         font-size: 0.75em;
         text-align: center;
       }
-      .regex-game-feedback.success {
+      .token-game-feedback.success {
         color: #4ade80;
       }
-      .regex-game-feedback.error {
+      .token-game-feedback.error {
         color: #f87171;
       }
-      .regex-confetti-burst {
+      /* ===== MCQ Game ===== */
+      .mcq-options {
+        display: flex;
+        gap: 1em;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 1em 0;
+      }
+      .mcq-btn {
+        background: #16213e;
+        border: 2px solid #2d2d5e;
+        color: white;
+        border-radius: 10px;
+        padding: 0.6em 1.4em;
+        font-size: 0.8em;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        font-family: inherit;
+      }
+      .mcq-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      .mcq-btn.correct {
+        background: rgba(0, 217, 163, 0.2);
+        border-color: var(--accent);
+      }
+      .mcq-btn.wrong {
+        background: rgba(255, 107, 107, 0.2);
+        border-color: var(--accent2);
+      }
+      /* ===== True / False Game ===== */
+      .tf-game {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8em;
+        text-align: left;
+        margin-top: 0.5em;
+      }
+      .tf-row {
+        background: #16213e;
+        border-radius: 10px;
+        padding: 0.7em 1em;
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        flex-wrap: wrap;
+      }
+      .tf-statement {
+        flex: 1;
+        margin: 0;
+        font-size: 0.82em;
+      }
+      .tf-btns {
+        display: flex;
+        gap: 0.5em;
+      }
+      .tf-btn {
+        background: #2d2d5e;
+        border: 2px solid #4a4a7e;
+        color: white;
+        border-radius: 8px;
+        padding: 0.35em 0.9em;
+        cursor: pointer;
+        font-size: 0.75em;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+      .tf-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      .tf-btn.correct {
+        background: var(--accent);
+        color: #0f172a;
+        border-color: var(--accent);
+      }
+      .tf-btn.wrong {
+        background: var(--accent2);
+        border-color: var(--accent2);
+      }
+      .tf-result {
+        font-size: 0.75em;
+        font-weight: 700;
+        min-width: 5em;
+      }
+      /* ===== Confetti ===== */
+      .confetti-burst {
         position: fixed;
         inset: 0;
         pointer-events: none;
         overflow: hidden;
         z-index: 9999;
       }
-      .regex-confetti-piece {
+      .confetti-piece {
         position: absolute;
         top: -12px;
         width: 10px;
@@ -289,9 +363,9 @@
         border-radius: 2px;
         opacity: 0.95;
         transform: translateY(0) rotate(0deg);
-        animation: regex-confetti-fall 900ms linear forwards;
+        animation: confetti-fall 900ms linear forwards;
       }
-      @keyframes regex-confetti-fall {
+      @keyframes confetti-fall {
         to {
           transform: translateY(105vh) rotate(720deg);
           opacity: 0.15;
@@ -302,1199 +376,672 @@
   <body>
     <div class="reveal">
       <div class="slides">
+
         <!-- ===== SLIDE 1: TITLE ===== -->
         <section
           data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
         >
-          <h1>Regular Expressions</h1>
-          <p class="subtitle">Lesson VI</p>
+          <h1>Classes and Objects</h1>
+          <p class="subtitle">in Python</p>
           <br />
           <div class="tag-row">
-            <span class="tag">re module</span>
-            <span class="tag">pattern matching</span>
-            <span class="tag">text processing</span>
+            <span class="tag">class</span>
+            <span class="tag">object</span>
+            <span class="tag">attributes</span>
+            <span class="tag">methods</span>
+            <span class="tag">OOP</span>
           </div>
           <br />
           <p style="color: #666; font-size: 0.6em">Jerome Loria</p>
           <p style="color: #666; font-size: 0.6em">March 2026</p>
         </section>
 
-        <!-- ===== SLIDE 2: WHAT IS A REGEX? ===== -->
+        <!-- ===== SLIDE 2: OBJECTIVES ===== -->
         <section>
-          <h2>🔍 What is a Regular Expression?</h2>
+          <h2>🎯 Lesson Objectives</h2>
+          <p style="font-size: 0.85em">By the end of this lesson you will be able to:</p>
+          <ul>
+            <li>Explain what a <strong>class</strong> and <strong>object</strong> are</li>
+            <li>Create classes in Python</li>
+            <li>Use <strong>attributes</strong> and <strong>methods</strong></li>
+            <li>Instantiate objects</li>
+            <li>Apply classes to solve problems</li>
+          </ul>
+        </section>
+
+        <!-- ===== SLIDE 3: WHAT IS OOP? ===== -->
+        <section>
+          <h2>💡 What is Object-Oriented Programming?</h2>
           <p style="font-size: 0.85em">
-            A
-            <strong style="color: var(--accent)">regular expression</strong>
-            (regex) is a sequence of characters that defines a
-            <em>search pattern</em>.
+            OOP is a programming paradigm based on
+            <strong style="color: var(--accent)">objects</strong>.
           </p>
           <br />
           <div class="two-col">
             <div class="card">
-              <h4>📌 Used for</h4>
-              <ul>
-                <li>Searching text</li>
-                <li>Validating input (emails, phone numbers)</li>
-                <li>Extracting data</li>
-                <li>Replacing/modifying strings</li>
-              </ul>
+              <h4>📦 Data (Attributes)</h4>
+              <p>Information an object stores about itself.</p>
+              <p><em>Example: a dog's name, age, breed</em></p>
             </div>
             <div class="card">
-              <h4>🌍 Used in</h4>
-              <ul>
-                <li>Web development</li>
-                <li>Data science &amp; scraping</li>
-                <li>Cybersecurity</li>
-                <li>Log file analysis</li>
-              </ul>
+              <h4>⚙️ Behavior (Methods)</h4>
+              <p>Actions an object can perform.</p>
+              <p><em>Example: bark, run, fetch</em></p>
             </div>
           </div>
           <br />
           <div class="callout">
-            💡 Think of regex as a <strong>supercharged search bar</strong> that
-            understands patterns, not just exact words.
+            OOP helps organize code into <strong>reusable, modular structures</strong>.
           </div>
         </section>
 
-        <!-- ===== SLIDE 3: REAL-WORLD EXAMPLES ===== -->
+        <!-- ===== SLIDE 4: REAL WORLD ANALOGY ===== -->
         <section>
-          <h2>🌐 Regex in the Real World</h2>
-          <table>
-            <tr>
-              <th>Use Case</th>
-              <th>Pattern Description</th>
-              <th>Example Match</th>
-            </tr>
-            <tr>
-              <td>Email validation</td>
-              <td>word@word.word</td>
-              <td>alice@school.edu</td>
-            </tr>
-            <tr>
-              <td>Phone number</td>
-              <td>digits with dashes</td>
-              <td>09-123-456-7890</td>
-            </tr>
-            <tr>
-              <td>ZIP / postal code</td>
-              <td>4–5 digits</td>
-              <td>1000 (Manila)</td>
-            </tr>
-            <tr>
-              <td>Password strength</td>
-              <td>mix of chars + length</td>
-              <td>P@ssw0rd!</td>
-            </tr>
-            <tr>
-              <td>Find dates in a log</td>
-              <td>YYYY-MM-DD</td>
-              <td>2024-11-15</td>
-            </tr>
-            <tr>
-              <td>HTML tag stripping</td>
-              <td>&lt;anything&gt;</td>
-              <td>&lt;b&gt;Hello&lt;/b&gt;</td>
-            </tr>
-          </table>
-        </section>
-
-        <!-- ===== SLIDE 4: THE re MODULE ===== -->
-        <section>
-          <h2>📦 The <code class="inline">re</code> Module</h2>
-          <p style="font-size: 0.85em">
-            Python's built-in module for working with regular expressions.
-          </p>
-          <pre><code class="language-python">import re   # Always import first!
-
-# Basic example
-text = "Hello, my name is Juan!"
-match = re.search(r"Juan", text)
-
-if match:
-    print("Found:", match.group())   # Found: Juan
-else:
-    print("Not found")</code></pre>
-          <div class="callout">
-            🔑 The <strong>r"..."</strong> prefix creates a
-            <em>raw string</em> — backslashes are treated literally. Always use
-            raw strings with regex!
-          </div>
-        </section>
-
-        <section>
-          <!-- <h3>🎯 Build the Exact <code class="inline">re.search(args)</code> Call</h3> -->
-          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
-            Using <code class="inline">re.search()</code>, translate:
-          </p>
-
-          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
-            <span style="font-style: italic" id="search-game-prompt"></span>
-          </div>
-
-          <div class="regex-game" id="search-builder-game">
-            <div class="regex-game-progress">
-              <span id="search-game-round">Round 1 of 3</span>
-              <span id="search-game-score">Score: 0</span>
-            </div>
-
-            <div
-              id="search-game-answer"
-              class="regex-answer-row empty"
-              aria-label="Selected answer tokens"
-            ></div>
-
-            <div
-              id="search-game-bank"
-              class="regex-token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="regex-game-controls">
-              <button id="search-game-check" class="regex-game-btn primary" type="button">
-                Check
-              </button>
-              <button id="search-game-clear" class="regex-game-btn secondary" type="button">
-                Clear
-              </button>
-            </div>
-
-            <p id="search-game-feedback" class="regex-game-feedback" aria-live="polite"></p>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 5: KEY FUNCTIONS ===== -->
-        <section>
-          <h2>⚙️ Key Functions in <code class="inline">re</code></h2>
-          <table>
-            <tr>
-              <th>Function</th>
-              <th>What it does</th>
-              <th>Returns</th>
-            </tr>
-            <tr>
-              <td><code>re.search()</code></td>
-              <td>Find first match anywhere</td>
-              <td>Match object or None</td>
-            </tr>
-            <tr>
-              <td><code>re.match()</code></td>
-              <td>Match at start of string only</td>
-              <td>Match object or None</td>
-            </tr>
-            <tr>
-              <td><code>re.findall()</code></td>
-              <td>Find all matches</td>
-              <td>List of strings</td>
-            </tr>
-            <tr>
-              <td><code>re.finditer()</code></td>
-              <td>Find all matches (iterator)</td>
-              <td>Iterator of Match objects</td>
-            </tr>
-            <tr>
-              <td><code>re.sub()</code></td>
-              <td>Replace matches</td>
-              <td>New string</td>
-            </tr>
-            <tr>
-              <td><code>re.split()</code></td>
-              <td>Split by pattern</td>
-              <td>List of strings</td>
-            </tr>
-            <tr>
-              <td><code>re.compile()</code></td>
-              <td>Pre-compile a pattern</td>
-              <td>Pattern object</td>
-            </tr>
-          </table>
-        </section>
-
-        <!-- ===== SLIDE 6: LITERAL CHARACTERS ===== -->
-        <section>
-          <h2>🔤 Literal Characters</h2>
-          <p style="font-size: 0.85em">
-            The simplest pattern — match exact characters.
-          </p>
-          <pre><code class="language-python">import re
-
-text = "The cat sat on the mat"
-
-result = re.findall(r"at", text)
-print(result)  # ['at', 'at', 'at']
-
-result2 = re.findall(r"cat", text)
-print(result2)  # ['cat']</code></pre>
-          <div class="callout">
-            Regex is <strong>case-sensitive</strong> by default.
-            <code class="inline">"Cat"</code> ≠
-            <code class="inline">"cat"</code>
-          </div>
-        </section>
-
-        <section>
-          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
-            Using <code class="inline">re.findall()</code>, translate:
-          </p>
-
-          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
-            <span style="font-style: italic" id="findall-game-prompt"></span>
-          </div>
-
-          <div class="regex-game" id="findall-builder-game">
-            <div class="regex-game-progress">
-              <span id="findall-game-round">Round 1 of 3</span>
-              <span id="findall-game-score">Score: 0</span>
-            </div>
-
-            <div
-              id="findall-game-answer"
-              class="regex-answer-row empty"
-              aria-label="Selected answer tokens"
-            ></div>
-
-            <div
-              id="findall-game-bank"
-              class="regex-token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="regex-game-controls">
-              <button id="findall-game-check" class="regex-game-btn primary" type="button">
-                Check
-              </button>
-              <button id="findall-game-clear" class="regex-game-btn secondary" type="button">
-                Clear
-              </button>
-            </div>
-
-            <p id="findall-game-feedback" class="regex-game-feedback" aria-live="polite"></p>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 7: METACHARACTERS ===== -->
-        <section>
-          <h2>✨ Metacharacters</h2>
-          <p style="font-size: 0.85em">
-            Characters with special meaning in regex:
-          </p>
-          <!-- <div class="tag-row" style="font-size: 1.1em">
-            <span class="tag">. ^ $ * + ? { } [ ] \ | ( )</span>
-          </div> -->
-          <br />
-          <table>
-            <tr>
-              <th>Symbol</th>
-              <th>Meaning</th>
-            </tr>
-            <tr>
-              <td><code>.</code></td>
-              <td>Any character except newline</td>
-            </tr>
-            <tr>
-              <td><code>^</code></td>
-              <td>Start of string</td>
-            </tr>
-            <tr>
-              <td><code>$</code></td>
-              <td>End of string</td>
-            </tr>
-            <tr>
-              <td><code>\</code></td>
-              <td>Escape special character</td>
-            </tr>
-            <tr>
-              <td><code>|</code></td>
-              <td>OR operator</td>
-            </tr>
-            <tr>
-              <td><code>( )</code></td>
-              <td>Grouping</td>
-            </tr>
-          </table>
-          <div class="warn">
-            ⚠️ To match a literal dot, escape it: <code class="inline">\.</code>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 8: THE DOT ===== -->
-        <section>
-          <h2>💡 The Dot <code class="inline">.</code></h2>
-          <p style="font-size: 0.85em">
-            Matches <strong>any single character</strong> except a newline.
-          </p>
-          <pre><code class="language-python">import re
-
-words = ["cat", "bat", "hat", "sat", "mat", "rat"]
-
-for w in words:
-    if re.match(r".at", w):
-        print(w, "✓")
-
-# cat ✓  bat ✓  hat ✓  sat ✓  mat ✓  rat ✓</code></pre>
-          <pre><code class="language-python"># Match any 3-character word ending in 'at'
-text = "cat bat 1at !at"
-print(re.findall(r".at", text))  # ['cat', 'bat', '1at', '!at']</code></pre>
-        </section>
-
-        <section>
-          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
-            Using dot <code class="inline">.</code> with
-            <code class="inline">re.findall()</code>, translate:
-          </p>
-
-          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
-            <span style="font-style: italic" id="dot-game-prompt"></span>
-          </div>
-
-          <div class="regex-game" id="dot-builder-game">
-            <div class="regex-game-progress">
-              <span id="dot-game-round">Round 1 of 3</span>
-              <span id="dot-game-score">Score: 0</span>
-            </div>
-
-            <div
-              id="dot-game-answer"
-              class="regex-answer-row empty"
-              aria-label="Selected answer tokens"
-            ></div>
-
-            <div
-              id="dot-game-bank"
-              class="regex-token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="regex-game-controls">
-              <button id="dot-game-check" class="regex-game-btn primary" type="button">
-                Check
-              </button>
-              <button id="dot-game-clear" class="regex-game-btn secondary" type="button">
-                Clear
-              </button>
-            </div>
-
-            <p id="dot-game-feedback" class="regex-game-feedback" aria-live="polite"></p>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 9: CHARACTER CLASSES ===== -->
-        <section>
-          <h2>🗂️ Character Classes <code class="inline">[ ]</code></h2>
-          <p style="font-size: 0.85em">
-            Match <strong>one character</strong> from a defined set.
-          </p>
-          <pre><code class="language-python">import re
-
-text = "cat bat hat sat"
-
-# Match c, b, or h followed by 'at'
-print(re.findall(r"[cbh]at", text))   # ['cat', 'bat', 'hat']
-
-# Match any lowercase vowel
-print(re.findall(r"[aeiou]", "Hello World"))  # ['e', 'o', 'o']
-
-# Match digits
-print(re.findall(r"[0-9]", "a1b2c3"))  # ['1', '2', '3']
-
-# Negation: match anything NOT a digit
-print(re.findall(r"[^0-9]", "a1b2c3"))  # ['a', 'b', 'c']</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 10: SHORTHAND CLASSES ===== -->
-        <section>
-          <h2>⚡ Shorthand Character Classes</h2>
-          <table>
-            <tr>
-              <th>Shorthand</th>
-              <th>Equivalent</th>
-              <th>Matches</th>
-            </tr>
-            <tr>
-              <td><code>\d</code></td>
-              <td><code>[0-9]</code></td>
-              <td>Any digit</td>
-            </tr>
-            <tr>
-              <td><code>\D</code></td>
-              <td><code>[^0-9]</code></td>
-              <td>Any non-digit</td>
-            </tr>
-            <tr>
-              <td><code>\w</code></td>
-              <td><code>[a-zA-Z0-9_]</code></td>
-              <td>Word character</td>
-            </tr>
-            <tr>
-              <td><code>\W</code></td>
-              <td><code>[^a-zA-Z0-9_]</code></td>
-              <td>Non-word character</td>
-            </tr>
-            <tr>
-              <td><code>\s</code></td>
-              <td><code>[ \t\n\r]</code></td>
-              <td>Whitespace</td>
-            </tr>
-            <tr>
-              <td><code>\S</code></td>
-              <td><code>[^ \t\n\r]</code></td>
-              <td>Non-whitespace</td>
-            </tr>
-          </table>
-          <pre><code class="language-python">text = "My phone is 0917-123-4567"
-print(re.findall(r"\d", text))   # ['0','9','1','7','1','2','3','4','5','6','7']
-print(re.findall(r"\w+", text))  # ['My', 'phone', 'is', '0917', '123', '4567']</code></pre>
-        </section>
-
-        <section>
-          <p style="font-size: 0.75em; margin-bottom: 0.35rem">
-            Using character classes/shorthands and the best
-            <code class="inline">re</code> function, translate:
-          </p>
-
-          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
-            <span style="font-style: italic" id="class-game-prompt"></span>
-          </div>
-
-          <div class="regex-game" id="class-builder-game">
-            <div class="regex-game-progress">
-              <span id="class-game-round">Round 1 of 3</span>
-              <span id="class-game-score">Score: 0</span>
-            </div>
-
-            <div
-              id="class-game-answer"
-              class="regex-answer-row empty"
-              aria-label="Selected answer tokens"
-            ></div>
-
-            <div
-              id="class-game-bank"
-              class="regex-token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="regex-game-controls">
-              <button id="class-game-check" class="regex-game-btn primary" type="button">
-                Check
-              </button>
-              <button id="class-game-clear" class="regex-game-btn secondary" type="button">
-                Clear
-              </button>
-            </div>
-
-            <p id="class-game-feedback" class="regex-game-feedback" aria-live="polite"></p>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 11: ANCHORS ===== -->
-        <section>
-          <h2>
-            ⚓ Anchors: <code class="inline">^</code> and
-            <code class="inline">$</code>
-          </h2>
-          <p style="font-size: 0.85em">
-            Anchors do not match characters — they match
-            <strong>positions</strong>.
-          </p>
-          <pre><code class="language-python">import re
-
-# ^ matches START of string
-print(re.search(r"^Hello", "Hello World"))  # Match ✓
-print(re.search(r"^World", "Hello World"))  # None ✗
-
-# $ matches END of string
-print(re.search(r"World$", "Hello World"))  # Match ✓
-print(re.search(r"Hello$", "Hello World"))  # None ✗
-
-# Combine both to match EXACT string
-print(re.match(r"^\d{4}$", "2024"))   # Match ✓  (exactly 4 digits)
-print(re.match(r"^\d{4}$", "20245"))  # None ✗   (5 digits)</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 12: QUANTIFIERS ===== -->
-        <section>
-          <h2>🔢 Quantifiers</h2>
-          <p style="font-size: 0.85em">
-            Specify <strong>how many times</strong> a pattern should repeat.
-          </p>
-          <table>
-            <tr>
-              <th>Quantifier</th>
-              <th>Meaning</th>
-              <th>Example</th>
-            </tr>
-            <tr>
-              <td><code>*</code></td>
-              <td>0 or more</td>
-              <td><code>ab*c</code> → ac, abc, abbc…</td>
-            </tr>
-            <tr>
-              <td><code>+</code></td>
-              <td>1 or more</td>
-              <td><code>ab+c</code> → abc, abbc… (not ac)</td>
-            </tr>
-            <tr>
-              <td><code>?</code></td>
-              <td>0 or 1 (optional)</td>
-              <td><code>colou?r</code> → color, colour</td>
-            </tr>
-            <tr>
-              <td><code>{n}</code></td>
-              <td>Exactly n times</td>
-              <td><code>\d{4}</code> → 2024</td>
-            </tr>
-            <tr>
-              <td><code>{n,}</code></td>
-              <td>n or more</td>
-              <td><code>\d{3,}</code> → 123, 1234…</td>
-            </tr>
-            <tr>
-              <td><code>{n,m}</code></td>
-              <td>Between n and m</td>
-              <td><code>\d{2,4}</code> → 12, 123, 1234</td>
-            </tr>
-          </table>
-        </section>
-
-        <!-- ===== SLIDE 13: QUANTIFIERS IN ACTION ===== -->
-        <section>
-          <h2>🧪 Quantifiers in Action</h2>
-          <pre><code class="language-python">import re
-
-# + : one or more digits
-print(re.findall(r"\d+", "abc123def456"))  # ['123', '456']
-
-# * : zero or more 'a's before 'b'
-print(re.findall(r"a*b", "b ab aab aaab"))  # ['b', 'ab', 'aab', 'aaab']
-
-# ? : optional 'u'
-words = ["color", "colour", "colr"]
-for w in words:
-    if re.match(r"colou?r", w):
-        print(w, "matches!")  # color, colour match
-
-# {2,4}: 2 to 4 word characters
-print(re.findall(r"\w{2,4}", "I am a student"))  # ['am', 'stud', 'ent']</code></pre>
-        </section>
-
-        <section>
-          <p style="font-size: 0.75em; margin-bottom: 0.35rem">
-            Using anchors <code class="inline">^</code>
-            <code class="inline">$</code> and quantifiers, translate:
-          </p>
-
-          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
-            <span style="font-style: italic" id="anchor-game-prompt"></span>
-          </div>
-
-          <div class="regex-game" id="anchor-builder-game">
-            <div class="regex-game-progress">
-              <span id="anchor-game-round">Round 1 of 3</span>
-              <span id="anchor-game-score">Score: 0</span>
-            </div>
-
-            <div
-              id="anchor-game-answer"
-              class="regex-answer-row empty"
-              aria-label="Selected answer tokens"
-            ></div>
-
-            <div
-              id="anchor-game-bank"
-              class="regex-token-bank"
-              aria-label="Available tokens"
-            ></div>
-
-            <div class="regex-game-controls">
-              <button id="anchor-game-check" class="regex-game-btn primary" type="button">
-                Check
-              </button>
-              <button id="anchor-game-clear" class="regex-game-btn secondary" type="button">
-                Clear
-              </button>
-            </div>
-
-            <p id="anchor-game-feedback" class="regex-game-feedback" aria-live="polite"></p>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 15: GROUPS ===== -->
-        <section>
-          <h2>🗃️ Groups <code class="inline">( )</code></h2>
-          <p style="font-size: 0.85em">
-            Parentheses <strong>group</strong> parts of a pattern and
-            <strong>capture</strong> matched text.
-          </p>
-          <pre><code class="language-python">import re
-
-# Extract year, month, day separately
-date = "Today is 2024-11-15"
-match = re.search(r"(\d{4})-(\d{2})-(\d{2})", date)
-
-if match:
-    print("Full match:", match.group(0))   # 2024-11-15
-    print("Year:",       match.group(1))   # 2024
-    print("Month:",      match.group(2))   # 11
-    print("Day:",        match.group(3))   # 15
-
-# Named groups — even cleaner!
-match2 = re.search(r"(?P&lt;year&gt;\d{4})-(?P&lt;month&gt;\d{2})-(?P&lt;day&gt;\d{2})", date)
-print(match2.group("year"))   # 2024
-print(match2.group("month"))  # 11</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 16: ALTERNATION ===== -->
-        <section>
-          <h2>🔀 Alternation <code class="inline">|</code></h2>
-          <p style="font-size: 0.85em">
-            The pipe <code class="inline">|</code> acts as an
-            <strong>OR</strong> operator between patterns.
-          </p>
-          <pre><code class="language-python">import re
-
-# Match 'cat' or 'dog'
-animals = ["I have a cat", "She has a dog", "He has a bird"]
-for sentence in animals:
-    if re.search(r"cat|dog", sentence):
-        print(sentence, "→ has a pet!")
-
-# Match multiple file extensions
-files = ["report.pdf", "photo.jpg", "data.csv", "notes.txt", "hack.exe"]
-for f in files:
-    if re.search(r"\.(pdf|jpg|csv|txt)$", f):
-        print(f, "→ safe file ✓")</code></pre>
-          <div class="callout">
-            Use groups to limit the scope of <code class="inline">|</code>:
-            <code class="inline">gr(a|e)y</code> matches "gray" and "grey".
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 17: re.search vs re.match ===== -->
-        <section>
-          <h2>
-            🔎 <code class="inline">search()</code> vs
-            <code class="inline">match()</code>
-          </h2>
-          <pre><code class="language-python">text = "  Python is awesome"
-
-# match() only checks the BEGINNING
-m1 = re.match(r"Python", text)
-print(m1)   # None — text starts with spaces!
-
-# search() scans the WHOLE string
-m2 = re.search(r"Python", text)
-print(m2)   # &lt;re.Match object; match='Python'&gt;
-
-# match() works if pattern is at start
-m3 = re.match(r"\s+Python", text)
-print(m3.group())   # '  Python' ✓</code></pre>
-          <div class="two-col" style="margin-top: 0.5em">
-            <div class="card">
-              <h4>match()</h4>
-              Use when input must start with pattern (e.g., validating format
-              from pos 0)
-            </div>
-            <div class="card">
-              <h4>search()</h4>
-              Use when pattern can appear anywhere in the string
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 18: findall and finditer ===== -->
-        <section>
-          <h2>
-            📋 <code class="inline">findall()</code> &amp;
-            <code class="inline">finditer()</code>
-          </h2>
-          <pre><code class="language-python">import re
-
-text = "Scores: 85, 90, 78, 92, 88"
-
-# findall → returns a plain list
-scores = re.findall(r"\d+", text)
-print(scores)  # ['85', '90', '78', '92', '88']
-print([int(s) for s in scores])  # convert to ints
-
-# finditer → returns iterator with position info
-for m in re.finditer(r"\d+", text):
-    print(f"Found '{m.group()}' at position {m.start()}–{m.end()}")</code></pre>
-          <pre style="font-size: 0.7em"><samp>Found '85' at position 8–10
-Found '90' at position 12–14
-Found '78' at position 16–18
-</samp></pre>
-          <div class="callout">
-            Use <code class="inline">finditer()</code> when you need position
-            info; use <code class="inline">findall()</code> when you just need
-            the values.
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 19: re.sub ===== -->
-        <section>
-          <h2>✏️ <code class="inline">re.sub()</code> — Find &amp; Replace</h2>
-          <pre><code class="language-python">import re
-
-# Syntax: re.sub(pattern, replacement, string, count=0)
-
-# Censor bad words
-text = "This is spam and more spam!"
-clean = re.sub(r"spam", "****", text)
-print(clean)  # This is **** and more ****!
-
-# Remove all digits
-msg = "My PIN is 1234 and OTP is 5678"
-print(re.sub(r"\d", "*", msg))  # My PIN is **** and OTP is ****
-
-# Format phone numbers: 09171234567 → 0917-123-4567
-phone = "Call 09171234567 now"
-formatted = re.sub(r"(0\d{3})(\d{3})(\d{4})", r"\1-\2-\3", phone)
-print(formatted)  # Call 0917-123-4567 now</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 20: re.split ===== -->
-        <section>
-          <h2>✂️ <code class="inline">re.split()</code> — Split by Pattern</h2>
-          <pre><code class="language-python"># Split by any whitespace (spaces, tabs, newlines)
-text = "one   two\tthree\nfour"
-print(re.split(r"\s+", text))
-# ['one', 'two', 'three', 'four']
-
-# Split by comma, semicolon, or pipe
-csv = "Alice,30;Bob|25,Carol;22"
-print(re.split(r"[,;|]", csv))
-# ['Alice', '30', 'Bob', '25', 'Carol', '22']
-
-# Split a sentence into words and punctuation
-sentence = "Hello, world! How are you?"
-tokens = re.split(r"(\W+)", sentence)
-print(tokens)</code></pre>
-          <div class="callout">
-            Wrapping the delimiter in a group
-            <code class="inline">( )</code> includes it in the output list —
-            useful for tokenization!
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 21: re.compile ===== -->
-        <section>
-          <h2>
-            ⚙️ <code class="inline">re.compile()</code> — Reusable Patterns
-          </h2>
-          <p style="font-size: 0.85em">
-            When you use the same pattern many times,
-            <strong>compile</strong> it for efficiency.
-          </p>
-          <pre><code class="language-python">import re
-
-# Without compile — pattern is re-parsed every call
-for line in open("students.txt"):
-    re.search(r"\d{5}", line)   # slightly slower
-
-# With compile — parsed ONCE, reused many times
-id_pattern = re.compile(r"\d{5}")
-
-lines = ["ID: 12345 — Alice", "ID: 67890 — Bob", "No ID here"]
-for line in lines:
-    m = id_pattern.search(line)
-    if m:
-        print("Found ID:", m.group())
-
-# Compiled patterns have the same methods
-ids = id_pattern.findall("12345 and 67890 and 99999")</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 22: FLAGS ===== -->
-        <section>
-          <h2>🚩 Regex Flags</h2>
-          <p style="font-size: 0.85em">
-            Flags modify how the pattern is applied.
-          </p>
-          <table>
-            <tr>
-              <th>Flag</th>
-              <th>Short</th>
-              <th>Effect</th>
-            </tr>
-            <tr>
-              <td><code>re.IGNORECASE</code></td>
-              <td><code>re.I</code></td>
-              <td>Case-insensitive matching</td>
-            </tr>
-            <tr>
-              <td><code>re.MULTILINE</code></td>
-              <td><code>re.M</code></td>
-              <td><code>^</code>/<code>$</code> match each line</td>
-            </tr>
-            <tr>
-              <td><code>re.DOTALL</code></td>
-              <td><code>re.S</code></td>
-              <td><code>.</code> matches newline too</td>
-            </tr>
-            <tr>
-              <td><code>re.VERBOSE</code></td>
-              <td><code>re.X</code></td>
-              <td>Allow comments &amp; whitespace</td>
-            </tr>
-          </table>
-          <pre><code class="language-python">import re
-
-text = "Hello WORLD hello world"
-
-# IGNORECASE
-print(re.findall(r"hello", text, re.I))
-# ['Hello', 'hello']
-
-# MULTILINE
-lines = "start\nstop\nstart again"
-print(re.findall(r"^start", lines, re.M))
-# ['start', 'start']</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 23: VERBOSE FLAG ===== -->
-        <section>
-          <h2>📝 The <code class="inline">re.VERBOSE</code> Flag</h2>
-          <p style="font-size: 0.85em">
-            Makes complex patterns <strong>readable</strong> with comments and
-            whitespace.
-          </p>
-          <pre><code class="language-python">import re
-
-# Hard to read
-phone_re = re.compile(r"(\+63|0)(\d{3})-?(\d{3})-?(\d{4})")
-
-# Same pattern with re.VERBOSE — much cleaner!
-phone_re = re.compile(r"""
-    (\+63|0)    # country code or leading 0
-    (\d{3})     # area/network code (e.g., 917)
-    -?          # optional dash
-    (\d{3})     # first 3 digits
-    -?          # optional dash
-    (\d{4})     # last 4 digits
-""", re.VERBOSE)
-
-matches = phone_re.findall("Call +63917-123-4567 or 0917-987-6543")
-print(matches)</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 24: PRACTICAL — EMAIL VALIDATION ===== -->
-        <section>
-          <h2>📧 Practice: Email Validation</h2>
-          <pre><code class="language-python">import re
-
-def is_valid_email(email):
-    pattern = re.compile(r"""
-        ^                   # start
-        [a-zA-Z0-9._%+-]+   # username (letters, digits, dots, etc.)
-        @                   # literal @
-        [a-zA-Z0-9.-]+      # domain name
-        \.                  # literal dot
-        [a-zA-Z]{2,}        # top-level domain (2+ letters)
-        $                   # end
-    """, re.VERBOSE)
-    return bool(pattern.match(email))
-
-emails = [
-    "student@school.edu",   # ✓
-    "invalid-email",        # ✗
-    "user@.com",            # ✗
-    "first.last@uni.edu.ph" # ✓
-]
-for e in emails:
-    status = "✓ Valid" if is_valid_email(e) else "✗ Invalid"
-    print(f"{e:<30} {status}")</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 25: PRACTICAL — PASSWORD CHECKER ===== -->
-        <section>
-          <h2>🔐 Practice: Password Strength Checker</h2>
-          <pre><code class="language-python">import re
-
-def check_password(password):
-    errors = []
-    if not re.search(r".{8,}", password):
-        errors.append("At least 8 characters")
-    if not re.search(r"[A-Z]", password):
-        errors.append("At least one uppercase letter")
-    if not re.search(r"[a-z]", password):
-        errors.append("At least one lowercase letter")
-    if not re.search(r"\d", password):
-        errors.append("At least one digit")
-    if not re.search(r"[!@#$%^&*]", password):
-        errors.append("At least one special character")
-    if errors:
-        print("❌ Weak password. Missing:")
-        for e in errors: print("  •", e)
-    else:
-        print("✅ Strong password!")
-
-check_password("hello")         # ❌ many issues
-check_password("P@ssw0rd!")     # ✅</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 26: PRACTICAL — LOG FILE PARSING ===== -->
-        <section>
-          <h2>📋 Practice: Parsing Log Files</h2>
-          <pre><code class="language-python">import re
-
-log = """
-2024-11-15 08:32:11 INFO  User 'alice' logged in from 192.168.1.10
-2024-11-15 08:45:03 ERROR Failed login attempt from 10.0.0.5
-2024-11-15 09:01:55 INFO  User 'bob' logged in from 172.16.0.2
-2024-11-15 09:15:22 WARN  High memory usage detected
-"""
-
-# Extract timestamps
-timestamps = re.findall(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", log)
-print("Timestamps:", timestamps)
-
-# Find all IP addresses
-ips = re.findall(r"\b\d{1,3}(?:\.\d{1,3}){3}\b", log)
-print("IPs found:", ips)
-
-# Find ERROR and WARN lines
-issues = re.findall(r"(ERROR|WARN).+", log)
-print("\nIssues:")
-for i in issues: print(" ", i)</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 27: LOOKAHEAD & LOOKBEHIND (INTRO) ===== -->
-        <section>
-          <h2>👀 Lookahead &amp; Lookbehind</h2>
-          <p style="font-size: 0.8em">
-            <!-- <em
-              >Match based on what surrounds a pattern, without the surroundings.</em
-            > -->
-          </p>
-          <table>
-            <tr>
-              <th>Syntax</th>
-              <th>Type</th>
-              <th>Meaning</th>
-            </tr>
-            <tr>
-              <td><code>(?=...)</code></td>
-              <td>Lookahead</td>
-              <td>Match if followed by …</td>
-            </tr>
-            <tr>
-              <td><code>(?!...)</code></td>
-              <td>Negative lookahead</td>
-              <td>Match if NOT followed by …</td>
-            </tr>
-            <tr>
-              <td><code>(?&lt;=...)</code></td>
-              <td>Lookbehind</td>
-              <td>Match if preceded by …</td>
-            </tr>
-            <tr>
-              <td><code>(?&lt;!...)</code></td>
-              <td>Negative lookbehind</td>
-              <td>Match if NOT preceded by …</td>
-            </tr>
-          </table>
-          <pre><code class="language-python">prices = "apple: 50, banana: 30, mango: 75"
-
-# Get numbers preceded by ': '
-nums = re.findall(r"(?&lt;=: )\d+", prices)
-print(nums)   # ['50', '30', '75']
-
-# Get words followed by ':'
-items = re.findall(r"\w+(?=:)", prices)
-print(items)  # ['apple', 'banana', 'mango']</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 28: COMMON MISTAKES ===== -->
-        <section>
-          <h2>⚠️ Common Mistakes to Avoid</h2>
+          <h2>🚗 Real World Analogy</h2>
+          <p style="font-size: 0.85em">Think about a <strong>Car</strong> 🚗</p>
           <div class="two-col">
             <div class="card">
-              <h4>❌ Forgetting raw strings</h4>
-              <pre><code class="language-python"># Wrong — \d is an escape seq
-re.findall("\d+", text)
-
-# Right
-re.findall(r"\d+", text)</code></pre>
+              <h4>Characteristics (Attributes)</h4>
+              <ul>
+                <li>Color</li>
+                <li>Brand</li>
+                <li>Speed</li>
+              </ul>
             </div>
-            <!-- <div class="card">
-              <h4>❌ Greedy traps</h4>
-              <pre><code class="language-python"># Matches too much!
-re.findall(r"&lt;.+&gt;", html)
-
-# Use lazy
-re.findall(r"&lt;.+?&gt;", html)</code></pre>
-            </div> -->
             <div class="card">
-              <h4>❌ Unescaped dots</h4>
-              <pre><code class="language-python"># Matches "google_com" too!
-re.match(r"google.com", url)
+              <h4>Behaviors (Methods)</h4>
+              <ul>
+                <li>start()</li>
+                <li>stop()</li>
+                <li>accelerate()</li>
+              </ul>
+            </div>
+          </div>
+          <br />
+          <div class="callout" style="text-align: center">
+            <strong>Class = Blueprint</strong> &nbsp;&nbsp;|&nbsp;&nbsp;
+            <strong>Object = Actual Car</strong>
+          </div>
+        </section>
 
-# Escape the dot
-re.match(r"google\.com", url)</code></pre>
+        <!-- ===== SLIDE 5: WHAT IS A CLASS? ===== -->
+        <section>
+          <h2>📐 What is a Class?</h2>
+          <p style="font-size: 0.85em">
+            A <strong>class</strong> is a blueprint used to create objects.
+          </p>
+          <br />
+          <div class="two-col">
+            <div class="card">
+              <h4>Class: <code>Dog</code></h4>
+              <p><strong>Possible attributes:</strong></p>
+              <ul>
+                <li>name</li>
+                <li>age</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>Possible behaviors:</h4>
+              <ul>
+                <li>bark()</li>
+                <li>sleep()</li>
+              </ul>
+            </div>
+          </div>
+          <br />
+          <div class="callout">
+            A class is just the <strong>definition</strong>.
+            Objects are the actual things created from it.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 6: CLASS SYNTAX ===== -->
+        <section>
+          <h2>🐍 Python Class Syntax</h2>
+          <pre><code class="language-python">class Dog:
+    pass</code></pre>
+          <div class="two-col" style="margin-top: 1em">
+            <div class="card">
+              <h4><code>class</code></h4>
+              <p>Keyword that defines a class</p>
+            </div>
+            <div class="card">
+              <h4><code>Dog</code></h4>
+              <p>Class name — capitalize by convention (PascalCase)</p>
             </div>
             <div class="card card-center-row">
-              <h4>❌ match() vs search()</h4>
-              <pre><code class="language-python"># Won't work if not at start
-re.match(r"\d+", "abc 123")
-
-# Use search() instead
-re.search(r"\d+", "abc 123")</code></pre>
+              <h4><code>pass</code></h4>
+              <p>Placeholder — class body is empty for now</p>
             </div>
           </div>
         </section>
 
-        <!-- ===== SLIDE 29: QUICK REFERENCE CHEATSHEET ===== -->
+        <!-- ===== SLIDE 7: CREATING AN OBJECT ===== -->
         <section>
-          <h2>📌 Regex Quick Reference</h2>
-          <div class="two-col" style="font-size: 0.75em">
-            <div>
-              <table>
-                <tr>
-                  <th colspan="2">Characters</th>
-                </tr>
-                <tr>
-                  <td><code>.</code></td>
-                  <td>Any char (not \n)</td>
-                </tr>
-                <tr>
-                  <td><code>\d \D</code></td>
-                  <td>Digit / Non-digit</td>
-                </tr>
-                <tr>
-                  <td><code>\w \W</code></td>
-                  <td>Word / Non-word</td>
-                </tr>
-                <tr>
-                  <td><code>\s \S</code></td>
-                  <td>Space / Non-space</td>
-                </tr>
-                <tr>
-                  <td><code>[abc]</code></td>
-                  <td>One of a, b, c</td>
-                </tr>
-                <tr>
-                  <td><code>[^abc]</code></td>
-                  <td>Not a, b, or c</td>
-                </tr>
-              </table>
-              <br />
-              <table>
-                <tr>
-                  <th colspan="2">Anchors</th>
-                </tr>
-                <tr>
-                  <td><code>^</code></td>
-                  <td>Start of string/line</td>
-                </tr>
-                <tr>
-                  <td><code>$</code></td>
-                  <td>End of string/line</td>
-                </tr>
-                <tr>
-                  <td><code>\b</code></td>
-                  <td>Word boundary</td>
-                </tr>
-              </table>
+          <h2>🔨 Creating an Object</h2>
+          <pre><code class="language-python">class Dog:
+    pass
+
+my_dog = Dog()
+print(type(my_dog))   # &lt;class '__main__.Dog'&gt;</code></pre>
+          <div class="callout">
+            <code class="inline">my_dog</code> is now an <strong>object</strong>
+            (instance) created from the class <code class="inline">Dog</code>.
+          </div>
+          <br />
+          <p style="font-size: 0.8em; color: #aaa">
+            Each call to <code class="inline">Dog()</code> creates a brand new,
+            independent object.
+          </p>
+        </section>
+
+        <!-- ===== SLIDE 8: ATTRIBUTES ===== -->
+        <section>
+          <h2>🗃️ Attributes</h2>
+          <p style="font-size: 0.85em">
+            Attributes store <strong>data about an object</strong>.
+          </p>
+          <pre><code class="language-python">class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age</code></pre>
+          <div class="callout">
+            <strong><code>self</code></strong> refers to the current object being
+            created. Each object gets its <em>own copy</em> of the attributes.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 9: __init__ ===== -->
+        <section>
+          <h2>🔑 What is <code class="inline">__init__</code>?</h2>
+          <p style="font-size: 0.85em">
+            <code class="inline">__init__</code> is a
+            <strong>constructor method</strong>. It runs
+            <em>automatically</em> when a new object is created.
+          </p>
+          <pre><code class="language-python">dog1 = Dog("Buddy", 3)
+# __init__ runs here automatically
+# sets dog1.name = "Buddy", dog1.age = 3</code></pre>
+          <div class="callout">
+            Think of <code class="inline">__init__</code> as setup instructions
+            that run every time a new object is born.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 10: ACCESSING ATTRIBUTES ===== -->
+        <section>
+          <h2>🔍 Accessing Attributes</h2>
+          <pre><code class="language-python">dog1 = Dog("Buddy", 3)
+
+print(dog1.name)   # Buddy
+print(dog1.age)    # 3</code></pre>
+          <div class="callout">
+            Use <strong>dot notation</strong>:
+            <code class="inline">object.attribute</code>
+          </div>
+          <br />
+          <div class="two-col" style="font-size: 0.85em">
+            <div class="card">
+              <h4>Read an attribute</h4>
+              <code>print(dog1.name)</code>
             </div>
-            <div>
-              <table>
-                <tr>
-                  <th colspan="2">Quantifiers</th>
-                </tr>
-                <tr>
-                  <td><code>*</code></td>
-                  <td>0 or more</td>
-                </tr>
-                <tr>
-                  <td><code>+</code></td>
-                  <td>1 or more</td>
-                </tr>
-                <tr>
-                  <td><code>?</code></td>
-                  <td>0 or 1</td>
-                </tr>
-                <tr>
-                  <td><code>{n}</code></td>
-                  <td>Exactly n</td>
-                </tr>
-                <tr>
-                  <td><code>{n,m}</code></td>
-                  <td>n to m</td>
-                </tr>
-                <tr>
-                  <td><code>*? +? ??</code></td>
-                  <td>Lazy versions</td>
-                </tr>
-              </table>
-              <br />
-              <table>
-                <tr>
-                  <th colspan="2">Functions</th>
-                </tr>
-                <tr>
-                  <td><code>search()</code></td>
-                  <td>First match anywhere</td>
-                </tr>
-                <tr>
-                  <td><code>findall()</code></td>
-                  <td>All matches (list)</td>
-                </tr>
-                <tr>
-                  <td><code>sub()</code></td>
-                  <td>Replace matches</td>
-                </tr>
-                <tr>
-                  <td><code>split()</code></td>
-                  <td>Split by pattern</td>
-                </tr>
-              </table>
+            <div class="card">
+              <h4>Change an attribute</h4>
+              <code>dog1.name = "Rex"</code>
             </div>
           </div>
         </section>
 
-        <!-- ===== SLIDE 30: SUMMARY & NEXT STEPS ===== -->
+        <!-- ===== SLIDE 11: METHODS ===== -->
+        <section>
+          <h2>⚙️ Methods</h2>
+          <p style="font-size: 0.85em">
+            Methods define the <strong>behavior</strong> of objects.
+          </p>
+          <pre><code class="language-python">class Dog:
+
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print(self.name + " says Woof!")</code></pre>
+          <div class="callout">
+            Every method takes <code class="inline">self</code> as its first
+            parameter — this lets it access the object's own data.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 12: USING METHODS ===== -->
+        <section>
+          <h2>▶️ Using Methods</h2>
+          <pre><code class="language-python">dog1 = Dog("Buddy")
+dog1.bark()   # Buddy says Woof!</code></pre>
+          <div class="callout">
+            Use dot notation to call methods:
+            <code class="inline">object.method()</code>
+          </div>
+          <br />
+          <div class="two-col">
+            <div class="card">
+              <h4>Without arguments</h4>
+              <code>dog1.bark()</code>
+            </div>
+            <div class="card">
+              <h4>With arguments</h4>
+              <code>dog1.eat("bone")</code>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 13: GAME 1 — PREDICT THE OUTPUT (MCQ) ===== -->
+        <section>
+          <h2>🎮 GAME 1: Predict the Output</h2>
+          <pre><code class="language-python">class Cat:
+    def __init__(self, name):
+        self.name = name
+
+    def speak(self):
+        print(self.name + " says Meow")
+
+cat1 = Cat("Luna")
+cat1.speak()</code></pre>
+          <p style="font-size: 0.82em; margin: 0.6em 0 0">
+            What will the output be?
+          </p>
+          <div class="mcq-options">
+            <button class="mcq-btn" data-correct="false">A. Luna says Woof</button>
+            <button class="mcq-btn" data-correct="true">B. Luna says Meow</button>
+            <button class="mcq-btn" data-correct="false">C. Error</button>
+          </div>
+          <p id="mcq-feedback" class="token-game-feedback" aria-live="polite"></p>
+        </section>
+
+        <!-- ===== SLIDE 14: GAME 2 — SPOT THE ERROR ===== -->
+        <section>
+          <h2>🎮 GAME 2: Spot the Error</h2>
+          <pre><code class="language-python">class Student
+    def __init__(self, name):
+        self.name = name</code></pre>
+          <p style="font-size: 0.82em">Find the mistake in the code above.</p>
+          <p style="font-size: 0.75em; color: #aaa">
+            Hint: Look carefully at the
+            <strong>class declaration line</strong>.
+          </p>
+          <br />
+          <button id="reveal-error-btn" class="token-game-btn primary" type="button">
+            Reveal Answer
+          </button>
+          <div id="error-reveal" class="warn" style="display: none; margin-top: 0.8em">
+            ❌ Missing colon <code class="inline">:</code> after
+            <code class="inline">Student</code>. It should be
+            <code class="inline">class Student:</code>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 15: GAME 3 — BUILD THE CLASS (TOKEN BUILDER) ===== -->
+        <section>
+          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
+            🎮 <strong>GAME 3: Build the Class</strong> — construct the correct
+            Python statement:
+          </p>
+          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
+            <span style="font-style: italic" id="g3-prompt"></span>
+          </div>
+          <div class="token-game">
+            <div class="token-game-progress">
+              <span id="g3-round">Round 1 of 3</span>
+              <span id="g3-score">Score: 0</span>
+            </div>
+            <div
+              id="g3-answer"
+              class="token-answer-row empty"
+              aria-label="Selected answer tokens"
+            ></div>
+            <div
+              id="g3-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+            <div class="token-game-controls">
+              <button id="g3-check" class="token-game-btn primary" type="button">
+                Check
+              </button>
+              <button id="g3-clear" class="token-game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+            <p id="g3-feedback" class="token-game-feedback" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 16: EXAMPLE SOLUTION — BOOK ===== -->
+        <section>
+          <h2>✅ Example Solution</h2>
+          <pre><code class="language-python">class Book:
+
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+
+b1 = Book("Harry Potter", "J.K. Rowling")
+print(b1.title)    # Harry Potter
+print(b1.author)   # J.K. Rowling</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 17: MULTIPLE OBJECTS ===== -->
+        <section>
+          <h2>🐾 Multiple Objects</h2>
+          <p style="font-size: 0.85em">
+            One class can create <strong>many objects</strong>.
+          </p>
+          <pre><code class="language-python">dog1 = Dog("Buddy")
+dog2 = Dog("Max")
+dog3 = Dog("Bella")
+
+dog1.bark()   # Buddy says Woof!
+dog2.bark()   # Max says Woof!
+dog3.bark()   # Bella says Woof!</code></pre>
+          <div class="callout">
+            Each object has its <strong>own data</strong> but shares the same
+            class blueprint.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 18: OBJECT STATE ===== -->
+        <section>
+          <h2>🗂️ Object State</h2>
+          <p style="font-size: 0.85em">
+            All created from the <strong>same class blueprint</strong>:
+          </p>
+          <table style="margin: 0.8em 0">
+            <tr>
+              <th>Object</th>
+              <th>name</th>
+            </tr>
+            <tr>
+              <td><code>dog1</code></td>
+              <td>Buddy</td>
+            </tr>
+            <tr>
+              <td><code>dog2</code></td>
+              <td>Max</td>
+            </tr>
+            <tr>
+              <td><code>dog3</code></td>
+              <td>Bella</td>
+            </tr>
+          </table>
+          <div class="callout">
+            Each object is <em>independent</em> — changing
+            <code class="inline">dog1.name</code> does <strong>not</strong>
+            affect <code class="inline">dog2.name</code>.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 19: ADDING MORE METHODS ===== -->
+        <section>
+          <h2>➕ Adding More Methods</h2>
+          <pre><code class="language-python">class Dog:
+
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print("Woof!")
+
+    def greet(self):
+        print("Hello, I am " + self.name)
+
+dog1 = Dog("Buddy")
+dog1.bark()    # Woof!
+dog1.greet()   # Hello, I am Buddy</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 20: GAME 4 — CLASS DESIGN CHALLENGE (TOKEN BUILDER) ===== -->
+        <section>
+          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
+            🎮 <strong>GAME 4: Class Design Challenge</strong> — construct the
+            correct Python statement:
+          </p>
+          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
+            <span style="font-style: italic" id="g4-prompt"></span>
+          </div>
+          <div class="token-game">
+            <div class="token-game-progress">
+              <span id="g4-round">Round 1 of 3</span>
+              <span id="g4-score">Score: 0</span>
+            </div>
+            <div
+              id="g4-answer"
+              class="token-answer-row empty"
+              aria-label="Selected answer tokens"
+            ></div>
+            <div
+              id="g4-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+            <div class="token-game-controls">
+              <button id="g4-check" class="token-game-btn primary" type="button">
+                Check
+              </button>
+              <button id="g4-clear" class="token-game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+            <p id="g4-feedback" class="token-game-feedback" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 21: PLAYER IMPLEMENTATION ===== -->
+        <section>
+          <h2>✅ Possible Implementation</h2>
+          <pre><code class="language-python">class Player:
+
+    def __init__(self, name):
+        self.name = name
+        self.score = 0
+
+    def add_score(self, points):
+        self.score += points
+
+    def show_score(self):
+        print(self.name, self.score)
+
+p1 = Player("Paulo")
+p1.add_score(50)
+p1.show_score()    # Paulo 50</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 22: GAME 5 — TRUE OR FALSE ===== -->
+        <section>
+          <h2>🎮 GAME 5: True or False</h2>
+          <p style="font-size: 0.8em">
+            Click <strong>True</strong> or <strong>False</strong> for each
+            statement:
+          </p>
+          <div class="tf-game">
+            <div class="tf-row" data-answered="false">
+              <p class="tf-statement">
+                1️⃣ &nbsp; A class is an object.
+              </p>
+              <div class="tf-btns">
+                <button class="tf-btn" data-value="true">True</button>
+                <button class="tf-btn" data-value="false">False</button>
+              </div>
+              <span class="tf-result"></span>
+            </div>
+            <div class="tf-row" data-answered="false">
+              <p class="tf-statement">
+                2️⃣ &nbsp; An object is created from a class.
+              </p>
+              <div class="tf-btns">
+                <button class="tf-btn" data-value="true">True</button>
+                <button class="tf-btn" data-value="false">False</button>
+              </div>
+              <span class="tf-result"></span>
+            </div>
+            <div class="tf-row" data-answered="false">
+              <p class="tf-statement">
+                3️⃣ &nbsp;
+                <code class="inline">__init__</code> runs when an object is
+                created.
+              </p>
+              <div class="tf-btns">
+                <button class="tf-btn" data-value="true">True</button>
+                <button class="tf-btn" data-value="false">False</button>
+              </div>
+              <span class="tf-result"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 23: QUICK PRACTICE ===== -->
+        <section>
+          <h2>💪 Quick Practice</h2>
+          <p style="font-size: 0.85em">
+            Create a class called <strong>Car</strong> with:
+          </p>
+          <div class="two-col">
+            <div class="card">
+              <h4>Attributes</h4>
+              <ul>
+                <li>brand</li>
+                <li>speed</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>Method</h4>
+              <ul>
+                <li>
+                  <code>drive()</code> → prints
+                  <em>"The car is driving"</em>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <br />
+          <p style="font-size: 0.8em; color: #aaa">
+            Objects should be created like:
+          </p>
+          <pre><code class="language-python">car1 = Car("Toyota", 100)
+car1.drive()   # The car is driving</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 24: WHY USE CLASSES? ===== -->
+        <section>
+          <h2>🤔 Why Use Classes?</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>📦 Organize Code</h4>
+              <p>Group related data and behavior together</p>
+            </div>
+            <div class="card">
+              <h4>♻️ Reuse Structures</h4>
+              <p>Define once, create many objects</p>
+            </div>
+            <div class="card">
+              <h4>🌍 Model Real-World Systems</h4>
+              <p>Students, products, bank accounts…</p>
+            </div>
+            <div class="card">
+              <h4>📈 Manage Large Programs</h4>
+              <p>Easier to maintain and scale</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 25: SUMMARY ===== -->
+        <section>
+          <h2>📋 Summary</h2>
+          <p style="font-size: 0.85em">Today you learned:</p>
+          <table>
+            <tr>
+              <th>Concept</th>
+              <th>Definition</th>
+            </tr>
+            <tr>
+              <td><strong>Class</strong></td>
+              <td>Blueprint for creating objects</td>
+            </tr>
+            <tr>
+              <td><strong>Object</strong></td>
+              <td>An instance of a class</td>
+            </tr>
+            <tr>
+              <td><strong>Attribute</strong></td>
+              <td>Data stored in an object</td>
+            </tr>
+            <tr>
+              <td><strong>Method</strong></td>
+              <td>A function defined inside a class</td>
+            </tr>
+            <tr>
+              <td><strong><code>__init__</code></strong></td>
+              <td>Constructor — runs when object is created</td>
+            </tr>
+            <tr>
+              <td><strong><code>self</code></strong></td>
+              <td>Reference to the current object</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- ===== SLIDE 26: FINAL CHALLENGE ===== -->
         <section
           data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
         >
-          <h2>🎓 Recommended Next Steps</h2>
+          <h2>🏆 Final Challenge</h2>
+          <p style="font-size: 0.85em">
+            Create a class called <strong>BankAccount</strong>
+          </p>
           <div class="two-col">
-            <!-- <div class="card">
-              <h4>✅ What You Learned</h4>
-              <ul style="font-size: 0.9em">
-                <li>What regex is and why it matters</li>
-                <li>The <code>re</code> module functions</li>
-                <li>Metacharacters, character classes</li>
-                <li>Quantifiers (greedy vs lazy)</li>
-                <li>Groups, alternation, anchors</li>
-                <li>Flags: IGNORECASE, MULTILINE, VERBOSE</li>
-                <li>Real-world applications</li>
+            <div class="card">
+              <h4>Attributes</h4>
+              <ul>
+                <li>owner</li>
+                <li>balance</li>
               </ul>
-            </div> -->
-            <div class="card card-center-row">
-              <h4>🚀 Practice &amp; Resources</h4>
-              <ul style="font-size: 0.9em">
-                <li><strong>regex101.com</strong> — Live regex tester</li>
-                <li><strong>regexlearn.com</strong> — Interactive exercises</li>
-                <li>
-                  <strong>Python docs</strong> — docs.python.org/3/library/re
-                </li>
-                <li>Build: email validator, form checker, log parser</li>
-                <li>Explore: <code>re.VERBOSE</code> for readable patterns</li>
+            </div>
+            <div class="card">
+              <h4>Methods</h4>
+              <ul>
+                <li>deposit(amount)</li>
+                <li>withdraw(amount)</li>
+                <li>display_balance()</li>
               </ul>
             </div>
           </div>
           <br />
-          <!-- <div class="callout" style="text-align: center; font-size: 1em">
-            🐍 <strong>Regular expressions are a superpower.</strong> Master
-            them and text processing becomes effortless!
-          </div> -->
+          <div class="callout">
+            🌟 <strong>Bonus:</strong> Prevent withdrawing more than the
+            balance.
+          </div>
         </section>
+
+        <!-- ===== SLIDE 27: THANK YOU ===== -->
+        <section
+          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+        >
+          <h1>Thank You! 🐍</h1>
+          <p style="color: #aaa; margin-top: 0.5em">Questions?</p>
+          <br />
+          <div class="tag-row">
+            <span class="tag">class</span>
+            <span class="tag">object</span>
+            <span class="tag">__init__</span>
+            <span class="tag">self</span>
+            <span class="tag">OOP</span>
+          </div>
+        </section>
+
       </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
+      // ===== COPY CODE BUTTONS =====
       const fallbackCopyText = (text) => {
         const textArea = document.createElement("textarea");
         textArea.value = text;
@@ -1512,7 +1059,6 @@ re.search(r"\d+", "abc 123")</code></pre>
           await navigator.clipboard.writeText(text);
           return;
         }
-
         fallbackCopyText(text);
       };
 
@@ -1537,24 +1083,17 @@ re.search(r"\d+", "abc 123")</code></pre>
       `;
 
       const addCopyButtons = () => {
-        const codeBlocks = document.querySelectorAll(".reveal pre > code");
-
-        codeBlocks.forEach((codeBlock) => {
+        document.querySelectorAll(".reveal pre > code").forEach((codeBlock) => {
           const pre = codeBlock.parentElement;
-          if (!pre || pre.querySelector(".copy-code-btn")) {
-            return;
-          }
-
+          if (!pre || pre.querySelector(".copy-code-btn")) return;
           const button = document.createElement("button");
           button.type = "button";
           button.className = "copy-code-btn";
           button.innerHTML = clipboardIcon;
           button.title = "Copy code";
           button.setAttribute("aria-label", "Copy code to clipboard");
-
           button.addEventListener("click", async () => {
             const codeText = codeBlock.textContent ?? "";
-
             try {
               await copyCodeText(codeText);
               button.innerHTML = checkIcon;
@@ -1572,1028 +1111,324 @@ re.search(r"\d+", "abc 123")</code></pre>
               }, 1200);
             }
           });
-
           pre.appendChild(button);
         });
       };
 
-      const launchRegexConfetti = () => {
+      // ===== CONFETTI =====
+      const launchConfetti = () => {
         const burst = document.createElement("div");
-        burst.className = "regex-confetti-burst";
+        burst.className = "confetti-burst";
         document.body.appendChild(burst);
-
         const colors = ["#00d9a3", "#ff6b6b", "#facc15", "#60a5fa", "#e879f9"];
-
-        for (let index = 0; index < 85; index += 1) {
+        for (let i = 0; i < 85; i++) {
           const piece = document.createElement("div");
-          piece.className = "regex-confetti-piece";
+          piece.className = "confetti-piece";
           piece.style.left = `${Math.random() * 100}%`;
-          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
           piece.style.animationDelay = `${Math.random() * 200}ms`;
           piece.style.animationDuration = `${700 + Math.random() * 600}ms`;
           burst.appendChild(piece);
         }
-
-        setTimeout(() => {
-          burst.remove();
-        }, 1500);
+        setTimeout(() => burst.remove(), 1500);
       };
 
-      const searchGameRounds = [
-        {
-          prompt: "Police IT: Find 'CASE' in report_text and store the result in case_hit.",
-          target: ["case_hit", "=", "re.search(", 'r"CASE",', "report_text", ")"],
-          tokens: [
-            "case_hit",
-            "=",
-            "re.search(",
-            'r"CASE",',
-            "report_text",
-            ")",
-            "re.match(",
-            'r"case",',
-            "re.findall(",
-          ],
-        },
-        {
-          prompt: "Hospital IT: Find 'urgent' in triage_note and save to room_match.",
-          target: ["room_match", "=", "re.search(", 'r"urgent",', "triage_note", ")"],
-          tokens: [
-            "room_match",
-            "=",
-            "re.search(",
-            'r"urgent",',
-            "triage_note",
-            ")",
-            "re.match(",
-            'r"URgent",',
-            "patients",
-          ],
-        },
-        {
-          prompt: "Hotel IT: Find 'checkout' in booking_log and save to checkout_hit.",
-          target: ["checkout_hit", "=", "re.search(", 'r"checkout",', "booking_log", ")"],
-          tokens: [
-            "checkout_hit",
-            "=",
-            "re.search(",
-            'r"checkout",',
-            "booking_log",
-            ")",
-            "re.I",
-            "re.M",
-            "re.findall(",
-          ],
-        },
-      ];
+      // ===== TOKEN BUILDER GAME FACTORY =====
+      const makeTokenGame = (gameId, rounds, successMsg) => {
+        const bank = document.getElementById(`${gameId}-bank`);
+        const answer = document.getElementById(`${gameId}-answer`);
+        const prompt = document.getElementById(`${gameId}-prompt`);
+        const roundText = document.getElementById(`${gameId}-round`);
+        const scoreText = document.getElementById(`${gameId}-score`);
+        const feedback = document.getElementById(`${gameId}-feedback`);
+        const checkBtn = document.getElementById(`${gameId}-check`);
+        const clearBtn = document.getElementById(`${gameId}-clear`);
 
-      const searchGameBank = document.getElementById("search-game-bank");
-      const searchGameAnswer = document.getElementById("search-game-answer");
-      const searchGamePrompt = document.getElementById("search-game-prompt");
-      const searchGameRoundText = document.getElementById("search-game-round");
-      const searchGameScoreText = document.getElementById("search-game-score");
-      const searchGameFeedback = document.getElementById("search-game-feedback");
-      const searchGameCheckBtn = document.getElementById("search-game-check");
-      const searchGameClearBtn = document.getElementById("search-game-clear");
+        let roundIndex = 0;
+        let score = 0;
+        let selectedIndexes = [];
 
-      let searchGameRoundIndex = 0;
-      let searchGameScore = 0;
-      let searchGameSelectedIndexes = [];
+        const shuffle = (length) => {
+          const arr = Array.from({ length }, (_, i) => i);
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        };
 
-      const makeSearchGameTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "regex-token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
+        const makeToken = (text, index) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "token";
+          btn.textContent = text;
+          btn.dataset.index = String(index);
+          return btn;
+        };
 
-      const getSearchGameShuffledIndexes = (length) => {
-        const indexes = Array.from({ length }, (_, index) => index);
-        for (let index = indexes.length - 1; index > 0; index -= 1) {
-          const randomIndex = Math.floor(Math.random() * (index + 1));
-          [indexes[index], indexes[randomIndex]] = [indexes[randomIndex], indexes[index]];
-        }
-        return indexes;
-      };
+        const updateHeader = () => {
+          roundText.textContent = `Round ${roundIndex + 1} of ${rounds.length}`;
+          scoreText.textContent = `Score: ${score}`;
+        };
 
-      const updateSearchGameHeader = () => {
-        searchGameRoundText.textContent = `Round ${searchGameRoundIndex + 1} of ${searchGameRounds.length}`;
-        searchGameScoreText.textContent = `Score: ${searchGameScore}`;
-      };
+        const setFeedback = (msg, tone = "") => {
+          feedback.textContent = msg;
+          feedback.classList.remove("success", "error");
+          if (tone) feedback.classList.add(tone);
+        };
 
-      const updateSearchGameAnswerPlaceholder = () => {
-        searchGameAnswer.classList.toggle("empty", searchGameSelectedIndexes.length === 0);
-      };
-
-      const setSearchGameFeedback = (message, tone = "") => {
-        searchGameFeedback.textContent = message;
-        searchGameFeedback.classList.remove("success", "error");
-        if (tone) {
-          searchGameFeedback.classList.add(tone);
-        }
-      };
-
-      const syncSearchGameBankState = () => {
-        const active = new Set(searchGameSelectedIndexes);
-        searchGameBank.querySelectorAll(".regex-token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderSearchGameAnswer = () => {
-        const round = searchGameRounds[searchGameRoundIndex];
-        searchGameAnswer.innerHTML = "";
-
-        searchGameSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeSearchGameTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            searchGameSelectedIndexes.splice(answerIndex, 1);
-            renderSearchGameAnswer();
-            syncSearchGameBankState();
-            updateSearchGameAnswerPlaceholder();
+        const syncBank = () => {
+          const active = new Set(selectedIndexes);
+          bank.querySelectorAll(".token").forEach((el) => {
+            const used = active.has(Number(el.dataset.index));
+            el.classList.toggle("used", used);
+            el.disabled = used;
           });
-          searchGameAnswer.appendChild(token);
-        });
+        };
 
-        updateSearchGameAnswerPlaceholder();
-      };
-
-      const renderSearchGameRound = () => {
-        const round = searchGameRounds[searchGameRoundIndex];
-        searchGameSelectedIndexes = [];
-        searchGameBank.innerHTML = "";
-        searchGameAnswer.innerHTML = "";
-
-        if (searchGamePrompt) {
-          searchGamePrompt.textContent = round.prompt;
-        }
-
-        setSearchGameFeedback("");
-
-        const shuffledIndexes = getSearchGameShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const token = makeSearchGameTokenButton(round.tokens[index], index);
-          token.addEventListener("click", () => {
-            searchGameSelectedIndexes.push(index);
-            renderSearchGameAnswer();
-            syncSearchGameBankState();
+        const renderAnswer = () => {
+          const round = rounds[roundIndex];
+          answer.innerHTML = "";
+          selectedIndexes.forEach((idx, pos) => {
+            const token = makeToken(round.tokens[idx], idx);
+            token.classList.add("answer-token");
+            token.title = "Tap to remove";
+            token.addEventListener("click", () => {
+              selectedIndexes.splice(pos, 1);
+              renderAnswer();
+              syncBank();
+              answer.classList.toggle("empty", selectedIndexes.length === 0);
+            });
+            answer.appendChild(token);
           });
-          searchGameBank.appendChild(token);
+          answer.classList.toggle("empty", selectedIndexes.length === 0);
+        };
+
+        const renderRound = () => {
+          const round = rounds[roundIndex];
+          selectedIndexes = [];
+          bank.innerHTML = "";
+          answer.innerHTML = "";
+          if (prompt) prompt.textContent = round.prompt;
+          setFeedback("");
+          shuffle(round.tokens.length).forEach((idx) => {
+            const token = makeToken(round.tokens[idx], idx);
+            token.addEventListener("click", () => {
+              selectedIndexes.push(idx);
+              renderAnswer();
+              syncBank();
+            });
+            bank.appendChild(token);
+          });
+          updateHeader();
+          syncBank();
+          answer.classList.add("empty");
+        };
+
+        const nextRound = () => {
+          if (roundIndex < rounds.length - 1) {
+            roundIndex++;
+            renderRound();
+            return;
+          }
+          setFeedback(
+            `Challenge complete! Final score: ${score}/${rounds.length}`,
+            "success",
+          );
+          checkBtn.disabled = true;
+        };
+
+        checkBtn.addEventListener("click", () => {
+          const round = rounds[roundIndex];
+          const ans = selectedIndexes.map((i) => round.tokens[i]);
+          const correct =
+            ans.length === round.target.length &&
+            ans.every((t, i) => t === round.target[i]);
+          if (correct) {
+            score++;
+            updateHeader();
+            setFeedback(successMsg || "Correct! Great work!", "success");
+            launchConfetti();
+            setTimeout(nextRound, 750);
+          } else {
+            setFeedback("Not quite. Check the order and tokens.", "error");
+          }
         });
 
-        updateSearchGameHeader();
-        syncSearchGameBankState();
-        updateSearchGameAnswerPlaceholder();
+        clearBtn.addEventListener("click", () => {
+          selectedIndexes = [];
+          renderAnswer();
+          syncBank();
+          setFeedback("Answer cleared.");
+        });
+
+        renderRound();
       };
 
-      const goToNextSearchGameRound = () => {
-        if (searchGameRoundIndex < searchGameRounds.length - 1) {
-          searchGameRoundIndex += 1;
-          renderSearchGameRound();
-          return;
-        }
+      // ===== GAME 3: BUILD THE CLASS — Token rounds =====
+      makeTokenGame(
+        "g3",
+        [
+          {
+            prompt:
+              "Bookstore: Create a Book object with title 'Harry Potter' and author 'Rowling'. Store it in b1.",
+            target: ["b1", "=", "Book(", '"Harry Potter",', '"Rowling"', ")"],
+            tokens: [
+              "b1",
+              "=",
+              "Book(",
+              '"Harry Potter",',
+              '"Rowling"',
+              ")",
+              "Dog(",
+              "b2",
+              '"harry potter",',
+            ],
+          },
+          {
+            prompt:
+              "Library: Access the title attribute of book b1 using print.",
+            target: ["print(", "b1.title", ")"],
+            tokens: [
+              "print(",
+              "b1.title",
+              ")",
+              "b1.author",
+              "Book.title",
+              "print(b1.title,",
+            ],
+          },
+          {
+            prompt:
+              "School Records: Create a Student object with name 'Maria'. Store it in s1.",
+            target: ["s1", "=", "Student(", '"Maria"', ")"],
+            tokens: [
+              "s1",
+              "=",
+              "Student(",
+              '"Maria"',
+              ")",
+              "s2",
+              '"maria"',
+              "student(",
+              "Student",
+            ],
+          },
+        ],
+        "Correct! That's a valid Python statement.",
+      );
 
-        setSearchGameFeedback(
-          `Challenge complete! Final score: ${searchGameScore}/${searchGameRounds.length}`,
-          "success",
-        );
-        searchGameCheckBtn.disabled = true;
-      };
+      // ===== GAME 4: CLASS DESIGN CHALLENGE — Token rounds =====
+      makeTokenGame(
+        "g4",
+        [
+          {
+            prompt:
+              "Game App: Create a Player object with name 'Paulo'. Store it in p1.",
+            target: ["p1", "=", "Player(", '"Paulo"', ")"],
+            tokens: [
+              "p1",
+              "=",
+              "Player(",
+              '"Paulo"',
+              ")",
+              "p2",
+              '"paulo"',
+              "player(",
+              "Player",
+            ],
+          },
+          {
+            prompt: "Game App: Add 50 points to p1 using add_score.",
+            target: ["p1.add_score(", "50", ")"],
+            tokens: [
+              "p1.add_score(",
+              "50",
+              ")",
+              "p1.show_score(",
+              "100",
+              "p1.score(",
+              "add_score(50)",
+            ],
+          },
+          {
+            prompt: "Game App: Display p1's current score using show_score.",
+            target: ["p1.show_score(", ")"],
+            tokens: [
+              "p1.show_score(",
+              ")",
+              "p1.add_score(",
+              "p1.name",
+              "show_score()",
+              "p1.score(",
+            ],
+          },
+        ],
+        "Correct! Nice class usage!",
+      );
 
-      searchGameCheckBtn.addEventListener("click", () => {
-        const round = searchGameRounds[searchGameRoundIndex];
-        const answerTokens = searchGameSelectedIndexes.map((index) => round.tokens[index]);
-
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          searchGameScore += 1;
-          updateSearchGameHeader();
-          setSearchGameFeedback("Great! That's a correct re.search() call.", "success");
-          launchRegexConfetti();
-          setTimeout(goToNextSearchGameRound, 750);
-          return;
-        }
-
-        setSearchGameFeedback("Not quite. Recheck token order and arguments.", "error");
+      // ===== GAME 1: MCQ — Predict the Output =====
+      let mcqAnswered = false;
+      document.querySelectorAll(".mcq-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (mcqAnswered) return;
+          mcqAnswered = true;
+          const isCorrect = btn.dataset.correct === "true";
+          const feedback = document.getElementById("mcq-feedback");
+          if (isCorrect) {
+            btn.classList.add("correct");
+            feedback.textContent =
+              "✅ Correct! Luna says Meow — speak() prints name + ' says Meow'.";
+            feedback.className = "token-game-feedback success";
+            launchConfetti();
+          } else {
+            btn.classList.add("wrong");
+            document
+              .querySelector(".mcq-btn[data-correct='true']")
+              .classList.add("correct");
+            feedback.textContent =
+              "❌ Not quite. The correct answer is B — Luna says Meow.";
+            feedback.className = "token-game-feedback error";
+          }
+          document
+            .querySelectorAll(".mcq-btn")
+            .forEach((b) => (b.disabled = true));
+        });
       });
 
-      searchGameClearBtn.addEventListener("click", () => {
-        searchGameSelectedIndexes = [];
-        renderSearchGameAnswer();
-        syncSearchGameBankState();
-        setSearchGameFeedback("Answer cleared.");
+      // ===== GAME 2: SPOT THE ERROR =====
+      document.getElementById("reveal-error-btn").addEventListener("click", () => {
+        document.getElementById("error-reveal").style.display = "block";
+        document.getElementById("reveal-error-btn").disabled = true;
       });
 
-      renderSearchGameRound();
-
-      const findallGameRounds = [
-        {
-          prompt: "Game Dev: Find every 'coin' in event_log and store matches in coin_hits.",
-          target: ["coin_hits", "=", "re.findall(", 'r"coin",', "event_log", ")"],
-          tokens: [
-            "coin_hits",
-            "=",
-            "re.findall(",
-            'r"coin",',
-            "event_log",
-            ")",
-            "re.search(",
-            "coin_hit",
-            'r"coins",',
-          ],
-        },
-        {
-          prompt: "Web Dev: Find all 'btn' classes in page_html and save to button_classes.",
-          target: [
-            "button_classes",
-            "=",
-            "re.findall(",
-            'r"btn",',
-            "page_html",
-            ")",
-          ],
-          tokens: [
-            "button_classes",
-            "=",
-            "re.findall(",
-            'r"btn",',
-            "page_html",
-            ")",
-            "re.match(",
-            'r"button",',
-            "buttons_html",
-          ],
-        },
-        {
-          prompt: "Civil Engineering IT: Find all 'bridge' mentions in report_text and save to bridge_hits.",
-          target: [
-            "bridge_hits",
-            "=",
-            "re.findall(",
-            'r"bridge",',
-            "report_text",
-            ")",
-          ],
-          tokens: [
-            "bridge_hits",
-            "=",
-            "re.findall(",
-            'r"bridge",',
-            "report_text",
-            ")",
-            "re.search(",
-            'r"bridges",',
-            "bridge_log",
-          ],
-        },
-      ];
-
-      const findallGameBank = document.getElementById("findall-game-bank");
-      const findallGameAnswer = document.getElementById("findall-game-answer");
-      const findallGamePrompt = document.getElementById("findall-game-prompt");
-      const findallGameRoundText = document.getElementById("findall-game-round");
-      const findallGameScoreText = document.getElementById("findall-game-score");
-      const findallGameFeedback = document.getElementById("findall-game-feedback");
-      const findallGameCheckBtn = document.getElementById("findall-game-check");
-      const findallGameClearBtn = document.getElementById("findall-game-clear");
-
-      let findallGameRoundIndex = 0;
-      let findallGameScore = 0;
-      let findallGameSelectedIndexes = [];
-
-      const makeFindallGameTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "regex-token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
-
-      const updateFindallGameHeader = () => {
-        findallGameRoundText.textContent = `Round ${findallGameRoundIndex + 1} of ${findallGameRounds.length}`;
-        findallGameScoreText.textContent = `Score: ${findallGameScore}`;
-      };
-
-      const updateFindallGameAnswerPlaceholder = () => {
-        findallGameAnswer.classList.toggle("empty", findallGameSelectedIndexes.length === 0);
-      };
-
-      const setFindallGameFeedback = (message, tone = "") => {
-        findallGameFeedback.textContent = message;
-        findallGameFeedback.classList.remove("success", "error");
-        if (tone) {
-          findallGameFeedback.classList.add(tone);
-        }
-      };
-
-      const syncFindallGameBankState = () => {
-        const active = new Set(findallGameSelectedIndexes);
-        findallGameBank.querySelectorAll(".regex-token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderFindallGameAnswer = () => {
-        const round = findallGameRounds[findallGameRoundIndex];
-        findallGameAnswer.innerHTML = "";
-
-        findallGameSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeFindallGameTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            findallGameSelectedIndexes.splice(answerIndex, 1);
-            renderFindallGameAnswer();
-            syncFindallGameBankState();
-            updateFindallGameAnswerPlaceholder();
+      // ===== GAME 5: TRUE OR FALSE =====
+      const tfCorrect = [false, true, true];
+      document.querySelectorAll(".tf-row").forEach((row, i) => {
+        row.querySelectorAll(".tf-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (row.dataset.answered === "true") return;
+            row.dataset.answered = "true";
+            const clicked = btn.dataset.value === "true";
+            const correct = clicked === tfCorrect[i];
+            btn.classList.add(correct ? "correct" : "wrong");
+            if (!correct) {
+              const correctVal = tfCorrect[i] ? "true" : "false";
+              row
+                .querySelector(`.tf-btn[data-value='${correctVal}']`)
+                .classList.add("correct");
+            }
+            const result = row.querySelector(".tf-result");
+            result.textContent = correct ? "✅ Correct!" : "❌ Not quite.";
+            result.style.color = correct ? "#4ade80" : "#f87171";
+            if (correct) launchConfetti();
+            row.querySelectorAll(".tf-btn").forEach((b) => (b.disabled = true));
           });
-          findallGameAnswer.appendChild(token);
         });
-
-        updateFindallGameAnswerPlaceholder();
-      };
-
-      const renderFindallGameRound = () => {
-        const round = findallGameRounds[findallGameRoundIndex];
-        findallGameSelectedIndexes = [];
-        findallGameBank.innerHTML = "";
-        findallGameAnswer.innerHTML = "";
-
-        if (findallGamePrompt) {
-          findallGamePrompt.textContent = round.prompt;
-        }
-
-        setFindallGameFeedback("");
-
-        const shuffledIndexes = getSearchGameShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const token = makeFindallGameTokenButton(round.tokens[index], index);
-          token.addEventListener("click", () => {
-            findallGameSelectedIndexes.push(index);
-            renderFindallGameAnswer();
-            syncFindallGameBankState();
-          });
-          findallGameBank.appendChild(token);
-        });
-
-        updateFindallGameHeader();
-        syncFindallGameBankState();
-        updateFindallGameAnswerPlaceholder();
-      };
-
-      const goToNextFindallGameRound = () => {
-        if (findallGameRoundIndex < findallGameRounds.length - 1) {
-          findallGameRoundIndex += 1;
-          renderFindallGameRound();
-          return;
-        }
-
-        setFindallGameFeedback(
-          `Challenge complete! Final score: ${findallGameScore}/${findallGameRounds.length}`,
-          "success",
-        );
-        findallGameCheckBtn.disabled = true;
-      };
-
-      findallGameCheckBtn.addEventListener("click", () => {
-        const round = findallGameRounds[findallGameRoundIndex];
-        const answerTokens = findallGameSelectedIndexes.map((index) => round.tokens[index]);
-
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          findallGameScore += 1;
-          updateFindallGameHeader();
-          setFindallGameFeedback("Great! That's a correct re.findall() call.", "success");
-          launchRegexConfetti();
-          setTimeout(goToNextFindallGameRound, 750);
-          return;
-        }
-
-        setFindallGameFeedback("Not quite. Recheck token order and arguments.", "error");
       });
 
-      findallGameClearBtn.addEventListener("click", () => {
-        findallGameSelectedIndexes = [];
-        renderFindallGameAnswer();
-        syncFindallGameBankState();
-        setFindallGameFeedback("Answer cleared.");
-      });
-
-      renderFindallGameRound();
-
-      const dotGameRounds = [
-        {
-          prompt: "Chat App: Find all 3-letter words ending in 'at' in chat_text and save to at_words.",
-          target: ["at_words", "=", "re.findall(", 'r".at",', "chat_text", ")"],
-          tokens: [
-            "at_words",
-            "=",
-            "re.findall(",
-            'r".at",',
-            "chat_text",
-            ")",
-            "re.search(",
-            'r"at",',
-            'r".*at",',
-          ],
-        },
-        {
-          prompt: "School Notes: Find all 3-letter words ending in 'og' in line_text and save to og_words.",
-          target: ["og_words", "=", "re.findall(", 'r".og",', "line_text", ")"],
-          tokens: [
-            "og_words",
-            "=",
-            "re.findall(",
-            'r".og",',
-            "line_text",
-            ")",
-            "re.match(",
-            'r"og",',
-            'r"..og",',
-          ],
-        },
-        {
-          prompt: "Game Log: Find all 3-letter words ending in 'un' in level_log and save to un_words.",
-          target: ["un_words", "=", "re.findall(", 'r".un",', "level_log", ")"],
-          tokens: [
-            "un_words",
-            "=",
-            "re.findall(",
-            'r".un",',
-            "level_log",
-            ")",
-            "re.sub(",
-            'r"un",',
-            'r".+un",',
-          ],
-        },
-      ];
-
-      const dotGameBank = document.getElementById("dot-game-bank");
-      const dotGameAnswer = document.getElementById("dot-game-answer");
-      const dotGamePrompt = document.getElementById("dot-game-prompt");
-      const dotGameRoundText = document.getElementById("dot-game-round");
-      const dotGameScoreText = document.getElementById("dot-game-score");
-      const dotGameFeedback = document.getElementById("dot-game-feedback");
-      const dotGameCheckBtn = document.getElementById("dot-game-check");
-      const dotGameClearBtn = document.getElementById("dot-game-clear");
-
-      let dotGameRoundIndex = 0;
-      let dotGameScore = 0;
-      let dotGameSelectedIndexes = [];
-
-      const makeDotGameTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "regex-token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
-
-      const updateDotGameHeader = () => {
-        dotGameRoundText.textContent = `Round ${dotGameRoundIndex + 1} of ${dotGameRounds.length}`;
-        dotGameScoreText.textContent = `Score: ${dotGameScore}`;
-      };
-
-      const updateDotGameAnswerPlaceholder = () => {
-        dotGameAnswer.classList.toggle("empty", dotGameSelectedIndexes.length === 0);
-      };
-
-      const setDotGameFeedback = (message, tone = "") => {
-        dotGameFeedback.textContent = message;
-        dotGameFeedback.classList.remove("success", "error");
-        if (tone) {
-          dotGameFeedback.classList.add(tone);
-        }
-      };
-
-      const syncDotGameBankState = () => {
-        const active = new Set(dotGameSelectedIndexes);
-        dotGameBank.querySelectorAll(".regex-token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderDotGameAnswer = () => {
-        const round = dotGameRounds[dotGameRoundIndex];
-        dotGameAnswer.innerHTML = "";
-
-        dotGameSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeDotGameTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            dotGameSelectedIndexes.splice(answerIndex, 1);
-            renderDotGameAnswer();
-            syncDotGameBankState();
-            updateDotGameAnswerPlaceholder();
-          });
-          dotGameAnswer.appendChild(token);
-        });
-
-        updateDotGameAnswerPlaceholder();
-      };
-
-      const renderDotGameRound = () => {
-        const round = dotGameRounds[dotGameRoundIndex];
-        dotGameSelectedIndexes = [];
-        dotGameBank.innerHTML = "";
-        dotGameAnswer.innerHTML = "";
-
-        if (dotGamePrompt) {
-          dotGamePrompt.textContent = round.prompt;
-        }
-
-        setDotGameFeedback("");
-
-        const shuffledIndexes = getSearchGameShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const token = makeDotGameTokenButton(round.tokens[index], index);
-          token.addEventListener("click", () => {
-            dotGameSelectedIndexes.push(index);
-            renderDotGameAnswer();
-            syncDotGameBankState();
-          });
-          dotGameBank.appendChild(token);
-        });
-
-        updateDotGameHeader();
-        syncDotGameBankState();
-        updateDotGameAnswerPlaceholder();
-      };
-
-      const goToNextDotGameRound = () => {
-        if (dotGameRoundIndex < dotGameRounds.length - 1) {
-          dotGameRoundIndex += 1;
-          renderDotGameRound();
-          return;
-        }
-
-        setDotGameFeedback(
-          `Challenge complete! Final score: ${dotGameScore}/${dotGameRounds.length}`,
-          "success",
-        );
-        dotGameCheckBtn.disabled = true;
-      };
-
-      dotGameCheckBtn.addEventListener("click", () => {
-        const round = dotGameRounds[dotGameRoundIndex];
-        const answerTokens = dotGameSelectedIndexes.map((index) => round.tokens[index]);
-
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          dotGameScore += 1;
-          updateDotGameHeader();
-          setDotGameFeedback("Great! You used the dot pattern correctly.", "success");
-          launchRegexConfetti();
-          setTimeout(goToNextDotGameRound, 750);
-          return;
-        }
-
-        setDotGameFeedback("Not quite. Check the function, pattern, and argument order.", "error");
-      });
-
-      dotGameClearBtn.addEventListener("click", () => {
-        dotGameSelectedIndexes = [];
-        renderDotGameAnswer();
-        syncDotGameBankState();
-        setDotGameFeedback("Answer cleared.");
-      });
-
-      renderDotGameRound();
-
-      const anchorGameRounds = [
-        {
-          prompt:
-            "Education IT: Validate that student_id is exactly 8 digits and save to id_check.",
-          target: ["id_check", "=", "re.match(", 'r"^\\d{8}$",', "student_id", ")"],
-          tokens: [
-            "id_check",
-            "=",
-            "re.match(",
-            'r"^\\d{8}$",',
-            "student_id",
-            ")",
-            "re.search(",
-            'r"\\d{8}",',
-            "student_ids",
-          ],
-        },
-        {
-          prompt:
-            "Agriculture IT: Validate that soil_code follows AG- plus exactly 4 digits and save to soil_ok.",
-          target: ["soil_ok", "=", "re.match(", 'r"^AG-\\d{4}$",', "soil_code", ")"],
-          tokens: [
-            "soil_ok",
-            "=",
-            "re.match(",
-            'r"^AG-\\d{4}$",',
-            "soil_code",
-            ")",
-            "re.findall(",
-            'r"AG-\\d+",',
-            "soil_codes",
-          ],
-        },
-        {
-          prompt:
-            "Funerary IT: Validate that case_code follows FUN- plus exactly 5 digits and save to memorial_hit.",
-          target: [
-            "memorial_hit",
-            "=",
-            "re.match(",
-            'r"^FUN-\\d{5}$",',
-            "case_code",
-            ")",
-          ],
-          tokens: [
-            "memorial_hit",
-            "=",
-            "re.match(",
-            'r"^FUN-\\d{5}$",',
-            "case_code",
-            ")",
-            "re.search(",
-            'r"FUN-\\d{5}",',
-            "cases",
-          ],
-        },
-      ];
-
-      const anchorGameBank = document.getElementById("anchor-game-bank");
-      const anchorGameAnswer = document.getElementById("anchor-game-answer");
-      const anchorGamePrompt = document.getElementById("anchor-game-prompt");
-      const anchorGameRoundText = document.getElementById("anchor-game-round");
-      const anchorGameScoreText = document.getElementById("anchor-game-score");
-      const anchorGameFeedback = document.getElementById("anchor-game-feedback");
-      const anchorGameCheckBtn = document.getElementById("anchor-game-check");
-      const anchorGameClearBtn = document.getElementById("anchor-game-clear");
-
-      let anchorGameRoundIndex = 0;
-      let anchorGameScore = 0;
-      let anchorGameSelectedIndexes = [];
-
-      const makeAnchorGameTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "regex-token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
-
-      const updateAnchorGameHeader = () => {
-        anchorGameRoundText.textContent = `Round ${anchorGameRoundIndex + 1} of ${anchorGameRounds.length}`;
-        anchorGameScoreText.textContent = `Score: ${anchorGameScore}`;
-      };
-
-      const updateAnchorGameAnswerPlaceholder = () => {
-        anchorGameAnswer.classList.toggle("empty", anchorGameSelectedIndexes.length === 0);
-      };
-
-      const setAnchorGameFeedback = (message, tone = "") => {
-        anchorGameFeedback.textContent = message;
-        anchorGameFeedback.classList.remove("success", "error");
-        if (tone) {
-          anchorGameFeedback.classList.add(tone);
-        }
-      };
-
-      const syncAnchorGameBankState = () => {
-        const active = new Set(anchorGameSelectedIndexes);
-        anchorGameBank.querySelectorAll(".regex-token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderAnchorGameAnswer = () => {
-        const round = anchorGameRounds[anchorGameRoundIndex];
-        anchorGameAnswer.innerHTML = "";
-
-        anchorGameSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeAnchorGameTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            anchorGameSelectedIndexes.splice(answerIndex, 1);
-            renderAnchorGameAnswer();
-            syncAnchorGameBankState();
-            updateAnchorGameAnswerPlaceholder();
-          });
-          anchorGameAnswer.appendChild(token);
-        });
-
-        updateAnchorGameAnswerPlaceholder();
-      };
-
-      const renderAnchorGameRound = () => {
-        const round = anchorGameRounds[anchorGameRoundIndex];
-        anchorGameSelectedIndexes = [];
-        anchorGameBank.innerHTML = "";
-        anchorGameAnswer.innerHTML = "";
-
-        if (anchorGamePrompt) {
-          anchorGamePrompt.textContent = round.prompt;
-        }
-
-        setAnchorGameFeedback("");
-
-        const shuffledIndexes = getSearchGameShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const token = makeAnchorGameTokenButton(round.tokens[index], index);
-          token.addEventListener("click", () => {
-            anchorGameSelectedIndexes.push(index);
-            renderAnchorGameAnswer();
-            syncAnchorGameBankState();
-          });
-          anchorGameBank.appendChild(token);
-        });
-
-        updateAnchorGameHeader();
-        syncAnchorGameBankState();
-        updateAnchorGameAnswerPlaceholder();
-      };
-
-      const goToNextAnchorGameRound = () => {
-        if (anchorGameRoundIndex < anchorGameRounds.length - 1) {
-          anchorGameRoundIndex += 1;
-          renderAnchorGameRound();
-          return;
-        }
-
-        setAnchorGameFeedback(
-          `Challenge complete! Final score: ${anchorGameScore}/${anchorGameRounds.length}`,
-          "success",
-        );
-        anchorGameCheckBtn.disabled = true;
-      };
-
-      anchorGameCheckBtn.addEventListener("click", () => {
-        const round = anchorGameRounds[anchorGameRoundIndex];
-        const answerTokens = anchorGameSelectedIndexes.map((index) => round.tokens[index]);
-
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          anchorGameScore += 1;
-          updateAnchorGameHeader();
-          setAnchorGameFeedback("Excellent! Anchors and quantifier pattern are correct.", "success");
-          launchRegexConfetti();
-          setTimeout(goToNextAnchorGameRound, 750);
-          return;
-        }
-
-        setAnchorGameFeedback("Not quite. Check ^, $, quantifier count, and argument order.", "error");
-      });
-
-      anchorGameClearBtn.addEventListener("click", () => {
-        anchorGameSelectedIndexes = [];
-        renderAnchorGameAnswer();
-        syncAnchorGameBankState();
-        setAnchorGameFeedback("Answer cleared.");
-      });
-
-      renderAnchorGameRound();
-
-      const classGameRounds = [
-        {
-          prompt:
-            "Hospital IT: Detect whether triage_log contains any patient-number sequence and save to patient_hit.",
-          target: ["patient_hit", "=", "re.search(", 'r"\\d+",', "triage_log", ")"],
-          tokens: [
-            "patient_hit",
-            "=",
-            "re.search(",
-            'r"\\d+",',
-            "triage_log",
-            ")",
-            "re.findall(",
-            'r"[A-Z]+",',
-            "patient_number",
-          ],
-        },
-        {
-          prompt:
-            "Airport IT: Extract gate IDs like A12/B07 from departure_board and save to codes.",
-          target: [
-            "codes",
-            "=",
-            "re.findall(",
-            'r"[A-Z]\\d{2}",',
-            "departure_board",
-            ")",
-          ],
-          tokens: [
-            "codes",
-            "=",
-            "re.findall(",
-            'r"[A-Z]\\d{2}",',
-            "departure_board",
-            ")",
-            "re.match(",
-            'r"\\w+",',
-            "gate_board",
-          ],
-        },
-        {
-          prompt:
-            "Military IT: Validate that radio_code starts with 3 uppercase letters and save to code_header.",
-          target: [
-            "code_header",
-            "=",
-            "re.match(",
-            'r"[A-Z]{3}",',
-            "radio_code",
-            ")",
-          ],
-          tokens: [
-            "code_header",
-            "=",
-            "re.match(",
-            'r"[A-Z]{3}",',
-            "radio_code",
-            ")",
-            "re.sub(",
-            'r"\\d+",',
-            "signals",
-          ],
-        },
-      ];
-
-      const classGameBank = document.getElementById("class-game-bank");
-      const classGameAnswer = document.getElementById("class-game-answer");
-      const classGamePrompt = document.getElementById("class-game-prompt");
-      const classGameRoundText = document.getElementById("class-game-round");
-      const classGameScoreText = document.getElementById("class-game-score");
-      const classGameFeedback = document.getElementById("class-game-feedback");
-      const classGameCheckBtn = document.getElementById("class-game-check");
-      const classGameClearBtn = document.getElementById("class-game-clear");
-
-      let classGameRoundIndex = 0;
-      let classGameScore = 0;
-      let classGameSelectedIndexes = [];
-
-      const makeClassGameTokenButton = (text, index) => {
-        const token = document.createElement("button");
-        token.type = "button";
-        token.className = "regex-token";
-        token.textContent = text;
-        token.dataset.index = String(index);
-        return token;
-      };
-
-      const updateClassGameHeader = () => {
-        classGameRoundText.textContent = `Round ${classGameRoundIndex + 1} of ${classGameRounds.length}`;
-        classGameScoreText.textContent = `Score: ${classGameScore}`;
-      };
-
-      const updateClassGameAnswerPlaceholder = () => {
-        classGameAnswer.classList.toggle("empty", classGameSelectedIndexes.length === 0);
-      };
-
-      const setClassGameFeedback = (message, tone = "") => {
-        classGameFeedback.textContent = message;
-        classGameFeedback.classList.remove("success", "error");
-        if (tone) {
-          classGameFeedback.classList.add(tone);
-        }
-      };
-
-      const syncClassGameBankState = () => {
-        const active = new Set(classGameSelectedIndexes);
-        classGameBank.querySelectorAll(".regex-token").forEach((tokenEl) => {
-          const index = Number(tokenEl.dataset.index);
-          const used = active.has(index);
-          tokenEl.classList.toggle("used", used);
-          tokenEl.disabled = used;
-        });
-      };
-
-      const renderClassGameAnswer = () => {
-        const round = classGameRounds[classGameRoundIndex];
-        classGameAnswer.innerHTML = "";
-
-        classGameSelectedIndexes.forEach((index, answerIndex) => {
-          const token = makeClassGameTokenButton(round.tokens[index], index);
-          token.classList.add("answer-token");
-          token.title = "Tap to remove";
-          token.addEventListener("click", () => {
-            classGameSelectedIndexes.splice(answerIndex, 1);
-            renderClassGameAnswer();
-            syncClassGameBankState();
-            updateClassGameAnswerPlaceholder();
-          });
-          classGameAnswer.appendChild(token);
-        });
-
-        updateClassGameAnswerPlaceholder();
-      };
-
-      const renderClassGameRound = () => {
-        const round = classGameRounds[classGameRoundIndex];
-        classGameSelectedIndexes = [];
-        classGameBank.innerHTML = "";
-        classGameAnswer.innerHTML = "";
-
-        if (classGamePrompt) {
-          classGamePrompt.textContent = round.prompt;
-        }
-
-        setClassGameFeedback("");
-
-        const shuffledIndexes = getSearchGameShuffledIndexes(round.tokens.length);
-
-        shuffledIndexes.forEach((index) => {
-          const token = makeClassGameTokenButton(round.tokens[index], index);
-          token.addEventListener("click", () => {
-            classGameSelectedIndexes.push(index);
-            renderClassGameAnswer();
-            syncClassGameBankState();
-          });
-          classGameBank.appendChild(token);
-        });
-
-        updateClassGameHeader();
-        syncClassGameBankState();
-        updateClassGameAnswerPlaceholder();
-      };
-
-      const goToNextClassGameRound = () => {
-        if (classGameRoundIndex < classGameRounds.length - 1) {
-          classGameRoundIndex += 1;
-          renderClassGameRound();
-          return;
-        }
-
-        setClassGameFeedback(
-          `Challenge complete! Final score: ${classGameScore}/${classGameRounds.length}`,
-          "success",
-        );
-        classGameCheckBtn.disabled = true;
-      };
-
-      classGameCheckBtn.addEventListener("click", () => {
-        const round = classGameRounds[classGameRoundIndex];
-        const answerTokens = classGameSelectedIndexes.map((index) => round.tokens[index]);
-
-        const correct =
-          answerTokens.length === round.target.length &&
-          answerTokens.every((token, index) => token === round.target[index]);
-
-        if (correct) {
-          classGameScore += 1;
-          updateClassGameHeader();
-          setClassGameFeedback("Excellent! Correct function + character class shorthand.", "success");
-          launchRegexConfetti();
-          setTimeout(goToNextClassGameRound, 750);
-          return;
-        }
-
-        setClassGameFeedback("Not quite. Recheck the class pattern and argument order.", "error");
-      });
-
-      classGameClearBtn.addEventListener("click", () => {
-        classGameSelectedIndexes = [];
-        renderClassGameAnswer();
-        syncClassGameBankState();
-        setClassGameFeedback("Answer cleared.");
-      });
-
-      renderClassGameRound();
-
+      // ===== REVEAL.JS INIT =====
       Reveal.initialize({
         hash: true,
         slideNumber: "c/t",
@@ -2604,6 +1439,7 @@ re.search(r"\d+", "abc 123")</code></pre>
         center: true,
         plugins: [],
       });
+
       document.querySelectorAll("pre code").forEach((el) => {
         hljs.highlightElement(el);
       });
