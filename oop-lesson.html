@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Linked Lists in Python — Computer Programming 2</title>
+    <title>Classes and Objects in Python — Computer Programming</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css"
@@ -381,18 +381,14 @@
         <section
           data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
         >
-          <h1>Linked Lists</h1>
+          <h1>Classes and Objects</h1>
           <p class="subtitle">in Python</p>
           <br />
-          <p style="color: #aaa; font-size: 0.8em">
-            From Objects to Dynamic Data Structures
-          </p>
-          <br />
           <div class="tag-row">
-            <span class="tag">Node</span>
-            <span class="tag">linked list</span>
-            <span class="tag">traversal</span>
-            <span class="tag">insertion</span>
+            <span class="tag">class</span>
+            <span class="tag">object</span>
+            <span class="tag">attributes</span>
+            <span class="tag">methods</span>
             <span class="tag">OOP</span>
           </div>
           <br />
@@ -400,329 +396,292 @@
           <p style="color: #666; font-size: 0.6em">March 2026</p>
         </section>
 
-        <!-- ===== SLIDE 2: MOTIVATION ===== -->
+        <!-- ===== SLIDE 2: OBJECTIVES ===== -->
         <section>
-          <h2>🚀 Where We Are</h2>
-          <p style="font-size: 0.85em">So far, you have learned:</p>
+          <h2>🎯 Lesson Objectives</h2>
+          <p style="font-size: 0.85em">By the end of this lesson you will be able to:</p>
+          <ul>
+            <li>Explain what a <strong>class</strong> and <strong>object</strong> are</li>
+            <li>Create classes in Python</li>
+            <li>Use <strong>attributes</strong> and <strong>methods</strong></li>
+            <li>Instantiate objects</li>
+            <li>Apply classes to solve problems</li>
+          </ul>
+        </section>
+
+        <!-- ===== SLIDE 3: WHAT IS OOP? ===== -->
+        <section>
+          <h2>💡 What is Object-Oriented Programming?</h2>
+          <!-- <p style="font-size: 0.85em">
+            OOP is a programming paradigm based on
+            <strong style="color: var(--accent)">objects</strong>.
+          </p> -->
+          <br />
           <div class="two-col">
             <div class="card">
-              <h4>Data Types</h4>
-              <ul>
-                <li>Dictionaries</li>
-                <li>Tuples</li>
-                <li>Sets</li>
-              </ul>
+              <h4>📦 Data (Attributes)</h4>
+              <p>Information an object stores about itself.</p>
+              <p><em>Example: a dog's name, age, breed</em></p>
             </div>
             <div class="card">
-              <h4>Object-Oriented</h4>
-              <ul>
-                <li>Classes</li>
-                <li>Objects</li>
-              </ul>
+              <h4>⚙️ Behavior (Methods)</h4>
+              <p>Actions an object can perform.</p>
+              <p><em>Example: bark, run, fetch</em></p>
             </div>
           </div>
           <br />
-          <div class="callout">
-            Now we move into:
-            <strong>Data Structures built from objects</strong>
-          </div>
+          <!-- <div class="callout">
+            OOP helps organize code into <strong>reusable, modular structures</strong>.
+          </div> -->
         </section>
 
-        <!-- ===== SLIDE 3: KEY IDEA REVIEW ===== -->
+        <!-- ===== SLIDE 4: REAL WORLD ANALOGY ===== -->
         <section>
-          <h2>💡 Key Idea Review</h2>
-          <div class="callout" style="text-align: center; font-size: 1em">
-            In Python: <strong>everything is an object</strong>
-          </div>
-          <br />
-          <p style="font-size: 0.85em">Even built-in types:</p>
-          <div class="two-col">
-            <div class="card" style="text-align: center">
-              <code>42</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">Integer object</p>
-            </div>
-            <div class="card" style="text-align: center">
-              <code>"hello"</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">String object</p>
-            </div>
-            <div class="card" style="text-align: center">
-              <code>[1, 2, 3]</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">List object</p>
-            </div>
-            <div class="card" style="text-align: center">
-              <code>Dog()</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">Your own object</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 4: WHY THIS MATTERS ===== -->
-        <section>
-          <h2>🔧 Why This Matters</h2>
+          <h2>🚗 Real World Analogy</h2>
+          <p style="font-size: 0.85em">Think about a <strong>Car</strong> 🚗</p>
           <div class="two-col">
             <div class="card">
-              <h4>Built-in Structures</h4>
-              <p>Python lists are powerful ✅</p>
-              <p>But: you don't control how they work internally.</p>
-            </div>
-            <div class="card">
-              <h4>Today's Goal 👉</h4>
-              <p>
-                You <strong>build your own</strong> structure from scratch
-                using classes.
-              </p>
-            </div>
-          </div>
-          <br />
-          <div class="callout">
-            When you understand how data structures work internally, you become
-            a <strong>stronger programmer</strong>.
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 5: THE PROBLEM ===== -->
-        <section>
-          <h2>⚠️ The Problem with Python Lists</h2>
-          <div class="two-col">
-            <div class="card">
-              <h4>✅ Fast at</h4>
+              <h4>Characteristics (Attributes)</h4>
               <ul>
-                <li>Index access: <code>my_list[2]</code></li>
-                <li>Append to end</li>
+                <li>Color</li>
+                <li>Brand</li>
+                <li>Speed</li>
               </ul>
             </div>
             <div class="card">
-              <h4>❌ Slow at</h4>
+              <h4>Behaviors (Methods)</h4>
               <ul>
-                <li>Inserting in the <strong>middle</strong></li>
-                <li>Deleting from the middle</li>
+                <li>start()</li>
+                <li>stop()</li>
+                <li>accelerate()</li>
               </ul>
             </div>
           </div>
           <br />
-          <div class="warn">
-            When you insert or delete in the middle, Python must
-            <strong>shift all elements</strong> in memory.
+          <div class="callout" style="text-align: center">
+            <strong>Class = Blueprint</strong> &nbsp;&nbsp;|&nbsp;&nbsp;
+            <strong>Object = Actual Car</strong>
           </div>
         </section>
 
-        <!-- ===== SLIDE 6: ENTER LINKED LISTS ===== -->
+        <!-- ===== SLIDE 5: WHAT IS A CLASS? ===== -->
         <section>
-          <h2>🔗 Enter: Linked Lists</h2>
-          <br />
-          <div class="callout" style="text-align: center; font-size: 1em">
-            A <strong>Linked List</strong> is a collection of
-            <strong>nodes</strong> connected by <strong>references</strong>.
-          </div>
-          <br />
-          <div class="two-col">
-            <div class="card">
-              <h4>Each node stores:</h4>
-              <ul>
-                <li>Some <strong>data</strong></li>
-                <li>A <strong>reference</strong> to the next node</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h4>The chain:</h4>
-              <p>
-                Each element <strong>points to the next</strong> one in line.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 7: VISUAL CONCEPT ===== -->
-        <section>
-          <h2>🖼️ Visual Concept</h2>
-          <pre><code class="language-text">[10 | next] ──▶ [20 | next] ──▶ [30 | None]</code></pre>
-          <br />
-          <div class="two-col">
-            <div class="card">
-              <h4>Each box = Node</h4>
-              <p>Left side: the <strong>data</strong></p>
-              <p>Right side: pointer to <strong>next node</strong></p>
-            </div>
-            <div class="card">
-              <h4>End of list</h4>
-              <p>
-                The last node's
-                <code class="inline">next</code> points to
-                <code class="inline">None</code>.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 8: NODE STRUCTURE ===== -->
-        <section>
-          <h2>🧱 Node Structure</h2>
+          <h2>📐 What is a Class?</h2>
           <p style="font-size: 0.85em">
-            A node is just an <strong>object</strong>:
+            A <strong>class</strong> is a blueprint used to create objects.
           </p>
-          <pre><code class="language-python">class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None</code></pre>
-          <div class="callout">
-            <code class="inline">self.data</code> — stores the value<br />
-            <code class="inline">self.next</code> — reference to the next node
-            (<code class="inline">None</code> by default)
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 9: KEY INSIGHT ===== -->
-        <section>
-          <h2>🔑 Key Insight</h2>
-          <p style="font-size: 0.85em">You are using what you already know:</p>
+          <br />
           <div class="two-col">
-            <div class="card" style="text-align: center">
-              <h4>Classes ✔</h4>
-              <p>Blueprint for nodes</p>
+            <div class="card">
+              <h4>Class: <code>Dog</code></h4>
+              <p><strong>Possible attributes:</strong></p>
+              <ul>
+                <li>name</li>
+                <li>age</li>
+              </ul>
             </div>
-            <div class="card" style="text-align: center">
-              <h4>Objects ✔</h4>
-              <p>Each individual node</p>
+            <div class="card">
+              <h4>Possible behaviors:</h4>
+              <ul>
+                <li>bark()</li>
+                <li>sleep()</li>
+              </ul>
             </div>
           </div>
           <br />
           <div class="callout">
-            To build: &nbsp;<strong>a custom data structure ✔</strong>
+            A class is just the <strong>definition</strong>.
+            Objects are the actual things created from it.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 6: CLASS SYNTAX ===== -->
+        <section>
+          <h2>🐍 Python Class Syntax</h2>
+          <pre><code class="language-python">class Dog:
+    pass</code></pre>
+          <div class="two-col" style="margin-top: 1em">
+            <div class="card">
+              <h4><code>class</code></h4>
+              <p>Keyword that defines a class</p>
+            </div>
+            <div class="card">
+              <h4><code>Dog</code></h4>
+              <p>Class name — capitalize by convention (PascalCase)</p>
+            </div>
+            <div class="card card-center-row">
+              <h4><code>pass</code></h4>
+              <p>Placeholder — class body is empty for now</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 7: CREATING AN OBJECT ===== -->
+        <section>
+          <h2>🔨 Creating an Object</h2>
+          <pre><code class="language-python">class Dog:
+    pass
+
+my_dog = Dog()
+print(type(my_dog))   # &lt;class '__main__.Dog'&gt;</code></pre>
+          <div class="callout">
+            <code class="inline">my_dog</code> is now an <strong>object</strong>
+            (instance) created from the class <code class="inline">Dog</code>.
           </div>
           <br />
           <p style="font-size: 0.8em; color: #aaa">
-            A linked list is just a chain of objects pointing to each other.
+            Each call to <code class="inline">Dog()</code> creates a brand new,
+            independent object.
           </p>
         </section>
 
-        <!-- ===== SLIDE 10: GAME 1 — PREDICT THE OUTPUT (MCQ) ===== -->
+        <!-- ===== SLIDE 8: ATTRIBUTES ===== -->
+        <section>
+          <h2>🗃️ Attributes</h2>
+          <p style="font-size: 0.85em">
+            Attributes store <strong>data about an object</strong>.
+          </p>
+          <pre><code class="language-python">class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age</code></pre>
+          <div class="callout">
+            <strong><code>self</code></strong> refers to the current object being
+            created. Each object gets its <em>own copy</em> of the attributes.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 9: __init__ ===== -->
+        <section>
+          <h2>🔑 What is <code class="inline">__init__</code>?</h2>
+          <p style="font-size: 0.85em">
+            <code class="inline">__init__</code> is a
+            <strong>constructor method</strong>. It runs
+            <em>automatically</em> when a new object is created.
+          </p>
+          <pre><code class="language-python">dog1 = Dog("Bantay", 3)
+# __init__ runs here automatically
+# sets dog1.name = "Bantay", dog1.age = 3</code></pre>
+          <div class="callout">
+            Think of <code class="inline">__init__</code> as setup instructions
+            that run every time a new object is born.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 10: ACCESSING ATTRIBUTES ===== -->
+        <section>
+          <h2>🔍 Accessing Attributes</h2>
+          <pre><code class="language-python">dog1 = Dog("Bantay", 3)
+
+print(dog1.name)   # Bantay
+print(dog1.age)    # 3</code></pre>
+          <div class="callout">
+            Use <strong>dot notation</strong>:
+            <code class="inline">object.attribute</code>
+          </div>
+          <br />
+          <div class="two-col" style="font-size: 0.85em">
+            <div class="card">
+              <h4>Read an attribute</h4>
+              <code>print(dog1.name)</code>
+            </div>
+            <div class="card">
+              <h4>Change an attribute</h4>
+              <code>dog1.name = "Rex"</code>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 11: METHODS ===== -->
+        <section>
+          <h2>⚙️ Methods</h2>
+          <p style="font-size: 0.85em">
+            Methods define the <strong>behavior</strong> of objects.
+          </p>
+          <pre><code class="language-python">class Dog:
+
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print(self.name + " says Woof!")</code></pre>
+          <div class="callout">
+            Every method takes <code class="inline">self</code> as its first
+            parameter — this lets it access the object's own data.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 12: USING METHODS ===== -->
+        <section>
+          <h2>▶️ Using Methods</h2>
+          <pre><code class="language-python">dog1 = Dog("Bantay")
+dog1.bark()   # Bantay says Woof!</code></pre>
+          <div class="callout">
+            Use dot notation to call methods:
+            <code class="inline">object.method()</code>
+          </div>
+          <br />
+          <div class="two-col">
+            <div class="card">
+              <h4>Without arguments</h4>
+              <code>dog1.bark()</code>
+            </div>
+            <div class="card">
+              <h4>With arguments</h4>
+              <code>dog1.eat("bone")</code>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 13: GAME 1 — PREDICT THE OUTPUT (MCQ) ===== -->
         <section>
           <h2>🎮 GAME 1: Predict the Output</h2>
-          <pre><code class="language-python">a = Node(5)
-b = Node(10)
+          <pre><code class="language-python">class Cat:
+    def __init__(self, name):
+        self.name = name
 
-a.next = b
+    def speak(self):
+        print(self.name + " says Meow")
 
-print(a.next.data)</code></pre>
+cat1 = Cat("Luna")
+cat1.speak()</code></pre>
+          <!-- <p style="font-size: 0.82em; margin: 0.6em 0 0">
+            What will the output be?
+          </p> -->
           <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">A. 5</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="true">B. 10</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">C. None</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">D. Error</button>
+            <button class="mcq-btn" data-correct="false">A. Luna says Woof</button>
+            <button class="mcq-btn" data-correct="true">B. Luna says Meow</button>
+            <button class="mcq-btn" data-correct="false">C. Error</button>
           </div>
-          <p id="g1-feedback" class="token-game-feedback" aria-live="polite"></p>
+          <p id="mcq-feedback" class="token-game-feedback" aria-live="polite"></p>
         </section>
 
-        <!-- ===== SLIDE 11: BUILDING A LINKED LIST ===== -->
+        <!-- ===== SLIDE 14: GAME 2 — SPOT THE ERROR ===== -->
         <section>
-          <h2>🔨 Building a Linked List</h2>
-          <pre><code class="language-python">head   = Node(1)
-second = Node(2)
-third  = Node(3)
-
-head.next   = second
-second.next = third</code></pre>
-          <div class="callout">
-            <code class="inline">head</code> is a reference to the
-            <strong>first node</strong> — our entry point into the list.
-          </div>
-          <br />
-          <pre><code class="language-text">head
- │
-[1|next] ──▶ [2|next] ──▶ [3|None]</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 12: TRAVERSING THE LIST ===== -->
-        <section>
-          <h2>🚶 Traversing the List</h2>
-          <pre><code class="language-python">current = head
-
-while current:
-    print(current.data)
-    current = current.next</code></pre>
-          <div class="callout">
-            Start at <code class="inline">head</code>, visit each node, then
-            move to <code class="inline">current.next</code> until we reach
-            <code class="inline">None</code>.
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 13: TRAVERSAL OUTPUT ===== -->
-        <section>
-          <h2>📤 Output</h2>
-          <pre><code class="language-text">1
-2
-3</code></pre>
-          <br />
-          <div class="callout">
-            <strong>Traversal</strong> = visiting each node one by one, from
-            <code class="inline">head</code> to the end.
-          </div>
-          <br />
-          <p style="font-size: 0.8em; color: #aaa">
-            When <code class="inline">current</code> becomes
-            <code class="inline">None</code>, the loop stops.
+          <h2>🎮 GAME 2: Spot the Error</h2>
+          <pre><code class="language-python">class Student
+    def __init__(self, name):
+        self.name = name</code></pre>
+          <p style="font-size: 0.82em">Find the mistake in the code above.</p>
+          <p style="font-size: 0.75em; color: #aaa">
+            Hint: Look carefully at the
+            <strong>class declaration line</strong>.
           </p>
-        </section>
-
-        <!-- ===== SLIDE 14: GAME 2 — FILL IN THE BLANK (MCQ) ===== -->
-        <section>
-          <h2>🎮 GAME 2: Fill in the Blank</h2>
-          <pre><code class="language-python">while current != ______:
-    print(current.data)
-    current = current.next</code></pre>
-          <p style="font-size: 0.82em">
-            What should replace <code class="inline">______</code>?
-          </p>
-          <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">A. 0</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="true">B. None</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">C. False</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">D. ""</button>
-          </div>
-          <p id="g2-feedback" class="token-game-feedback" aria-live="polite"></p>
-        </section>
-
-        <!-- ===== SLIDE 15: INSERTING AT BEGINNING ===== -->
-        <section>
-          <h2>➕ Inserting at the Beginning</h2>
-          <pre><code class="language-python">new_node = Node(0)
-new_node.next = head
-head = new_node</code></pre>
-          <div class="callout">
-            <ol style="list-style: decimal; padding-left: 1.5em; margin: 0">
-              <li>Create the new node</li>
-              <li>
-                Point its <code class="inline">next</code> to the old
-                <code class="inline">head</code>
-              </li>
-              <li>
-                Update <code class="inline">head</code> to be the new node
-              </li>
-            </ol>
+          <br />
+          <button id="reveal-error-btn" class="token-game-btn primary" type="button">
+            Reveal Answer
+          </button>
+          <div id="error-reveal" class="warn" style="display: none; margin-top: 0.8em">
+            ❌ Missing colon <code class="inline">:</code> after
+            <code class="inline">Student</code>. It should be
+            <code class="inline">class Student:</code>
           </div>
         </section>
 
-        <!-- ===== SLIDE 16: INSERTING AT END ===== -->
-        <section>
-          <h2>➕ Inserting at the End</h2>
-          <pre><code class="language-python">current = head
-
-while current.next:
-    current = current.next
-
-current.next = Node(4)</code></pre>
-          <div class="callout">
-            Traverse to the <strong>last node</strong> (where
-            <code class="inline">current.next</code> is
-            <code class="inline">None</code>), then attach the new node.
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 17: GAME 3 — TOKEN BUILDER ===== -->
+        <!-- ===== SLIDE 15: GAME 3 — BUILD THE CLASS (TOKEN BUILDER) ===== -->
         <section>
           <p style="font-size: 0.75em; margin-bottom: 0.5rem">
-            🎮 <strong>GAME 3: Build the Code</strong> — construct the correct
+            🎮 <strong>GAME 3: Build the Class</strong> — construct the correct
             Python statement:
           </p>
           <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
@@ -755,121 +714,146 @@ current.next = Node(4)</code></pre>
           </div>
         </section>
 
-        <!-- ===== SLIDE 18: DELETING A NODE ===== -->
+        <!-- ===== SLIDE 16: EXAMPLE SOLUTION — BOOK ===== -->
         <section>
-          <h2>🗑️ Deleting a Node</h2>
-          <pre><code class="language-python">current = head
+          <h2>✅ Example Solution</h2>
+          <pre><code class="language-python">class Book:
 
-while current.next:
-    if current.next.data == target:
-        current.next = current.next.next
-        break
-    current = current.next</code></pre>
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+
+b1 = Book("Harry Potter", "J.K. Rowling")
+print(b1.title)    # Harry Potter
+print(b1.author)   # J.K. Rowling</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 17: MULTIPLE OBJECTS ===== -->
+        <section>
+          <h2>🐾 Multiple Objects</h2>
+          <p style="font-size: 0.85em">
+            One class can create <strong>many objects</strong>.
+          </p>
+          <pre><code class="language-python">dog1 = Dog("Bantay")
+dog2 = Dog("Max")
+dog3 = Dog("Bella")
+
+dog1.bark()   # Bantay says Woof!
+dog2.bark()   # Max says Woof!
+dog3.bark()   # Bella says Woof!</code></pre>
           <div class="callout">
-            To delete a node: make the node <em>before</em> it skip over it —
-            point directly to the node <em>after</em> it.
+            Each object has its <strong>own data</strong> but shares the same
+            class blueprint.
           </div>
         </section>
 
-        <!-- ===== SLIDE 19: WHY LINKED LISTS? ===== -->
+        <!-- ===== SLIDE 18: OBJECT STATE ===== -->
         <section>
-          <h2>✅ Why Linked Lists?</h2>
-          <p style="font-size: 0.85em">Advantages over Python lists:</p>
-          <div class="two-col">
-            <div class="card">
-              <h4>📏 Dynamic Size</h4>
-              <p>Grows and shrinks without preallocating memory.</p>
-            </div>
-            <div class="card">
-              <h4>⚡ Fast Insert / Delete</h4>
-              <p>No shifting elements — just update pointers.</p>
-            </div>
-            <div class="card card-center-row">
-              <h4>🔁 Flexible Structure</h4>
-              <p>Can be extended into stacks, queues, and more.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 20: DOWNSIDES ===== -->
-        <section>
-          <h2>⚠️ Downsides</h2>
-          <div class="two-col">
-            <div class="card">
-              <h4>🚫 No Direct Indexing</h4>
-              <p>
-                Can't do <code>my_list[3]</code> — must traverse from head.
-              </p>
-            </div>
-            <div class="card">
-              <h4>💾 More Memory</h4>
-              <p>
-                Each node stores an extra pointer
-                (<code class="inline">next</code>).
-              </p>
-            </div>
-            <div class="card card-center-row">
-              <h4>🐢 Slower Traversal</h4>
-              <p>Must visit each node one by one to find elements.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 21: COMPARISON TABLE ===== -->
-        <section>
-          <h2>📊 Comparison</h2>
+          <h2>🗂️ Object State</h2>
+          <p style="font-size: 0.85em">
+            All created from the <strong>same class blueprint</strong>:
+          </p>
           <table style="margin: 0.8em 0">
             <tr>
-              <th>Feature</th>
-              <th>Python List</th>
-              <th>Linked List</th>
+              <th>Object</th>
+              <th>name</th>
             </tr>
             <tr>
-              <td>Index access</td>
-              <td>✅ Fast</td>
-              <td>❌ Slow</td>
+              <td><code>dog1</code></td>
+              <td>Bantay</td>
             </tr>
             <tr>
-              <td>Insert / Delete (middle)</td>
-              <td>❌ Slow</td>
-              <td>✅ Fast</td>
+              <td><code>dog2</code></td>
+              <td>Max</td>
             </tr>
             <tr>
-              <td>Memory use</td>
-              <td>✅ Efficient</td>
-              <td>⚠️ Extra (pointers)</td>
-            </tr>
-            <tr>
-              <td>Dynamic size</td>
-              <td>✅ Yes</td>
-              <td>✅ Yes</td>
+              <td><code>dog3</code></td>
+              <td>Bella</td>
             </tr>
           </table>
+          <div class="callout">
+            Each object is <em>independent</em> — changing
+            <code class="inline">dog1.name</code> does <strong>not</strong>
+            affect <code class="inline">dog2.name</code>.
+          </div>
         </section>
 
-        <!-- ===== SLIDE 22: GAME 4 — WHICH IS BETTER? (MCQ) ===== -->
+        <!-- ===== SLIDE 19: ADDING MORE METHODS ===== -->
         <section>
-          <h2>🎮 GAME 4: Which is Better?</h2>
-          <div class="callout" style="margin-bottom: 1em">
-            <strong>Scenario:</strong> You are building an app that
-            <strong>frequently inserts data in the middle</strong> of a
-            collection.
-          </div>
-          <p style="font-size: 0.82em">Which structure should you use?</p>
-          <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g4" data-correct="false">
-              A. Python List
-            </button>
-            <button class="mcq-btn mcq-btn-g4" data-correct="true">
-              B. Linked List
-            </button>
-          </div>
-          <p id="g4-feedback" class="token-game-feedback" aria-live="polite"></p>
+          <h2>➕ Adding More Methods</h2>
+          <pre><code class="language-python">class Dog:
+
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print("Woof!")
+
+    def greet(self):
+        print("Hello, I am " + self.name)
+
+dog1 = Dog("Bantay")
+dog1.bark()    # Woof!
+dog1.greet()   # Hello, I am Bantay</code></pre>
         </section>
 
+        <!-- ===== SLIDE 20: GAME 4 — CLASS DESIGN CHALLENGE (TOKEN BUILDER) ===== -->
+        <section>
+          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
+            🎮 <strong>GAME 4: Class Design Challenge</strong> — construct the
+            correct Python statement:
+          </p>
+          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
+            <span style="font-style: italic" id="g4-prompt"></span>
+          </div>
+          <div class="token-game">
+            <div class="token-game-progress">
+              <span id="g4-round">Round 1 of 3</span>
+              <span id="g4-score">Score: 0</span>
+            </div>
+            <div
+              id="g4-answer"
+              class="token-answer-row empty"
+              aria-label="Selected answer tokens"
+            ></div>
+            <div
+              id="g4-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+            <div class="token-game-controls">
+              <button id="g4-check" class="token-game-btn primary" type="button">
+                Check
+              </button>
+              <button id="g4-clear" class="token-game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+            <p id="g4-feedback" class="token-game-feedback" aria-live="polite"></p>
+          </div>
+        </section>
 
+        <!-- ===== SLIDE 21: PLAYER IMPLEMENTATION ===== -->
+        <section>
+          <h2>✅ Possible Implementation</h2>
+          <pre><code class="language-python">class Player:
 
-        <!-- ===== SLIDE 23: GAME 5 — TRUE OR FALSE ===== -->
+    def __init__(self, name):
+        self.name = name
+        self.score = 0
+
+    def add_score(self, points):
+        self.score += points
+
+    def show_score(self):
+        print(self.name, self.score)
+
+p1 = Player("Bella")
+p1.add_score(50)
+p1.show_score()    # Bella 50</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 22: GAME 5 — TRUE OR FALSE ===== -->
         <section>
           <h2>🎮 GAME 5: True or False</h2>
           <p style="font-size: 0.8em">
@@ -879,8 +863,7 @@ while current.next:
           <div class="tf-game">
             <div class="tf-row" data-answered="false">
               <p class="tf-statement">
-                1️⃣ &nbsp; A linked list node stores data and a reference to
-                the next node.
+                1️⃣ &nbsp; A class is an object.
               </p>
               <div class="tf-btns">
                 <button class="tf-btn" data-value="true">True</button>
@@ -890,8 +873,7 @@ while current.next:
             </div>
             <div class="tf-row" data-answered="false">
               <p class="tf-statement">
-                2️⃣ &nbsp; Python lists are faster than linked lists for
-                insertions in the middle.
+                2️⃣ &nbsp; An object is created from a class.
               </p>
               <div class="tf-btns">
                 <button class="tf-btn" data-value="true">True</button>
@@ -901,8 +883,9 @@ while current.next:
             </div>
             <div class="tf-row" data-answered="false">
               <p class="tf-statement">
-                3️⃣ &nbsp; The last node in a linked list points to
-                <code class="inline">None</code>.
+                3️⃣ &nbsp;
+                <code class="inline">__init__</code> runs when an object is
+                created.
               </p>
               <div class="tf-btns">
                 <button class="tf-btn" data-value="true">True</button>
@@ -913,7 +896,62 @@ while current.next:
           </div>
         </section>
 
-        <!-- ===== SLIDE 24: SUMMARY ===== -->
+        <!-- ===== SLIDE 23: QUICK PRACTICE ===== -->
+        <section>
+          <h2>💪 Quick Practice</h2>
+          <p style="font-size: 0.85em">
+            Create a class called <strong>Car</strong> with:
+          </p>
+          <div class="two-col">
+            <div class="card">
+              <h4>Attributes</h4>
+              <ul>
+                <li>brand</li>
+                <li>speed</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>Method</h4>
+              <ul>
+                <li>
+                  <code>drive()</code> → prints
+                  <em>"The car is driving"</em>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <br />
+          <p style="font-size: 0.8em; color: #aaa">
+            Objects should be created like:
+          </p>
+          <pre><code class="language-python">car1 = Car("Toyota", 100)
+car1.drive()   # The car is driving</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 24: WHY USE CLASSES? ===== -->
+        <section>
+          <h2>🤔 Why Use Classes?</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>📦 Organize Code</h4>
+              <p>Group related data and behavior together</p>
+            </div>
+            <div class="card">
+              <h4>♻️ Reuse Structures</h4>
+              <p>Define once, create many objects</p>
+            </div>
+            <div class="card">
+              <h4>🌍 Model Real-World Systems</h4>
+              <p>Students, products, bank accounts…</p>
+            </div>
+            <div class="card">
+              <h4>📈 Manage Large Programs</h4>
+              <p>Easier to maintain and scale</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 25: SUMMARY ===== -->
         <section>
           <h2>📋 Summary</h2>
           <p style="font-size: 0.85em">Today you learned:</p>
@@ -923,92 +961,76 @@ while current.next:
               <th>Definition</th>
             </tr>
             <tr>
-              <td><strong>Node</strong></td>
-              <td>Object holding data + reference to next node</td>
+              <td><strong>Class</strong></td>
+              <td>Blueprint for creating objects</td>
             </tr>
             <tr>
-              <td><strong>Linked List</strong></td>
-              <td>Chain of nodes connected by references</td>
+              <td><strong>Object</strong></td>
+              <td>An instance of a class</td>
             </tr>
             <tr>
-              <td><strong>head</strong></td>
-              <td>Reference to the first node</td>
+              <td><strong>Attribute</strong></td>
+              <td>Data stored in an object</td>
             </tr>
             <tr>
-              <td><strong>Traversal</strong></td>
-              <td>
-                Visiting nodes one by one, following
-                <code>next</code>
-              </td>
+              <td><strong>Method</strong></td>
+              <td>A function defined inside a class</td>
             </tr>
             <tr>
-              <td><strong>Insertion</strong></td>
-              <td>Create node, update pointer(s)</td>
+              <td><strong><code>__init__</code></strong></td>
+              <td>Constructor — runs when object is created</td>
             </tr>
             <tr>
-              <td><strong>Deletion</strong></td>
-              <td>
-                Skip target by updating previous node's
-                <code>next</code>
-              </td>
+              <td><strong><code>self</code></strong></td>
+              <td>Reference to the current object</td>
             </tr>
           </table>
         </section>
 
-
-
-
-
-        <!-- ===== SLIDE 25: CHALLENGE EXERCISE ===== -->
+        <!-- ===== SLIDE 26: FINAL CHALLENGE ===== -->
         <section
           data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
         >
-          <h2>🚀 Challenge Exercise</h2>
-          <p style="font-size: 0.85em">Create a program that:</p>
+          <h2>🏆 Final Challenge</h2>
+          <p style="font-size: 0.85em">
+            Create a class called <strong>BankAccount</strong>
+          </p>
           <div class="two-col">
             <div class="card">
-              <h4>Requirements</h4>
-              <ol
-                style="
-                  list-style: decimal;
-                  padding-left: 1.5em;
-                  margin: 0;
-                  font-size: 0.9em;
-                "
-              >
-                <li>Builds a linked list</li>
-                <li>Adds 5 numbers</li>
-                <li>Prints all values</li>
-              </ol>
+              <h4>Attributes</h4>
+              <ul>
+                <li>owner</li>
+                <li>balance</li>
+              </ul>
             </div>
             <div class="card">
-              <h4>🌟 Bonus</h4>
-              <p>
-                Add a <strong>delete</strong> function that removes a node by
-                value.
-              </p>
+              <h4>Methods</h4>
+              <ul>
+                <li>deposit(amount)</li>
+                <li>withdraw(amount)</li>
+                <li>display_balance()</li>
+              </ul>
             </div>
+          </div>
+          <br />
+          <div class="callout">
+            🌟 <strong>Bonus:</strong> Prevent withdrawing more than the
+            balance.
           </div>
         </section>
 
-        <!-- ===== SLIDE 26: CLOSING THOUGHT / THANK YOU ===== -->
+        <!-- ===== SLIDE 27: THANK YOU ===== -->
         <section
           data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
         >
-          <h1>Thank You! 🔗</h1>
-          <br />
-          <div class="callout" style="font-size: 1em; text-align: center">
-            You are no longer just <em>using</em> data structures —<br />
-            you are now <strong>engineering them.</strong>
-          </div>
-          <br />
+          <h1>Thank You! 🐍</h1>
           <p style="color: #aaa; margin-top: 0.5em">Questions?</p>
           <br />
           <div class="tag-row">
-            <span class="tag">Node</span>
-            <span class="tag">linked list</span>
-            <span class="tag">head</span>
-            <span class="tag">traversal</span>
+            <span class="tag">class</span>
+            <span class="tag">object</span>
+            <span class="tag">__init__</span>
+            <span class="tag">self</span>
             <span class="tag">OOP</span>
           </div>
         </section>
@@ -1244,89 +1266,145 @@ while current.next:
         renderRound();
       };
 
-      // ===== GAME 3: BUILD THE CODE — Token rounds (Linked List) =====
+      // ===== GAME 3: BUILD THE CLASS — Token rounds =====
       makeTokenGame(
         "g3",
         [
           {
-            prompt: "Create a Node with data 5 and store it in variable a.",
-            target: ["a", "=", "Node(", "5", ")"],
-            tokens: ["a", "=", "Node(", "5", ")", "b", "10", "node(", "Node"],
-          },
-          {
-            prompt: "Link node b after node a (make a.next point to b).",
-            target: ["a.next", "=", "b"],
-            tokens: ["a.next", "=", "b", "b.next", "a", "a.data", "None"],
-          },
-          {
-            prompt: "Start traversal: set current equal to head.",
-            target: ["current", "=", "head"],
+            prompt:
+              "Bookstore: Create a Book object with title 'Harry Potter' and author 'Rowling'. Store it in b1.",
+            target: ["b1", "=", "Book(", '"Harry Potter",', '"Rowling"', ")"],
             tokens: [
-              "current",
+              "b1",
               "=",
-              "head",
-              "next",
-              "current.next",
-              "head.next",
-              "start",
+              "Book(",
+              '"Harry Potter",',
+              '"Rowling"',
+              ")",
+              "Dog(",
+              "b2",
+              '"harry potter",',
+            ],
+          },
+          {
+            prompt:
+              "Library: Access the title attribute of book b1 using print.",
+            target: ["print(", "b1.title", ")"],
+            tokens: [
+              "print(",
+              "b1.title",
+              ")",
+              "b1.author",
+              "Book.title",
+              "print(b1.title,",
+            ],
+          },
+          {
+            prompt:
+              "School Records: Create a Student object with name 'Maria'. Store it in s1.",
+            target: ["s1", "=", "Student(", '"Maria"', ")"],
+            tokens: [
+              "s1",
+              "=",
+              "Student(",
+              '"Maria"',
+              ")",
+              "s2",
+              '"maria"',
+              "student(",
+              "Student",
             ],
           },
         ],
-        "Correct! That's a valid linked list operation.",
+        "Correct! That's a valid Python statement.",
       );
 
-      // ===== MCQ GAME FACTORY =====
-      const makeMCQ = (gameId, correctFeedback, wrongFeedback) => {
-        let answered = false;
-        document.querySelectorAll(`.mcq-btn-${gameId}`).forEach((btn) => {
-          btn.addEventListener("click", () => {
-            if (answered) return;
-            answered = true;
-            const isCorrect = btn.dataset.correct === "true";
-            const feedback = document.getElementById(`${gameId}-feedback`);
-            if (isCorrect) {
-              btn.classList.add("correct");
-              feedback.textContent = correctFeedback;
-              feedback.className = "token-game-feedback success";
-              launchConfetti();
-            } else {
-              btn.classList.add("wrong");
-              document
-                .querySelector(`.mcq-btn-${gameId}[data-correct='true']`)
-                .classList.add("correct");
-              feedback.textContent = wrongFeedback;
-              feedback.className = "token-game-feedback error";
-            }
-            document
-              .querySelectorAll(`.mcq-btn-${gameId}`)
-              .forEach((b) => (b.disabled = true));
-          });
-        });
-      };
+      // ===== GAME 4: CLASS DESIGN CHALLENGE — Token rounds =====
+      makeTokenGame(
+        "g4",
+        [
+          {
+            prompt:
+              "Game App: Create a Player object with name 'Bella'. Store it in p1.",
+            target: ["p1", "=", "Player(", '"Bella"', ")"],
+            tokens: [
+              "p1",
+              "=",
+              "Player(",
+              '"Bella"',
+              ")",
+              "p2",
+              '"Bella"',
+              "player(",
+              "Player",
+            ],
+          },
+          {
+            prompt: "Game App: Add 50 points to p1 using add_score.",
+            target: ["p1.add_score(", "50", ")"],
+            tokens: [
+              "p1.add_score(",
+              "50",
+              ")",
+              "p1.show_score(",
+              "100",
+              "p1.score(",
+              "add_score(50)",
+            ],
+          },
+          {
+            prompt: "Game App: Display p1's current score using show_score.",
+            target: ["p1.show_score(", ")"],
+            tokens: [
+              "p1.show_score(",
+              ")",
+              "p1.add_score(",
+              "p1.name",
+              "show_score()",
+              "p1.score(",
+            ],
+          },
+        ],
+        "Correct! Nice class usage!",
+      );
 
       // ===== GAME 1: MCQ — Predict the Output =====
-      makeMCQ(
-        "g1",
-        "✅ Correct! a.next points to b, so a.next.data is b.data = 10.",
-        "❌ Not quite. a.next points to b, and b.data = 10. Answer: B.",
-      );
+      let mcqAnswered = false;
+      document.querySelectorAll(".mcq-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (mcqAnswered) return;
+          mcqAnswered = true;
+          const isCorrect = btn.dataset.correct === "true";
+          const feedback = document.getElementById("mcq-feedback");
+          if (isCorrect) {
+            btn.classList.add("correct");
+            feedback.textContent =
+              "✅ Correct! Luna says Meow — speak() prints name + ' says Meow'.";
+            feedback.className = "token-game-feedback success";
+            launchConfetti();
+          } else {
+            btn.classList.add("wrong");
+            document
+              .querySelector(".mcq-btn[data-correct='true']")
+              .classList.add("correct");
+            feedback.textContent =
+              "❌ Not quite. The correct answer is B — Luna says Meow.";
+            feedback.className = "token-game-feedback error";
+          }
+          document
+            .querySelectorAll(".mcq-btn")
+            .forEach((b) => (b.disabled = true));
+        });
+      });
 
-      // ===== GAME 2: MCQ — Fill in the Blank =====
-      makeMCQ(
-        "g2",
-        "✅ Correct! The end of a linked list is marked by None.",
-        "❌ Not quite. The last node's next is None, so the loop stops there. Answer: B.",
-      );
-
-      // ===== GAME 4: MCQ — Which is Better? =====
-      makeMCQ(
-        "g4",
-        "✅ Correct! Linked Lists are faster for middle insertions — no shifting needed.",
-        "❌ Not quite. Python Lists require shifting; Linked Lists just update pointers. Answer: B.",
-      );
+      // ===== GAME 2: SPOT THE ERROR =====
+      document.getElementById("reveal-error-btn").addEventListener("click", () => {
+        document.getElementById("error-reveal").style.display = "block";
+        document.getElementById("reveal-error-btn").disabled = true;
+      });
 
       // ===== GAME 5: TRUE OR FALSE =====
-      const tfCorrect = [true, false, true];
+      const tfCorrect = [false, true, true];
       document.querySelectorAll(".tf-row").forEach((row, i) => {
         row.querySelectorAll(".tf-btn").forEach((btn) => {
           btn.addEventListener("click", () => {
