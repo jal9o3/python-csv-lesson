@@ -1,420 +1,332 @@
-# Classes and Objects in Python
-### Understanding Object-Oriented Programming
-Python Programming Lesson
+# Linked Lists in Python
+### Computer Programming 2
+### From Objects to Dynamic Data Structures
 
 ---
 
-## Lesson Objectives
+## Slide 1: Motivation
 
-By the end of this lesson you will be able to:
-
-- Explain what a **class** and **object** are
-- Create classes in Python
-- Use **attributes** and **methods**
-- Instantiate objects
-- Apply classes to solve problems
-
----
-
-## What is Object-Oriented Programming?
-
-Object-Oriented Programming (OOP) is a programming paradigm based on **objects**.
-
-Objects contain:
-
-- **Data (attributes)**
-- **Behavior (methods)**
-
-OOP helps organize code into reusable structures.
+- So far, you've learned:
+  - Dictionaries
+  - Tuples
+  - Sets
+  - Classes and Objects
+- Now we move into:
+  **Data Structures built from objects**
 
 ---
 
-## Real World Analogy
+## Slide 2: Key Idea Review
 
-Think about a **Car** 🚗
+- In Python:
+  > Everything is an object
+- Even:
+  - Integers
+  - Strings
+  - Lists
 
-Car characteristics:
-- Color
-- Brand
-- Speed
-
-Car behaviors:
-- Start
-- Stop
-- Accelerate
-
-In programming:
-
-- **Class = Blueprint**
-- **Object = Actual Car**
+- You can also create your own objects (classes)
 
 ---
 
-## What is a Class?
+## Slide 3: Why This Matters
 
-A **class** is a blueprint used to create objects.
-
-Example idea:
-
-Class: `Dog`
-
-Possible attributes:
-- name
-- age
-
-Possible behaviors:
-- bark
-- sleep
+- Built-in structures (like lists) are powerful
+- But:
+  - You don’t control how they work internally
+- Today:
+  👉 You build your own structure
 
 ---
 
-## Python Class Syntax
+## Slide 4: The Problem
 
-```python
-class Dog:
-    pass
+- Python lists:
+  - Fast indexing ✅
+  - Slow insertions (in middle) ❌
+
+- Why?
+  - They shift elements in memory
+
+---
+
+## Slide 5: Enter Linked Lists
+
+- A **Linked List** is:
+  > A collection of nodes connected by references
+
+- Each element points to the next
+
+---
+
+## Slide 6: Visual Concept
+
+```
+
+[10 | next] → [20 | next] → [30 | None]
+
 ````
 
-Explanation:
-
-* `class` keyword defines a class
-* `Dog` is the class name
-* `pass` means empty for now
-
----
-
-## Creating an Object
-
-```python
-class Dog:
-    pass
-
-my_dog = Dog()
-```
-
-`my_dog` is now an **object** created from the class `Dog`.
+- Each box = Node
+- Each node contains:
+  - Data
+  - Reference to next node
 
 ---
 
-## Attributes
+## Slide 7: Node Structure
 
-Attributes store **data about an object**.
-
-Example:
+- A node is just an object:
 
 ```python
-class Dog:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+````
+
+---
+
+## Slide 8: Key Insight
+
+* You are using:
+
+  * Classes ✔
+  * Objects ✔
+* To build:
+
+  * A custom data structure ✔
+
+---
+
+## Slide 9: Interactive Game 1 🧠
+
+**Predict the Output**
+
+```python
+a = Node(5)
+b = Node(10)
+
+a.next = b
+
+print(a.next.data)
+```
+
+Options:
+A. 5
+B. 10
+C. None
+D. Error
+
+---
+
+## Slide 10: Answer
+
+✅ Correct Answer: **B. 10**
+
+* `a.next` points to node `b`
+* `b.data = 10`
+
+---
+
+## Slide 11: Building a Linked List
+
+```python
+head = Node(1)
+second = Node(2)
+third = Node(3)
+
+head.next = second
+second.next = third
 ```
 
 ---
 
-## What is `__init__`?
-
-`__init__` is a **constructor method**.
-
-It runs automatically when a new object is created.
-
-Example:
+## Slide 12: Traversing the List
 
 ```python
-dog1 = Dog("Buddy", 3)
+current = head
+
+while current:
+    print(current.data)
+    current = current.next
 ```
-
-Now:
-
-* `dog1.name` → Buddy
-* `dog1.age` → 3
 
 ---
 
-## Accessing Attributes
-
-Example:
-
-```python
-print(dog1.name)
-print(dog1.age)
-```
-
-Output:
+## Slide 13: Output
 
 ```
-Buddy
+1
+2
 3
 ```
 
+* Traversal = visiting nodes one by one
+
 ---
 
-## Methods
+## Slide 14: Interactive Game 2 🎯
 
-Methods define **behavior** of objects.
-
-Example:
+**Fill in the blank**
 
 ```python
-class Dog:
-
-    def __init__(self, name):
-        self.name = name
-
-    def bark(self):
-        print(self.name + " says Woof!")
+while current != ______:
+    print(current.data)
+    current = current.next
 ```
+
+Options:
+A. 0
+B. None
+C. False
+D. ""
 
 ---
 
-## Using Methods
+## Slide 15: Answer
+
+✅ Correct Answer: **B. None**
+
+* End of list is marked by `None`
+
+---
+
+## Slide 16: Inserting at Beginning
 
 ```python
-dog1 = Dog("Buddy")
-
-dog1.bark()
-```
-
-Output:
-
-```
-Buddy says Woof!
+new_node = Node(0)
+new_node.next = head
+head = new_node
 ```
 
 ---
 
-# GAME 1 🎮
-
-## Predict the Output
+## Slide 17: Inserting at End
 
 ```python
-class Cat:
-    def __init__(self, name):
-        self.name = name
+current = head
 
-    def speak(self):
-        print(self.name + " says Meow")
+while current.next:
+    current = current.next
 
-cat1 = Cat("Luna")
-cat1.speak()
+current.next = Node(4)
 ```
-
-Question:
-
-What will the output be?
-
-A. Luna says Woof
-B. Luna says Meow
-C. Error
 
 ---
 
-# GAME 2 🎮
+## Slide 18: Interactive Game 3 🧩
 
-## Spot the Error
+What does this do?
 
 ```python
-class Student
-    def __init__(self, name):
-        self.name = name
+current.next = Node(99)
 ```
 
-Find the mistake.
-
-Hint:
-Look carefully at the **class declaration line**.
+A. Deletes node
+B. Adds new node after current
+C. Replaces current node
+D. Ends list
 
 ---
 
-# GAME 3 🎮
+## Slide 19: Answer
 
-## Build the Class
+✅ Correct Answer: **B**
 
-Create a class called **Book**.
+* It links a new node after current
 
-Attributes:
+---
 
-* title
-* author
-
-Objects should be created like this:
+## Slide 20: Deleting a Node (Basic)
 
 ```python
-b1 = Book("Harry Potter", "J.K. Rowling")
-```
+current = head
 
-Challenge:
-
-Write the `__init__` method.
-
----
-
-## Example Solution
-
-```python
-class Book:
-
-    def __init__(self, title, author):
-        self.title = title
-        self.author = author
+while current.next:
+    if current.next.data == target:
+        current.next = current.next.next
+        break
+    current = current.next
 ```
 
 ---
 
-## Multiple Objects
+## Slide 21: Why Linked Lists?
 
-One class can create **many objects**.
+Advantages:
 
-Example:
-
-```python
-dog1 = Dog("Buddy")
-dog2 = Dog("Max")
-dog3 = Dog("Bella")
-```
-
-Each object has its **own data**.
+* Dynamic size
+* Fast insertions/deletions
+* No shifting needed
 
 ---
 
-## Object State
+## Slide 22: Downsides
 
-Example:
-
-```
-dog1.name = Buddy
-dog2.name = Max
-dog3.name = Bella
-```
-
-All come from the **same class blueprint**.
+* No direct indexing
+* More memory (extra pointers)
+* Slower traversal
 
 ---
 
-## Adding More Methods
+## Slide 23: Comparison
 
-```python
-class Dog:
-
-    def __init__(self, name):
-        self.name = name
-
-    def bark(self):
-        print("Woof!")
-
-    def greet(self):
-        print("Hello, I am " + self.name)
-```
+| Feature       | Python List | Linked List |
+| ------------- | ----------- | ----------- |
+| Indexing      | Fast        | Slow        |
+| Insert/Delete | Slow        | Fast        |
+| Memory        | Efficient   | Extra used  |
 
 ---
 
-# GAME 4 🎮
+## Slide 24: Interactive Game 4 ⚔️
 
-## Class Design Challenge
+Which is better?
 
-Design a class called **Player**
+**Scenario:**
+You frequently insert data in the middle.
 
-Attributes:
-
-* name
-* score
-
-Methods:
-
-* `add_score(points)`
-* `show_score()`
-
-Think about how the code would look.
+A. Python List
+B. Linked List
 
 ---
 
-## Possible Implementation
+## Slide 25: Final Answer
 
-```python
-class Player:
-
-    def __init__(self, name):
-        self.name = name
-        self.score = 0
-
-    def add_score(self, points):
-        self.score += points
-
-    def show_score(self):
-        print(self.name, self.score)
-```
+✅ Correct Answer: **B. Linked List**
 
 ---
 
-# GAME 5 🎮
+## Slide 26: Summary
 
-## True or False
+* Linked Lists are:
 
-1️⃣ A class is an object.
-2️⃣ An object is created from a class.
-3️⃣ `__init__` runs when an object is created.
+  * Built using classes
+  * Connected via references
+* Core operations:
 
-Discuss with a partner.
-
----
-
-## Quick Practice
-
-Create a class called **Car** with:
-
-Attributes:
-
-* brand
-* speed
-
-Method:
-
-* `drive()` → prints `"The car is driving"`.
+  * Traverse
+  * Insert
+  * Delete
 
 ---
 
-## Why Use Classes?
+## Slide 27: Challenge Exercise 🚀
 
-Classes help:
+Create a program that:
 
-* Organize code
-* Reuse structures
-* Model real-world systems
-* Manage large programs
+1. Builds a linked list
+2. Adds 5 numbers
+3. Prints all values
 
----
+Bonus:
 
-## Summary
-
-Today you learned:
-
-* Classes
-* Objects
-* Attributes
-* Methods
-* Constructors (`__init__`)
-* Creating multiple objects
+* Add delete functionality
 
 ---
 
-## Final Challenge
+## Slide 28: Closing Thought
 
-Create a class called **BankAccount**
-
-Attributes:
-
-* owner
-* balance
-
-Methods:
-
-* deposit(amount)
-* withdraw(amount)
-* display_balance()
-
-Bonus: Prevent withdrawing more than the balance.
-
----
-
-# Thank You!
-
-Questions?
+> You are no longer just using data structures
+> You are now **engineering them**
