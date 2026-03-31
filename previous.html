@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linked Lists in Python — Computer Programming 2</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <style>
+      :root {
+        --accent: #00d9a3;
+        --accent2: #ff6b6b;
+        --code-bg: #1a1a2e;
+      }
+      .reveal {
+        font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+      }
+      .reveal h1,
+      .reveal h2,
+      .reveal h3 {
+        color: var(--accent);
+        text-transform: none;
+        letter-spacing: -0.02em;
+      }
+      .reveal h1 {
+        font-size: 2.2em;
+      }
+      .reveal h2 {
+        font-size: 1.5em;
+      }
+      .reveal pre {
+        width: 100%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        position: relative;
+      }
+      .reveal pre code {
+        font-size: 0.78em;
+        line-height: 1.5;
+        padding: 1em !important;
+        border-radius: 8px;
+      }
+      .reveal code.inline {
+        background: #2d2d5e;
+        padding: 0.1em 0.4em;
+        border-radius: 4px;
+        color: var(--accent);
+        font-size: 0.9em;
+      }
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 0.5em;
+      }
+      .tag {
+        background: #16213e;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        border-radius: 20px;
+        padding: 0.3em 0.9em;
+        font-size: 0.8em;
+        font-family: monospace;
+      }
+      .callout {
+        background: rgba(0, 217, 163, 0.1);
+        border-left: 4px solid var(--accent);
+        border-radius: 6px;
+        padding: 0.6em 1em;
+        margin: 0.5em 0;
+        font-size: 0.85em;
+        text-align: left;
+      }
+      .warn {
+        background: rgba(255, 107, 107, 0.1);
+        border-left: 4px solid var(--accent2);
+        border-radius: 6px;
+        padding: 0.6em 1em;
+        margin: 0.5em 0;
+        font-size: 0.85em;
+        text-align: left;
+      }
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1em;
+        text-align: left;
+      }
+      .card {
+        background: #16213e;
+        border-radius: 10px;
+        padding: 0.8em;
+        font-size: 0.78em;
+      }
+      .card-center-row {
+        grid-column: 1 / -1;
+        max-width: calc(50% - 0.5em);
+        justify-self: center;
+      }
+      .card h4 {
+        color: var(--accent);
+        margin: 0 0 0.4em;
+        font-size: 1em;
+      }
+      table {
+        font-size: 0.75em;
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        background: #16213e;
+        color: var(--accent);
+        padding: 0.5em 0.8em;
+      }
+      td {
+        padding: 0.4em 0.8em;
+        border-bottom: 1px solid #2d2d5e;
+      }
+      tr:nth-child(even) td {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .subtitle {
+        color: #aaa;
+        font-size: 0.8em;
+      }
+      .reveal .copy-code-btn {
+        position: absolute;
+        top: 0.05rem;
+        right: 0.5rem;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.8rem;
+        height: 1.8rem;
+        padding: 0;
+        border: none;
+        border-radius: 0.3rem;
+        background: transparent;
+        color: white;
+        cursor: pointer;
+      }
+      .reveal .copy-code-btn svg {
+        width: 1rem;
+        height: 1rem;
+        stroke: currentColor;
+      }
+      .reveal .copy-code-btn:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+      }
+      /* ===== Token Builder Game ===== */
+      .token-game {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 1rem;
+        border: 2px solid var(--accent);
+        border-radius: 16px;
+        background: rgba(0, 217, 163, 0.08);
+      }
+      .token-game-progress {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 0.7em;
+        margin-bottom: 0.8rem;
+      }
+      .token-bank,
+      .token-answer-row {
+        display: flex;
+        flex-wrap: wrap;
+        min-height: 62px;
+        padding: 0.75rem;
+        border-radius: 12px;
+      }
+      .token-bank {
+        gap: 0.5rem;
+        border: 2px dashed var(--accent);
+        background: rgba(255, 255, 255, 0.95);
+      }
+      .token-answer-row {
+        gap: 0.35rem;
+        margin-top: 0.8rem;
+        border: 2px solid #2d2d5e;
+        background: rgba(255, 255, 255, 0.98);
+      }
+      .token-answer-row.empty::before {
+        content: "Tap tokens to build your Python statement";
+        color: #555;
+        font-size: 0.8em;
+      }
+      .token {
+        margin: 0;
+        padding: 0.45rem 0.75rem;
+        border: 2px solid #d1d5db;
+        border-radius: 999px;
+        background: white;
+        color: #111827;
+        cursor: pointer;
+        font-family: monospace;
+        font-size: 0.75em;
+        font-weight: 600;
+        transition: transform 120ms ease;
+      }
+      .token:hover {
+        transform: translateY(-1px);
+      }
+      .token.used {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .token.answer-token {
+        padding: 0;
+        font-size: 0.68em;
+        border: 2px solid transparent;
+      }
+      .token.answer-token:hover {
+        border-color: var(--accent2);
+      }
+      .token-game-controls {
+        display: flex;
+        gap: 0.7rem;
+        margin-top: 0.8rem;
+      }
+      .token-game-btn {
+        border: none;
+        border-radius: 12px;
+        padding: 0.5rem 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.7em;
+      }
+      .token-game-btn.primary {
+        background: var(--accent);
+        color: #0f172a;
+      }
+      .token-game-btn.secondary {
+        background: #e5e7eb;
+        color: #111827;
+      }
+      .token-game-feedback {
+        min-height: 1.4rem;
+        margin-top: 0.65rem;
+        font-weight: 700;
+        font-size: 0.75em;
+        text-align: center;
+      }
+      .token-game-feedback.success {
+        color: #4ade80;
+      }
+      .token-game-feedback.error {
+        color: #f87171;
+      }
+      /* ===== MCQ Game ===== */
+      .mcq-options {
+        display: flex;
+        gap: 1em;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 1em 0;
+      }
+      .mcq-btn {
+        background: #16213e;
+        border: 2px solid #2d2d5e;
+        color: white;
+        border-radius: 10px;
+        padding: 0.6em 1.4em;
+        font-size: 0.8em;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        font-family: inherit;
+      }
+      .mcq-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      .mcq-btn.correct {
+        background: rgba(0, 217, 163, 0.2);
+        border-color: var(--accent);
+      }
+      .mcq-btn.wrong {
+        background: rgba(255, 107, 107, 0.2);
+        border-color: var(--accent2);
+      }
+      /* ===== True / False Game ===== */
+      .tf-game {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8em;
+        text-align: left;
+        margin-top: 0.5em;
+      }
+      .tf-row {
+        background: #16213e;
+        border-radius: 10px;
+        padding: 0.7em 1em;
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        flex-wrap: wrap;
+      }
+      .tf-statement {
+        flex: 1;
+        margin: 0;
+        font-size: 0.82em;
+      }
+      .tf-btns {
+        display: flex;
+        gap: 0.5em;
+      }
+      .tf-btn {
+        background: #2d2d5e;
+        border: 2px solid #4a4a7e;
+        color: white;
+        border-radius: 8px;
+        padding: 0.35em 0.9em;
+        cursor: pointer;
+        font-size: 0.75em;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+      .tf-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      .tf-btn.correct {
+        background: var(--accent);
+        color: #0f172a;
+        border-color: var(--accent);
+      }
+      .tf-btn.wrong {
+        background: var(--accent2);
+        border-color: var(--accent2);
+      }
+      .tf-result {
+        font-size: 0.75em;
+        font-weight: 700;
+        min-width: 5em;
+      }
+      /* ===== Confetti ===== */
+      .confetti-burst {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 9999;
+      }
+      .confetti-piece {
+        position: absolute;
+        top: -12px;
+        width: 10px;
+        height: 14px;
+        border-radius: 2px;
+        opacity: 0.95;
+        transform: translateY(0) rotate(0deg);
+        animation: confetti-fall 900ms linear forwards;
+      }
+      @keyframes confetti-fall {
+        to {
+          transform: translateY(105vh) rotate(720deg);
+          opacity: 0.15;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- ===== SLIDE 1: TITLE ===== -->
+        <section
+          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+        >
+          <h1>Linked Lists</h1>
+          <p class="subtitle">in Python</p>
+          <br />
+          <p style="color: #aaa; font-size: 0.8em">
+            From Objects to Dynamic Data Structures
+          </p>
+          <br />
+          <div class="tag-row">
+            <span class="tag">Node</span>
+            <span class="tag">linked list</span>
+            <span class="tag">traversal</span>
+            <span class="tag">insertion</span>
+            <span class="tag">OOP</span>
+          </div>
+          <br />
+          <p style="color: #666; font-size: 0.6em">Jerome Loria</p>
+          <p style="color: #666; font-size: 0.6em">March 2026</p>
+        </section>
+
+        <!-- ===== SLIDE 2: MOTIVATION ===== -->
+        <section>
+          <h2>🚀 Where We Are</h2>
+          <p style="font-size: 0.85em">So far, you have learned:</p>
+          <div class="two-col">
+            <div class="card">
+              <h4>Data Types</h4>
+              <ul>
+                <li>Dictionaries</li>
+                <li>Tuples</li>
+                <li>Sets</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>Object-Oriented</h4>
+              <ul>
+                <li>Classes</li>
+                <li>Objects</li>
+              </ul>
+            </div>
+          </div>
+          <br />
+          <div class="callout">
+            Now we move into:
+            <strong>Data Structures built from objects</strong>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 3: KEY IDEA REVIEW ===== -->
+        <section>
+          <h2>💡 Key Idea Review</h2>
+          <div class="callout" style="text-align: center; font-size: 1em">
+            In Python: <strong>everything is an object</strong>
+          </div>
+          <br />
+          <p style="font-size: 0.85em">Even built-in types:</p>
+          <div class="two-col">
+            <div class="card" style="text-align: center">
+              <code>42</code>
+              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">Integer object</p>
+            </div>
+            <div class="card" style="text-align: center">
+              <code>"hello"</code>
+              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">String object</p>
+            </div>
+            <div class="card" style="text-align: center">
+              <code>[1, 2, 3]</code>
+              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">List object</p>
+            </div>
+            <div class="card" style="text-align: center">
+              <code>Dog()</code>
+              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">Your own object</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 4: WHY THIS MATTERS ===== -->
+        <section>
+          <h2>🔧 Why This Matters</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>Built-in Structures</h4>
+              <p>Python lists are powerful ✅</p>
+              <p>But: you don't control how they work internally.</p>
+            </div>
+            <div class="card">
+              <h4>Today's Goal 👉</h4>
+              <p>
+                You <strong>build your own</strong> structure from scratch
+                using classes.
+              </p>
+            </div>
+          </div>
+          <br />
+          <div class="callout">
+            When you understand how data structures work internally, you become
+            a <strong>stronger programmer</strong>.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 5: THE PROBLEM ===== -->
+        <section>
+          <h2>⚠️ The Problem with Python Lists</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>✅ Fast at</h4>
+              <ul>
+                <li>Index access: <code>my_list[2]</code></li>
+                <li>Append to end</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>❌ Slow at</h4>
+              <ul>
+                <li>Inserting in the <strong>middle</strong></li>
+                <li>Deleting from the middle</li>
+              </ul>
+            </div>
+          </div>
+          <br />
+          <div class="warn">
+            When you insert or delete in the middle, Python must
+            <strong>shift all elements</strong> in memory.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 6: ENTER LINKED LISTS ===== -->
+        <section>
+          <h2>🔗 Enter: Linked Lists</h2>
+          <br />
+          <div class="callout" style="text-align: center; font-size: 1em">
+            A <strong>Linked List</strong> is a collection of
+            <strong>nodes</strong> connected by <strong>references</strong>.
+          </div>
+          <br />
+          <div class="two-col">
+            <div class="card">
+              <h4>Each node stores:</h4>
+              <ul>
+                <li>Some <strong>data</strong></li>
+                <li>A <strong>reference</strong> to the next node</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>The chain:</h4>
+              <p>
+                Each element <strong>points to the next</strong> one in line.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 7: VISUAL CONCEPT ===== -->
+        <section>
+          <h2>🖼️ Visual Concept</h2>
+          <pre><code class="language-text">[10 | next] ──▶ [20 | next] ──▶ [30 | None]</code></pre>
+          <br />
+          <div class="two-col">
+            <div class="card">
+              <h4>Each box = Node</h4>
+              <p>Left side: the <strong>data</strong></p>
+              <p>Right side: pointer to <strong>next node</strong></p>
+            </div>
+            <div class="card">
+              <h4>End of list</h4>
+              <p>
+                The last node's
+                <code class="inline">next</code> points to
+                <code class="inline">None</code>.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 8: NODE STRUCTURE ===== -->
+        <section>
+          <h2>🧱 Node Structure</h2>
+          <p style="font-size: 0.85em">
+            A node is just an <strong>object</strong>:
+          </p>
+          <pre><code class="language-python">class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None</code></pre>
+          <div class="callout">
+            <code class="inline">self.data</code> — stores the value<br />
+            <code class="inline">self.next</code> — reference to the next node
+            (<code class="inline">None</code> by default)
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 9: KEY INSIGHT ===== -->
+        <section>
+          <h2>🔑 Key Insight</h2>
+          <p style="font-size: 0.85em">You are using what you already know:</p>
+          <div class="two-col">
+            <div class="card" style="text-align: center">
+              <h4>Classes ✔</h4>
+              <p>Blueprint for nodes</p>
+            </div>
+            <div class="card" style="text-align: center">
+              <h4>Objects ✔</h4>
+              <p>Each individual node</p>
+            </div>
+          </div>
+          <br />
+          <div class="callout">
+            To build: &nbsp;<strong>a custom data structure ✔</strong>
+          </div>
+          <br />
+          <p style="font-size: 0.8em; color: #aaa">
+            A linked list is just a chain of objects pointing to each other.
+          </p>
+        </section>
+
+        <!-- ===== SLIDE 10: GAME 1 — PREDICT THE OUTPUT (MCQ) ===== -->
+        <section>
+          <h2>🎮 GAME 1: Predict the Output</h2>
+          <pre><code class="language-python">a = Node(5)
+b = Node(10)
+
+a.next = b
+
+print(a.next.data)</code></pre>
+          <div class="mcq-options">
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">A. 5</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="true">B. 10</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">C. None</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">D. Error</button>
+          </div>
+          <p id="g1-feedback" class="token-game-feedback" aria-live="polite"></p>
+        </section>
+
+        <!-- ===== SLIDE 11: BUILDING A LINKED LIST ===== -->
+        <section>
+          <h2>🔨 Building a Linked List</h2>
+          <pre><code class="language-python">head   = Node(1)
+second = Node(2)
+third  = Node(3)
+
+head.next   = second
+second.next = third</code></pre>
+          <div class="callout">
+            <code class="inline">head</code> is a reference to the
+            <strong>first node</strong> — our entry point into the list.
+          </div>
+          <br />
+          <pre><code class="language-text">head
+ │
+[1|next] ──▶ [2|next] ──▶ [3|None]</code></pre>
+        </section>
+
+        <!-- ===== SLIDE 12: TRAVERSING THE LIST ===== -->
+        <section>
+          <h2>🚶 Traversing the List</h2>
+          <pre><code class="language-python">current = head
+
+while current:
+    print(current.data)
+    current = current.next</code></pre>
+          <div class="callout">
+            Start at <code class="inline">head</code>, visit each node, then
+            move to <code class="inline">current.next</code> until we reach
+            <code class="inline">None</code>.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 13: TRAVERSAL OUTPUT ===== -->
+        <section>
+          <h2>📤 Output</h2>
+          <pre><code class="language-text">1
+2
+3</code></pre>
+          <br />
+          <div class="callout">
+            <strong>Traversal</strong> = visiting each node one by one, from
+            <code class="inline">head</code> to the end.
+          </div>
+          <br />
+          <p style="font-size: 0.8em; color: #aaa">
+            When <code class="inline">current</code> becomes
+            <code class="inline">None</code>, the loop stops.
+          </p>
+        </section>
+
+        <!-- ===== SLIDE 14: GAME 2 — FILL IN THE BLANK (MCQ) ===== -->
+        <section>
+          <h2>🎮 GAME 2: Fill in the Blank</h2>
+          <pre><code class="language-python">while current != ______:
+    print(current.data)
+    current = current.next</code></pre>
+          <p style="font-size: 0.82em">
+            What should replace <code class="inline">______</code>?
+          </p>
+          <div class="mcq-options">
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">A. 0</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="true">B. None</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">C. False</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">D. ""</button>
+          </div>
+          <p id="g2-feedback" class="token-game-feedback" aria-live="polite"></p>
+        </section>
+
+        <!-- ===== SLIDE 15: INSERTING AT BEGINNING ===== -->
+        <section>
+          <h2>➕ Inserting at the Beginning</h2>
+          <pre><code class="language-python">new_node = Node(0)
+new_node.next = head
+head = new_node</code></pre>
+          <div class="callout">
+            <ol style="list-style: decimal; padding-left: 1.5em; margin: 0">
+              <li>Create the new node</li>
+              <li>
+                Point its <code class="inline">next</code> to the old
+                <code class="inline">head</code>
+              </li>
+              <li>
+                Update <code class="inline">head</code> to be the new node
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 16: INSERTING AT END ===== -->
+        <section>
+          <h2>➕ Inserting at the End</h2>
+          <pre><code class="language-python">current = head
+
+while current.next:
+    current = current.next
+
+current.next = Node(4)</code></pre>
+          <div class="callout">
+            Traverse to the <strong>last node</strong> (where
+            <code class="inline">current.next</code> is
+            <code class="inline">None</code>), then attach the new node.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 17: GAME 3 — TOKEN BUILDER ===== -->
+        <section>
+          <p style="font-size: 0.75em; margin-bottom: 0.5rem">
+            🎮 <strong>GAME 3: Build the Code</strong> — construct the correct
+            Python statement:
+          </p>
+          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
+            <span style="font-style: italic" id="g3-prompt"></span>
+          </div>
+          <div class="token-game">
+            <div class="token-game-progress">
+              <span id="g3-round">Round 1 of 3</span>
+              <span id="g3-score">Score: 0</span>
+            </div>
+            <div
+              id="g3-answer"
+              class="token-answer-row empty"
+              aria-label="Selected answer tokens"
+            ></div>
+            <div
+              id="g3-bank"
+              class="token-bank"
+              aria-label="Available tokens"
+            ></div>
+            <div class="token-game-controls">
+              <button id="g3-check" class="token-game-btn primary" type="button">
+                Check
+              </button>
+              <button id="g3-clear" class="token-game-btn secondary" type="button">
+                Clear
+              </button>
+            </div>
+            <p id="g3-feedback" class="token-game-feedback" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 18: DELETING A NODE ===== -->
+        <section>
+          <h2>🗑️ Deleting a Node</h2>
+          <pre><code class="language-python">current = head
+
+while current.next:
+    if current.next.data == target:
+        current.next = current.next.next
+        break
+    current = current.next</code></pre>
+          <div class="callout">
+            To delete a node: make the node <em>before</em> it skip over it —
+            point directly to the node <em>after</em> it.
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 19: WHY LINKED LISTS? ===== -->
+        <section>
+          <h2>✅ Why Linked Lists?</h2>
+          <p style="font-size: 0.85em">Advantages over Python lists:</p>
+          <div class="two-col">
+            <div class="card">
+              <h4>📏 Dynamic Size</h4>
+              <p>Grows and shrinks without preallocating memory.</p>
+            </div>
+            <div class="card">
+              <h4>⚡ Fast Insert / Delete</h4>
+              <p>No shifting elements — just update pointers.</p>
+            </div>
+            <div class="card card-center-row">
+              <h4>🔁 Flexible Structure</h4>
+              <p>Can be extended into stacks, queues, and more.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 20: DOWNSIDES ===== -->
+        <section>
+          <h2>⚠️ Downsides</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>🚫 No Direct Indexing</h4>
+              <p>
+                Can't do <code>my_list[3]</code> — must traverse from head.
+              </p>
+            </div>
+            <div class="card">
+              <h4>💾 More Memory</h4>
+              <p>
+                Each node stores an extra pointer
+                (<code class="inline">next</code>).
+              </p>
+            </div>
+            <div class="card card-center-row">
+              <h4>🐢 Slower Traversal</h4>
+              <p>Must visit each node one by one to find elements.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 21: COMPARISON TABLE ===== -->
+        <section>
+          <h2>📊 Comparison</h2>
+          <table style="margin: 0.8em 0">
+            <tr>
+              <th>Feature</th>
+              <th>Python List</th>
+              <th>Linked List</th>
+            </tr>
+            <tr>
+              <td>Index access</td>
+              <td>✅ Fast</td>
+              <td>❌ Slow</td>
+            </tr>
+            <tr>
+              <td>Insert / Delete (middle)</td>
+              <td>❌ Slow</td>
+              <td>✅ Fast</td>
+            </tr>
+            <tr>
+              <td>Memory use</td>
+              <td>✅ Efficient</td>
+              <td>⚠️ Extra (pointers)</td>
+            </tr>
+            <tr>
+              <td>Dynamic size</td>
+              <td>✅ Yes</td>
+              <td>✅ Yes</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- ===== SLIDE 22: GAME 4 — WHICH IS BETTER? (MCQ) ===== -->
+        <section>
+          <h2>🎮 GAME 4: Which is Better?</h2>
+          <div class="callout" style="margin-bottom: 1em">
+            <strong>Scenario:</strong> You are building an app that
+            <strong>frequently inserts data in the middle</strong> of a
+            collection.
+          </div>
+          <p style="font-size: 0.82em">Which structure should you use?</p>
+          <div class="mcq-options">
+            <button class="mcq-btn mcq-btn-g4" data-correct="false">
+              A. Python List
+            </button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="true">
+              B. Linked List
+            </button>
+          </div>
+          <p id="g4-feedback" class="token-game-feedback" aria-live="polite"></p>
+        </section>
+
+
+
+        <!-- ===== SLIDE 23: GAME 5 — TRUE OR FALSE ===== -->
+        <section>
+          <h2>🎮 GAME 5: True or False</h2>
+          <p style="font-size: 0.8em">
+            Click <strong>True</strong> or <strong>False</strong> for each
+            statement:
+          </p>
+          <div class="tf-game">
+            <div class="tf-row" data-answered="false">
+              <p class="tf-statement">
+                1️⃣ &nbsp; A linked list node stores data and a reference to
+                the next node.
+              </p>
+              <div class="tf-btns">
+                <button class="tf-btn" data-value="true">True</button>
+                <button class="tf-btn" data-value="false">False</button>
+              </div>
+              <span class="tf-result"></span>
+            </div>
+            <div class="tf-row" data-answered="false">
+              <p class="tf-statement">
+                2️⃣ &nbsp; Python lists are faster than linked lists for
+                insertions in the middle.
+              </p>
+              <div class="tf-btns">
+                <button class="tf-btn" data-value="true">True</button>
+                <button class="tf-btn" data-value="false">False</button>
+              </div>
+              <span class="tf-result"></span>
+            </div>
+            <div class="tf-row" data-answered="false">
+              <p class="tf-statement">
+                3️⃣ &nbsp; The last node in a linked list points to
+                <code class="inline">None</code>.
+              </p>
+              <div class="tf-btns">
+                <button class="tf-btn" data-value="true">True</button>
+                <button class="tf-btn" data-value="false">False</button>
+              </div>
+              <span class="tf-result"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 24: SUMMARY ===== -->
+        <section>
+          <h2>📋 Summary</h2>
+          <p style="font-size: 0.85em">Today you learned:</p>
+          <table>
+            <tr>
+              <th>Concept</th>
+              <th>Definition</th>
+            </tr>
+            <tr>
+              <td><strong>Node</strong></td>
+              <td>Object holding data + reference to next node</td>
+            </tr>
+            <tr>
+              <td><strong>Linked List</strong></td>
+              <td>Chain of nodes connected by references</td>
+            </tr>
+            <tr>
+              <td><strong>head</strong></td>
+              <td>Reference to the first node</td>
+            </tr>
+            <tr>
+              <td><strong>Traversal</strong></td>
+              <td>
+                Visiting nodes one by one, following
+                <code>next</code>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Insertion</strong></td>
+              <td>Create node, update pointer(s)</td>
+            </tr>
+            <tr>
+              <td><strong>Deletion</strong></td>
+              <td>
+                Skip target by updating previous node's
+                <code>next</code>
+              </td>
+            </tr>
+          </table>
+        </section>
+
+
+
+
+
+        <!-- ===== SLIDE 25: CHALLENGE EXERCISE ===== -->
+        <section
+          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+        >
+          <h2>🚀 Challenge Exercise</h2>
+          <p style="font-size: 0.85em">Create a program that:</p>
+          <div class="two-col">
+            <div class="card">
+              <h4>Requirements</h4>
+              <ol
+                style="
+                  list-style: decimal;
+                  padding-left: 1.5em;
+                  margin: 0;
+                  font-size: 0.9em;
+                "
+              >
+                <li>Builds a linked list</li>
+                <li>Adds 5 numbers</li>
+                <li>Prints all values</li>
+              </ol>
+            </div>
+            <div class="card">
+              <h4>🌟 Bonus</h4>
+              <p>
+                Add a <strong>delete</strong> function that removes a node by
+                value.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== SLIDE 26: CLOSING THOUGHT / THANK YOU ===== -->
+        <section
+          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+        >
+          <h1>Thank You! 🔗</h1>
+          <br />
+          <div class="callout" style="font-size: 1em; text-align: center">
+            You are no longer just <em>using</em> data structures —<br />
+            you are now <strong>engineering them.</strong>
+          </div>
+          <br />
+          <p style="color: #aaa; margin-top: 0.5em">Questions?</p>
+          <br />
+          <div class="tag-row">
+            <span class="tag">Node</span>
+            <span class="tag">linked list</span>
+            <span class="tag">head</span>
+            <span class="tag">traversal</span>
+            <span class="tag">OOP</span>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+      // ===== COPY CODE BUTTONS =====
+      const fallbackCopyText = (text) => {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      };
+
+      const copyCodeText = async (text) => {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        fallbackCopyText(text);
+      };
+
+      const clipboardIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      `;
+
+      const checkIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+      `;
+
+      const xIcon = `
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      `;
+
+      const addCopyButtons = () => {
+        document.querySelectorAll(".reveal pre > code").forEach((codeBlock) => {
+          const pre = codeBlock.parentElement;
+          if (!pre || pre.querySelector(".copy-code-btn")) return;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "copy-code-btn";
+          button.innerHTML = clipboardIcon;
+          button.title = "Copy code";
+          button.setAttribute("aria-label", "Copy code to clipboard");
+          button.addEventListener("click", async () => {
+            const codeText = codeBlock.textContent ?? "";
+            try {
+              await copyCodeText(codeText);
+              button.innerHTML = checkIcon;
+              button.title = "Copied";
+              setTimeout(() => {
+                button.innerHTML = clipboardIcon;
+                button.title = "Copy code";
+              }, 1200);
+            } catch {
+              button.innerHTML = xIcon;
+              button.title = "Copy failed";
+              setTimeout(() => {
+                button.innerHTML = clipboardIcon;
+                button.title = "Copy code";
+              }, 1200);
+            }
+          });
+          pre.appendChild(button);
+        });
+      };
+
+      // ===== CONFETTI =====
+      const launchConfetti = () => {
+        const burst = document.createElement("div");
+        burst.className = "confetti-burst";
+        document.body.appendChild(burst);
+        const colors = ["#00d9a3", "#ff6b6b", "#facc15", "#60a5fa", "#e879f9"];
+        for (let i = 0; i < 85; i++) {
+          const piece = document.createElement("div");
+          piece.className = "confetti-piece";
+          piece.style.left = `${Math.random() * 100}%`;
+          piece.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+          piece.style.animationDelay = `${Math.random() * 200}ms`;
+          piece.style.animationDuration = `${700 + Math.random() * 600}ms`;
+          burst.appendChild(piece);
+        }
+        setTimeout(() => burst.remove(), 1500);
+      };
+
+      // ===== TOKEN BUILDER GAME FACTORY =====
+      const makeTokenGame = (gameId, rounds, successMsg) => {
+        const bank = document.getElementById(`${gameId}-bank`);
+        const answer = document.getElementById(`${gameId}-answer`);
+        const prompt = document.getElementById(`${gameId}-prompt`);
+        const roundText = document.getElementById(`${gameId}-round`);
+        const scoreText = document.getElementById(`${gameId}-score`);
+        const feedback = document.getElementById(`${gameId}-feedback`);
+        const checkBtn = document.getElementById(`${gameId}-check`);
+        const clearBtn = document.getElementById(`${gameId}-clear`);
+
+        let roundIndex = 0;
+        let score = 0;
+        let selectedIndexes = [];
+
+        const shuffle = (length) => {
+          const arr = Array.from({ length }, (_, i) => i);
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        };
+
+        const makeToken = (text, index) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "token";
+          btn.textContent = text;
+          btn.dataset.index = String(index);
+          return btn;
+        };
+
+        const updateHeader = () => {
+          roundText.textContent = `Round ${roundIndex + 1} of ${rounds.length}`;
+          scoreText.textContent = `Score: ${score}`;
+        };
+
+        const setFeedback = (msg, tone = "") => {
+          feedback.textContent = msg;
+          feedback.classList.remove("success", "error");
+          if (tone) feedback.classList.add(tone);
+        };
+
+        const syncBank = () => {
+          const active = new Set(selectedIndexes);
+          bank.querySelectorAll(".token").forEach((el) => {
+            const used = active.has(Number(el.dataset.index));
+            el.classList.toggle("used", used);
+            el.disabled = used;
+          });
+        };
+
+        const renderAnswer = () => {
+          const round = rounds[roundIndex];
+          answer.innerHTML = "";
+          selectedIndexes.forEach((idx, pos) => {
+            const token = makeToken(round.tokens[idx], idx);
+            token.classList.add("answer-token");
+            token.title = "Tap to remove";
+            token.addEventListener("click", () => {
+              selectedIndexes.splice(pos, 1);
+              renderAnswer();
+              syncBank();
+              answer.classList.toggle("empty", selectedIndexes.length === 0);
+            });
+            answer.appendChild(token);
+          });
+          answer.classList.toggle("empty", selectedIndexes.length === 0);
+        };
+
+        const renderRound = () => {
+          const round = rounds[roundIndex];
+          selectedIndexes = [];
+          bank.innerHTML = "";
+          answer.innerHTML = "";
+          if (prompt) prompt.textContent = round.prompt;
+          setFeedback("");
+          shuffle(round.tokens.length).forEach((idx) => {
+            const token = makeToken(round.tokens[idx], idx);
+            token.addEventListener("click", () => {
+              selectedIndexes.push(idx);
+              renderAnswer();
+              syncBank();
+            });
+            bank.appendChild(token);
+          });
+          updateHeader();
+          syncBank();
+          answer.classList.add("empty");
+        };
+
+        const nextRound = () => {
+          if (roundIndex < rounds.length - 1) {
+            roundIndex++;
+            renderRound();
+            return;
+          }
+          setFeedback(
+            `Challenge complete! Final score: ${score}/${rounds.length}`,
+            "success",
+          );
+          checkBtn.disabled = true;
+        };
+
+        checkBtn.addEventListener("click", () => {
+          const round = rounds[roundIndex];
+          const ans = selectedIndexes.map((i) => round.tokens[i]);
+          const correct =
+            ans.length === round.target.length &&
+            ans.every((t, i) => t === round.target[i]);
+          if (correct) {
+            score++;
+            updateHeader();
+            setFeedback(successMsg || "Correct! Great work!", "success");
+            launchConfetti();
+            setTimeout(nextRound, 750);
+          } else {
+            setFeedback("Not quite. Check the order and tokens.", "error");
+          }
+        });
+
+        clearBtn.addEventListener("click", () => {
+          selectedIndexes = [];
+          renderAnswer();
+          syncBank();
+          setFeedback("Answer cleared.");
+        });
+
+        renderRound();
+      };
+
+      // ===== GAME 3: BUILD THE CODE — Token rounds (Linked List) =====
+      makeTokenGame(
+        "g3",
+        [
+          {
+            prompt: "Create a Node with data 5 and store it in variable a.",
+            target: ["a", "=", "Node(", "5", ")"],
+            tokens: ["a", "=", "Node(", "5", ")", "b", "10", "node(", "Node"],
+          },
+          {
+            prompt: "Link node b after node a (make a.next point to b).",
+            target: ["a.next", "=", "b"],
+            tokens: ["a.next", "=", "b", "b.next", "a", "a.data", "None"],
+          },
+          {
+            prompt: "Start traversal: set current equal to head.",
+            target: ["current", "=", "head"],
+            tokens: [
+              "current",
+              "=",
+              "head",
+              "next",
+              "current.next",
+              "head.next",
+              "start",
+            ],
+          },
+        ],
+        "Correct! That's a valid linked list operation.",
+      );
+
+      // ===== MCQ GAME FACTORY =====
+      const makeMCQ = (gameId, correctFeedback, wrongFeedback) => {
+        let answered = false;
+        document.querySelectorAll(`.mcq-btn-${gameId}`).forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (answered) return;
+            answered = true;
+            const isCorrect = btn.dataset.correct === "true";
+            const feedback = document.getElementById(`${gameId}-feedback`);
+            if (isCorrect) {
+              btn.classList.add("correct");
+              feedback.textContent = correctFeedback;
+              feedback.className = "token-game-feedback success";
+              launchConfetti();
+            } else {
+              btn.classList.add("wrong");
+              document
+                .querySelector(`.mcq-btn-${gameId}[data-correct='true']`)
+                .classList.add("correct");
+              feedback.textContent = wrongFeedback;
+              feedback.className = "token-game-feedback error";
+            }
+            document
+              .querySelectorAll(`.mcq-btn-${gameId}`)
+              .forEach((b) => (b.disabled = true));
+          });
+        });
+      };
+
+      // ===== GAME 1: MCQ — Predict the Output =====
+      makeMCQ(
+        "g1",
+        "✅ Correct! a.next points to b, so a.next.data is b.data = 10.",
+        "❌ Not quite. a.next points to b, and b.data = 10. Answer: B.",
+      );
+
+      // ===== GAME 2: MCQ — Fill in the Blank =====
+      makeMCQ(
+        "g2",
+        "✅ Correct! The end of a linked list is marked by None.",
+        "❌ Not quite. The last node's next is None, so the loop stops there. Answer: B.",
+      );
+
+      // ===== GAME 4: MCQ — Which is Better? =====
+      makeMCQ(
+        "g4",
+        "✅ Correct! Linked Lists are faster for middle insertions — no shifting needed.",
+        "❌ Not quite. Python Lists require shifting; Linked Lists just update pointers. Answer: B.",
+      );
+
+      // ===== GAME 5: TRUE OR FALSE =====
+      const tfCorrect = [true, false, true];
+      document.querySelectorAll(".tf-row").forEach((row, i) => {
+        row.querySelectorAll(".tf-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (row.dataset.answered === "true") return;
+            row.dataset.answered = "true";
+            const clicked = btn.dataset.value === "true";
+            const correct = clicked === tfCorrect[i];
+            btn.classList.add(correct ? "correct" : "wrong");
+            if (!correct) {
+              const correctVal = tfCorrect[i] ? "true" : "false";
+              row
+                .querySelector(`.tf-btn[data-value='${correctVal}']`)
+                .classList.add("correct");
+            }
+            const result = row.querySelector(".tf-result");
+            result.textContent = correct ? "✅ Correct!" : "❌ Not quite.";
+            result.style.color = correct ? "#4ade80" : "#f87171";
+            if (correct) launchConfetti();
+            row.querySelectorAll(".tf-btn").forEach((b) => (b.disabled = true));
+          });
+        });
+      });
+
+      // ===== REVEAL.JS INIT =====
+      Reveal.initialize({
+        hash: true,
+        slideNumber: "c/t",
+        transition: "slide",
+        transitionSpeed: "fast",
+        controls: true,
+        progress: true,
+        center: true,
+        plugins: [],
+      });
+
+      document.querySelectorAll("pre code").forEach((el) => {
+        hljs.highlightElement(el);
+      });
+
+      Reveal.on("ready", addCopyButtons);
+      Reveal.on("slidechanged", addCopyButtons);
+    </script>
+  </body>
+</html>

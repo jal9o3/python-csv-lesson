@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Linked Lists in Python — Computer Programming 2</title>
+    <title>Trees and Recursion in Python - Computer Programming 2</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css"
@@ -18,9 +18,9 @@
     />
     <style>
       :root {
-        --accent: #00d9a3;
-        --accent2: #ff6b6b;
-        --code-bg: #1a1a2e;
+        --accent: #22d3ee;
+        --accent2: #f97316;
+        --code-bg: #111827;
       }
       .reveal {
         font-family: "Segoe UI", "Helvetica Neue", sans-serif;
@@ -33,10 +33,10 @@
         letter-spacing: -0.02em;
       }
       .reveal h1 {
-        font-size: 2.2em;
+        font-size: 2.15em;
       }
       .reveal h2 {
-        font-size: 1.5em;
+        font-size: 1.45em;
       }
       .reveal pre {
         width: 100%;
@@ -45,13 +45,13 @@
         position: relative;
       }
       .reveal pre code {
-        font-size: 0.78em;
-        line-height: 1.5;
+        font-size: 0.76em;
+        line-height: 1.45;
         padding: 1em !important;
         border-radius: 8px;
       }
       .reveal code.inline {
-        background: #2d2d5e;
+        background: #243146;
         padding: 0.1em 0.4em;
         border-radius: 4px;
         color: var(--accent);
@@ -65,7 +65,7 @@
         margin-top: 0.5em;
       }
       .tag {
-        background: #16213e;
+        background: #1f2937;
         border: 1px solid var(--accent);
         color: var(--accent);
         border-radius: 20px;
@@ -74,21 +74,21 @@
         font-family: monospace;
       }
       .callout {
-        background: rgba(0, 217, 163, 0.1);
+        background: rgba(34, 211, 238, 0.12);
         border-left: 4px solid var(--accent);
         border-radius: 6px;
         padding: 0.6em 1em;
         margin: 0.5em 0;
-        font-size: 0.85em;
+        font-size: 0.83em;
         text-align: left;
       }
       .warn {
-        background: rgba(255, 107, 107, 0.1);
+        background: rgba(249, 115, 22, 0.12);
         border-left: 4px solid var(--accent2);
         border-radius: 6px;
         padding: 0.6em 1em;
         margin: 0.5em 0;
-        font-size: 0.85em;
+        font-size: 0.83em;
         text-align: left;
       }
       .two-col {
@@ -98,10 +98,10 @@
         text-align: left;
       }
       .card {
-        background: #16213e;
+        background: #1f2937;
         border-radius: 10px;
-        padding: 0.8em;
-        font-size: 0.78em;
+        padding: 0.75em;
+        font-size: 0.75em;
       }
       .card-center-row {
         grid-column: 1 / -1;
@@ -110,28 +110,28 @@
       }
       .card h4 {
         color: var(--accent);
-        margin: 0 0 0.4em;
+        margin: 0 0 0.35em;
         font-size: 1em;
       }
       table {
-        font-size: 0.75em;
+        font-size: 0.72em;
         width: 100%;
         border-collapse: collapse;
       }
       th {
-        background: #16213e;
+        background: #1f2937;
         color: var(--accent);
         padding: 0.5em 0.8em;
       }
       td {
         padding: 0.4em 0.8em;
-        border-bottom: 1px solid #2d2d5e;
+        border-bottom: 1px solid #334155;
       }
       tr:nth-child(even) td {
         background: rgba(255, 255, 255, 0.03);
       }
       .subtitle {
-        color: #aaa;
+        color: #9ca3af;
         font-size: 0.8em;
       }
       .reveal .copy-code-btn {
@@ -160,14 +160,42 @@
         outline: 2px solid currentColor;
         outline-offset: 2px;
       }
-      /* ===== Token Builder Game ===== */
+      .mcq-options {
+        display: flex;
+        gap: 1em;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 1em 0;
+      }
+      .mcq-btn {
+        background: #1f2937;
+        border: 2px solid #334155;
+        color: white;
+        border-radius: 10px;
+        padding: 0.6em 1.3em;
+        font-size: 0.8em;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        font-family: inherit;
+      }
+      .mcq-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      .mcq-btn.correct {
+        background: rgba(34, 211, 238, 0.2);
+        border-color: var(--accent);
+      }
+      .mcq-btn.wrong {
+        background: rgba(249, 115, 22, 0.2);
+        border-color: var(--accent2);
+      }
       .token-game {
         max-width: 920px;
         margin: 0 auto;
         padding: 1rem;
         border: 2px solid var(--accent);
         border-radius: 16px;
-        background: rgba(0, 217, 163, 0.08);
+        background: rgba(34, 211, 238, 0.08);
       }
       .token-game-progress {
         display: flex;
@@ -193,11 +221,11 @@
       .token-answer-row {
         gap: 0.35rem;
         margin-top: 0.8rem;
-        border: 2px solid #2d2d5e;
+        border: 2px solid #334155;
         background: rgba(255, 255, 255, 0.98);
       }
       .token-answer-row.empty::before {
-        content: "Tap tokens to build your Python statement";
+        content: "Tap tokens to build your answer";
         color: #555;
         font-size: 0.8em;
       }
@@ -258,96 +286,11 @@
         text-align: center;
       }
       .token-game-feedback.success {
-        color: #4ade80;
+        color: #22d3ee;
       }
       .token-game-feedback.error {
-        color: #f87171;
+        color: #f97316;
       }
-      /* ===== MCQ Game ===== */
-      .mcq-options {
-        display: flex;
-        gap: 1em;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin: 1em 0;
-      }
-      .mcq-btn {
-        background: #16213e;
-        border: 2px solid #2d2d5e;
-        color: white;
-        border-radius: 10px;
-        padding: 0.6em 1.4em;
-        font-size: 0.8em;
-        cursor: pointer;
-        transition: border-color 0.2s;
-        font-family: inherit;
-      }
-      .mcq-btn:hover:not(:disabled) {
-        border-color: var(--accent);
-      }
-      .mcq-btn.correct {
-        background: rgba(0, 217, 163, 0.2);
-        border-color: var(--accent);
-      }
-      .mcq-btn.wrong {
-        background: rgba(255, 107, 107, 0.2);
-        border-color: var(--accent2);
-      }
-      /* ===== True / False Game ===== */
-      .tf-game {
-        display: flex;
-        flex-direction: column;
-        gap: 0.8em;
-        text-align: left;
-        margin-top: 0.5em;
-      }
-      .tf-row {
-        background: #16213e;
-        border-radius: 10px;
-        padding: 0.7em 1em;
-        display: flex;
-        align-items: center;
-        gap: 1em;
-        flex-wrap: wrap;
-      }
-      .tf-statement {
-        flex: 1;
-        margin: 0;
-        font-size: 0.82em;
-      }
-      .tf-btns {
-        display: flex;
-        gap: 0.5em;
-      }
-      .tf-btn {
-        background: #2d2d5e;
-        border: 2px solid #4a4a7e;
-        color: white;
-        border-radius: 8px;
-        padding: 0.35em 0.9em;
-        cursor: pointer;
-        font-size: 0.75em;
-        font-family: inherit;
-        transition: border-color 0.2s;
-      }
-      .tf-btn:hover:not(:disabled) {
-        border-color: var(--accent);
-      }
-      .tf-btn.correct {
-        background: var(--accent);
-        color: #0f172a;
-        border-color: var(--accent);
-      }
-      .tf-btn.wrong {
-        background: var(--accent2);
-        border-color: var(--accent2);
-      }
-      .tf-result {
-        font-size: 0.75em;
-        font-weight: 700;
-        min-width: 5em;
-      }
-      /* ===== Confetti ===== */
       .confetti-burst {
         position: fixed;
         inset: 0;
@@ -376,650 +319,537 @@
   <body>
     <div class="reveal">
       <div class="slides">
-
-        <!-- ===== SLIDE 1: TITLE ===== -->
         <section
-          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+          data-background-gradient="linear-gradient(135deg, #0f172a, #1e293b, #0b1120)"
         >
-          <h1>Linked Lists</h1>
+          <h1>Trees and Recursion</h1>
           <p class="subtitle">in Python</p>
           <br />
-          <p style="color: #aaa; font-size: 0.8em">
-            From Objects to Dynamic Data Structures
+          <p style="color: #9ca3af; font-size: 0.8em">
+            Hierarchical Data Structures and Self-Calling Functions
           </p>
           <br />
           <div class="tag-row">
-            <span class="tag">Node</span>
-            <span class="tag">linked list</span>
+            <span class="tag">recursion</span>
+            <span class="tag">tree</span>
             <span class="tag">traversal</span>
-            <span class="tag">insertion</span>
-            <span class="tag">OOP</span>
+            <span class="tag">bst</span>
+            <span class="tag">python</span>
           </div>
           <br />
-          <p style="color: #666; font-size: 0.6em">Jerome Loria</p>
-          <p style="color: #666; font-size: 0.6em">March 2026</p>
+          <p style="color: #6b7280; font-size: 0.62em">Jerome Loria</p>
+          <p style="color: #6b7280; font-size: 0.62em">March 2026</p>
         </section>
 
-        <!-- ===== SLIDE 2: MOTIVATION ===== -->
         <section>
-          <h2>🚀 Where We Are</h2>
-          <p style="font-size: 0.85em">So far, you have learned:</p>
+          <h2>What We Will Cover</h2>
           <div class="two-col">
             <div class="card">
-              <h4>Data Types</h4>
+              <h4>Part 1: Recursion</h4>
               <ul>
-                <li>Dictionaries</li>
-                <li>Tuples</li>
-                <li>Sets</li>
+                <li>Function calling itself</li>
+                <li>Base and recursive case</li>
+                <li>Call stack behavior</li>
               </ul>
             </div>
             <div class="card">
-              <h4>Object-Oriented</h4>
+              <h4>Part 2: Trees</h4>
               <ul>
-                <li>Classes</li>
-                <li>Objects</li>
+                <li>Terminology</li>
+                <li>Binary tree and BST</li>
+                <li>Tree traversals and recursion</li>
               </ul>
-            </div>
-          </div>
-          <br />
-          <div class="callout">
-            Now we move into:
-            <strong>Data Structures built from objects</strong>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 3: KEY IDEA REVIEW ===== -->
-        <section>
-          <h2>💡 Key Idea Review</h2>
-          <div class="callout" style="text-align: center; font-size: 1em">
-            In Python: <strong>everything is an object</strong>
-          </div>
-          <br />
-          <p style="font-size: 0.85em">Even built-in types:</p>
-          <div class="two-col">
-            <div class="card" style="text-align: center">
-              <code>42</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">Integer object</p>
-            </div>
-            <div class="card" style="text-align: center">
-              <code>"hello"</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">String object</p>
-            </div>
-            <div class="card" style="text-align: center">
-              <code>[1, 2, 3]</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">List object</p>
-            </div>
-            <div class="card" style="text-align: center">
-              <code>Dog()</code>
-              <p style="margin: 0.3em 0 0; color: #aaa; font-size: 0.9em">Your own object</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 4: WHY THIS MATTERS ===== -->
-        <section>
-          <h2>🔧 Why This Matters</h2>
-          <div class="two-col">
-            <div class="card">
-              <h4>Built-in Structures</h4>
-              <p>Python lists are powerful ✅</p>
-              <p>But: you don't control how they work internally.</p>
-            </div>
-            <div class="card">
-              <h4>Today's Goal 👉</h4>
-              <p>
-                You <strong>build your own</strong> structure from scratch
-                using classes.
-              </p>
             </div>
           </div>
           <br />
           <div class="callout">
-            When you understand how data structures work internally, you become
-            a <strong>stronger programmer</strong>.
+            Goal: Connect recursion to tree algorithms so each concept reinforces
+            the other.
           </div>
         </section>
 
-        <!-- ===== SLIDE 5: THE PROBLEM ===== -->
         <section>
-          <h2>⚠️ The Problem with Python Lists</h2>
+          <h2>Recursion: A Function That Calls Itself</h2>
+          <pre><code class="language-python">def countdown(n):
+    if n == 0:
+        print("Blast off!")
+        return
+    print(n)
+    countdown(n - 1)
+
+countdown(5)</code></pre>
+          <div class="callout">
+            Output: <code class="inline">5 4 3 2 1 Blast off!</code>
+          </div>
+        </section>
+
+        <section>
+          <h2>The Two Rules of Recursion</h2>
           <div class="two-col">
             <div class="card">
-              <h4>✅ Fast at</h4>
-              <ul>
-                <li>Index access: <code>my_list[2]</code></li>
-                <li>Append to end</li>
-              </ul>
+              <h4>1. Base Case</h4>
+              <p>The condition that stops the function from calling itself.</p>
             </div>
             <div class="card">
-              <h4>❌ Slow at</h4>
-              <ul>
-                <li>Inserting in the <strong>middle</strong></li>
-                <li>Deleting from the middle</li>
-              </ul>
+              <h4>2. Recursive Case</h4>
+              <p>Calls itself with a smaller or simpler input.</p>
             </div>
           </div>
           <br />
           <div class="warn">
-            When you insert or delete in the middle, Python must
-            <strong>shift all elements</strong> in memory.
+            Missing base case leads to infinite recursion and a stack overflow.
           </div>
         </section>
 
-        <!-- ===== SLIDE 6: ENTER LINKED LISTS ===== -->
         <section>
-          <h2>🔗 Enter: Linked Lists</h2>
-          <br />
-          <div class="callout" style="text-align: center; font-size: 1em">
-            A <strong>Linked List</strong> is a collection of
-            <strong>nodes</strong> connected by <strong>references</strong>.
-          </div>
-          <br />
-          <div class="two-col">
-            <div class="card">
-              <h4>Each node stores:</h4>
-              <ul>
-                <li>Some <strong>data</strong></li>
-                <li>A <strong>reference</strong> to the next node</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h4>The chain:</h4>
-              <p>
-                Each element <strong>points to the next</strong> one in line.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 7: VISUAL CONCEPT ===== -->
-        <section>
-          <h2>🖼️ Visual Concept</h2>
-          <pre><code class="language-text">[10 | next] ──▶ [20 | next] ──▶ [30 | None]</code></pre>
-          <br />
-          <div class="two-col">
-            <div class="card">
-              <h4>Each box = Node</h4>
-              <p>Left side: the <strong>data</strong></p>
-              <p>Right side: pointer to <strong>next node</strong></p>
-            </div>
-            <div class="card">
-              <h4>End of list</h4>
-              <p>
-                The last node's
-                <code class="inline">next</code> points to
-                <code class="inline">None</code>.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 8: NODE STRUCTURE ===== -->
-        <section>
-          <h2>🧱 Node Structure</h2>
-          <p style="font-size: 0.85em">
-            A node is just an <strong>object</strong>:
-          </p>
-          <pre><code class="language-python">class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None</code></pre>
-          <div class="callout">
-            <code class="inline">self.data</code> — stores the value<br />
-            <code class="inline">self.next</code> — reference to the next node
-            (<code class="inline">None</code> by default)
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 9: KEY INSIGHT ===== -->
-        <section>
-          <h2>🔑 Key Insight</h2>
-          <p style="font-size: 0.85em">You are using what you already know:</p>
-          <div class="two-col">
-            <div class="card" style="text-align: center">
-              <h4>Classes ✔</h4>
-              <p>Blueprint for nodes</p>
-            </div>
-            <div class="card" style="text-align: center">
-              <h4>Objects ✔</h4>
-              <p>Each individual node</p>
-            </div>
-          </div>
-          <br />
-          <div class="callout">
-            To build: &nbsp;<strong>a custom data structure ✔</strong>
-          </div>
-          <br />
-          <p style="font-size: 0.8em; color: #aaa">
-            A linked list is just a chain of objects pointing to each other.
-          </p>
-        </section>
-
-        <!-- ===== SLIDE 10: GAME 1 — PREDICT THE OUTPUT (MCQ) ===== -->
-        <section>
-          <h2>🎮 GAME 1: Predict the Output</h2>
-          <pre><code class="language-python">a = Node(5)
-b = Node(10)
-
-a.next = b
-
-print(a.next.data)</code></pre>
+          <h2>Game 1: Spot the Base Case</h2>
+          <pre><code class="language-python">def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)</code></pre>
+          <p style="font-size: 0.82em">Which line is the base case?</p>
           <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">A. 5</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="true">B. 10</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">C. None</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">D. Error</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">A. return n * factorial(n - 1)</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="true">B. if n == 0: return 1</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">C. def factorial(n):</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">D. There is no base case</button>
           </div>
           <p id="g1-feedback" class="token-game-feedback" aria-live="polite"></p>
         </section>
 
-        <!-- ===== SLIDE 11: BUILDING A LINKED LIST ===== -->
         <section>
-          <h2>🔨 Building a Linked List</h2>
-          <pre><code class="language-python">head   = Node(1)
-second = Node(2)
-third  = Node(3)
-
-head.next   = second
-second.next = third</code></pre>
+          <h2>Visualizing the Call Stack</h2>
+          <pre><code class="language-text">factorial(4)
+  -> 4 * factorial(3)
+      -> 3 * factorial(2)
+          -> 2 * factorial(1)
+              -> 1 * factorial(0)
+                  -> returns 1
+              -> returns 1
+          -> returns 2
+      -> returns 6
+  -> returns 24</code></pre>
           <div class="callout">
-            <code class="inline">head</code> is a reference to the
-            <strong>first node</strong> — our entry point into the list.
-          </div>
-          <br />
-          <pre><code class="language-text">head
- │
-[1|next] ──▶ [2|next] ──▶ [3|None]</code></pre>
-        </section>
-
-        <!-- ===== SLIDE 12: TRAVERSING THE LIST ===== -->
-        <section>
-          <h2>🚶 Traversing the List</h2>
-          <pre><code class="language-python">current = head
-
-while current:
-    print(current.data)
-    current = current.next</code></pre>
-          <div class="callout">
-            Start at <code class="inline">head</code>, visit each node, then
-            move to <code class="inline">current.next</code> until we reach
-            <code class="inline">None</code>.
+            Calls go down the stack first, then results return on the way back up.
           </div>
         </section>
 
-        <!-- ===== SLIDE 13: TRAVERSAL OUTPUT ===== -->
         <section>
-          <h2>📤 Output</h2>
-          <pre><code class="language-text">1
-2
-3</code></pre>
-          <br />
-          <div class="callout">
-            <strong>Traversal</strong> = visiting each node one by one, from
-            <code class="inline">head</code> to the end.
-          </div>
-          <br />
-          <p style="font-size: 0.8em; color: #aaa">
-            When <code class="inline">current</code> becomes
-            <code class="inline">None</code>, the loop stops.
-          </p>
+          <h2>Recursion vs Iteration</h2>
+          <table>
+            <tr>
+              <th>Aspect</th>
+              <th>Recursion</th>
+              <th>Iteration</th>
+            </tr>
+            <tr>
+              <td>Uses</td>
+              <td>Function calls</td>
+              <td>Loops</td>
+            </tr>
+            <tr>
+              <td>Stop condition</td>
+              <td>Base case</td>
+              <td>Loop condition</td>
+            </tr>
+            <tr>
+              <td>Memory</td>
+              <td>Call stack</td>
+              <td>Loop variables</td>
+            </tr>
+            <tr>
+              <td>Common risk</td>
+              <td>Stack overflow</td>
+              <td>Infinite loop</td>
+            </tr>
+          </table>
         </section>
 
-        <!-- ===== SLIDE 14: GAME 2 — FILL IN THE BLANK (MCQ) ===== -->
         <section>
-          <h2>🎮 GAME 2: Fill in the Blank</h2>
-          <pre><code class="language-python">while current != ______:
-    print(current.data)
-    current = current.next</code></pre>
-          <p style="font-size: 0.82em">
-            What should replace <code class="inline">______</code>?
-          </p>
+          <h2>Game 2: Trace the Recursion</h2>
+          <pre><code class="language-python">def mystery(n):
+    if n &lt;= 0:
+        return
+    mystery(n - 2)
+    print(n)
+
+mystery(6)</code></pre>
+          <p style="font-size: 0.82em">What is printed?</p>
           <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">A. 0</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="true">B. None</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">C. False</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">D. ""</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">A. 6 4 2</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="true">B. 2 4 6</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">C. 6 2 4</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">D. Nothing</button>
           </div>
           <p id="g2-feedback" class="token-game-feedback" aria-live="polite"></p>
         </section>
 
-        <!-- ===== SLIDE 15: INSERTING AT BEGINNING ===== -->
         <section>
-          <h2>➕ Inserting at the Beginning</h2>
-          <pre><code class="language-python">new_node = Node(0)
-new_node.next = head
-head = new_node</code></pre>
+          <h2>Trees Are Everywhere</h2>
+          <div class="two-col">
+            <div class="card">
+              <h4>Real Examples</h4>
+              <ul>
+                <li>File systems</li>
+                <li>HTML / DOM</li>
+                <li>Org charts</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>More Examples</h4>
+              <ul>
+                <li>Decision trees</li>
+                <li>Database indexes</li>
+                <li>Expression parsing</li>
+              </ul>
+            </div>
+          </div>
+          <br />
           <div class="callout">
-            <ol style="list-style: decimal; padding-left: 1.5em; margin: 0">
-              <li>Create the new node</li>
-              <li>
-                Point its <code class="inline">next</code> to the old
-                <code class="inline">head</code>
-              </li>
-              <li>
-                Update <code class="inline">head</code> to be the new node
-              </li>
-            </ol>
+            A tree is a hierarchical structure of nodes connected by edges.
           </div>
         </section>
 
-        <!-- ===== SLIDE 16: INSERTING AT END ===== -->
         <section>
-          <h2>➕ Inserting at the End</h2>
-          <pre><code class="language-python">current = head
+          <h2>Tree Terminology</h2>
+          <pre><code class="language-text">          [A]        <- Root
+         /   \
+       [B]   [C]     <- Children of A
+      /   \     \
+    [D]   [E]   [F]  <- Leaves</code></pre>
+          <table>
+            <tr>
+              <th>Term</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>Root</td>
+              <td>Top node with no parent</td>
+            </tr>
+            <tr>
+              <td>Leaf</td>
+              <td>Node with no children</td>
+            </tr>
+            <tr>
+              <td>Depth</td>
+              <td>Distance from root</td>
+            </tr>
+            <tr>
+              <td>Height</td>
+              <td>Longest root-to-leaf path length</td>
+            </tr>
+          </table>
+        </section>
 
-while current.next:
-    current = current.next
-
-current.next = Node(4)</code></pre>
-          <div class="callout">
-            Traverse to the <strong>last node</strong> (where
-            <code class="inline">current.next</code> is
-            <code class="inline">None</code>), then attach the new node.
+        <section>
+          <h2>Count the Tree</h2>
+          <pre><code class="language-text">            [10]
+           /    \
+         [5]    [20]
+        /   \      \
+      [3]   [7]    [25]
+                  /
+               [22]</code></pre>
+          <div class="callout" style="text-align: center">
+            Nodes: 7 | Height: 3 | Leaves: 3, 7, 22 | Depth of 22: 3
           </div>
         </section>
 
-        <!-- ===== SLIDE 17: GAME 3 — TOKEN BUILDER ===== -->
+        <section>
+          <h2>Binary Trees and TreeNode</h2>
+          <pre><code class="language-python">class TreeNode:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+    def __repr__(self):
+        return f"TreeNode({self.value})"</code></pre>
+          <div class="callout">
+            Binary tree rule: every node has at most two children.
+          </div>
+        </section>
+
+        <section>
+          <h2>Build a Small Tree</h2>
+          <pre><code class="language-python">#       1
+#      / \
+#     2   3
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+
+print(root)       # TreeNode(1)
+print(root.left)  # TreeNode(2)</code></pre>
+        </section>
+
+        <section>
+          <h2>Traversal Orders</h2>
+          <table>
+            <tr>
+              <th>Traversal</th>
+              <th>Order</th>
+              <th>Mnemonic</th>
+            </tr>
+            <tr>
+              <td>Pre-order</td>
+              <td>Root -> Left -> Right</td>
+              <td>Parents first</td>
+            </tr>
+            <tr>
+              <td>In-order</td>
+              <td>Left -> Root -> Right</td>
+              <td>In-between</td>
+            </tr>
+            <tr>
+              <td>Post-order</td>
+              <td>Left -> Right -> Root</td>
+              <td>Parents last</td>
+            </tr>
+          </table>
+          <div class="callout">
+            Traversals are natural examples of recursion.
+          </div>
+        </section>
+
+        <section>
+          <h2>Pre-order Traversal</h2>
+          <pre><code class="language-python">def preorder(node):
+    if node is None:
+        return
+    print(node.value)
+    preorder(node.left)
+    preorder(node.right)</code></pre>
+          <p style="font-size: 0.8em">Example result: <code class="inline">A B D E C</code></p>
+        </section>
+
+        <section>
+          <h2>In-order Traversal</h2>
+          <pre><code class="language-python">def inorder(node):
+    if node is None:
+        return
+    inorder(node.left)
+    print(node.value)
+    inorder(node.right)</code></pre>
+          <div class="callout">
+            In a binary search tree, in-order traversal returns sorted values.
+          </div>
+        </section>
+
+        <section>
+          <h2>Post-order Traversal</h2>
+          <pre><code class="language-python">def postorder(node):
+    if node is None:
+        return
+    postorder(node.left)
+    postorder(node.right)
+    print(node.value)</code></pre>
+          <p style="font-size: 0.8em">Useful for deleting trees from leaves up to root.</p>
+        </section>
+
         <section>
           <p style="font-size: 0.75em; margin-bottom: 0.5rem">
-            🎮 <strong>GAME 3: Build the Code</strong> — construct the correct
-            Python statement:
+            <strong>Game 3: Traversal Race</strong> - Build each answer using tokens.
           </p>
-          <div style="text-align: center; font-size: 0.75em; margin-bottom: 0.6rem">
-            <span style="font-style: italic" id="g3-prompt"></span>
-          </div>
+          <pre><code class="language-text">           [1]
+          /   \
+        [2]   [3]
+       /   \
+     [4]   [5]</code></pre>
           <div class="token-game">
             <div class="token-game-progress">
               <span id="g3-round">Round 1 of 3</span>
               <span id="g3-score">Score: 0</span>
             </div>
-            <div
-              id="g3-answer"
-              class="token-answer-row empty"
-              aria-label="Selected answer tokens"
-            ></div>
-            <div
-              id="g3-bank"
-              class="token-bank"
-              aria-label="Available tokens"
-            ></div>
+            <div style="text-align: center; font-size: 0.76em; margin-bottom: 0.5rem">
+              <span id="g3-prompt" style="font-style: italic"></span>
+            </div>
+            <div id="g3-answer" class="token-answer-row empty" aria-label="Selected tokens"></div>
+            <div id="g3-bank" class="token-bank" aria-label="Available tokens"></div>
             <div class="token-game-controls">
-              <button id="g3-check" class="token-game-btn primary" type="button">
-                Check
-              </button>
-              <button id="g3-clear" class="token-game-btn secondary" type="button">
-                Clear
-              </button>
+              <button id="g3-check" class="token-game-btn primary" type="button">Check</button>
+              <button id="g3-clear" class="token-game-btn secondary" type="button">Clear</button>
             </div>
             <p id="g3-feedback" class="token-game-feedback" aria-live="polite"></p>
           </div>
         </section>
 
-        <!-- ===== SLIDE 18: DELETING A NODE ===== -->
         <section>
-          <h2>🗑️ Deleting a Node</h2>
-          <pre><code class="language-python">current = head
-
-while current.next:
-    if current.next.data == target:
-        current.next = current.next.next
-        break
-    current = current.next</code></pre>
-          <div class="callout">
-            To delete a node: make the node <em>before</em> it skip over it —
-            point directly to the node <em>after</em> it.
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 19: WHY LINKED LISTS? ===== -->
-        <section>
-          <h2>✅ Why Linked Lists?</h2>
-          <p style="font-size: 0.85em">Advantages over Python lists:</p>
+          <h2>Build-a-Tree Challenge</h2>
+          <pre><code class="language-text">Pre-order: [A, B, D, E, C, F]
+In-order:  [D, B, E, A, F, C]</code></pre>
           <div class="two-col">
             <div class="card">
-              <h4>📏 Dynamic Size</h4>
-              <p>Grows and shrinks without preallocating memory.</p>
+              <h4>Hint 1</h4>
+              <p>First item in pre-order is the root.</p>
             </div>
             <div class="card">
-              <h4>⚡ Fast Insert / Delete</h4>
-              <p>No shifting elements — just update pointers.</p>
+              <h4>Hint 2</h4>
+              <p>In-order splits into left and right around the root.</p>
             </div>
-            <div class="card card-center-row">
-              <h4>🔁 Flexible Structure</h4>
-              <p>Can be extended into stacks, queues, and more.</p>
-            </div>
+          </div>
+          <br />
+          <div class="callout" style="text-align: center">
+            Answer tree: root A, left subtree B(D, E), right subtree C(F, -)
           </div>
         </section>
 
-        <!-- ===== SLIDE 20: DOWNSIDES ===== -->
         <section>
-          <h2>⚠️ Downsides</h2>
-          <div class="two-col">
-            <div class="card">
-              <h4>🚫 No Direct Indexing</h4>
-              <p>
-                Can't do <code>my_list[3]</code> — must traverse from head.
-              </p>
-            </div>
-            <div class="card">
-              <h4>💾 More Memory</h4>
-              <p>
-                Each node stores an extra pointer
-                (<code class="inline">next</code>).
-              </p>
-            </div>
-            <div class="card card-center-row">
-              <h4>🐢 Slower Traversal</h4>
-              <p>Must visit each node one by one to find elements.</p>
-            </div>
-          </div>
+          <h2>Recursive Tree Height</h2>
+          <pre><code class="language-python">def height(node):
+    if node is None:
+        return -1
+
+    left_height = height(node.left)
+    right_height = height(node.right)
+    return 1 + max(left_height, right_height)</code></pre>
         </section>
 
-        <!-- ===== SLIDE 21: COMPARISON TABLE ===== -->
         <section>
-          <h2>📊 Comparison</h2>
-          <table style="margin: 0.8em 0">
-            <tr>
-              <th>Feature</th>
-              <th>Python List</th>
-              <th>Linked List</th>
-            </tr>
-            <tr>
-              <td>Index access</td>
-              <td>✅ Fast</td>
-              <td>❌ Slow</td>
-            </tr>
-            <tr>
-              <td>Insert / Delete (middle)</td>
-              <td>❌ Slow</td>
-              <td>✅ Fast</td>
-            </tr>
-            <tr>
-              <td>Memory use</td>
-              <td>✅ Efficient</td>
-              <td>⚠️ Extra (pointers)</td>
-            </tr>
-            <tr>
-              <td>Dynamic size</td>
-              <td>✅ Yes</td>
-              <td>✅ Yes</td>
-            </tr>
-          </table>
+          <h2>Count Nodes and Search</h2>
+          <pre><code class="language-python">def count_nodes(node):
+    if node is None:
+        return 0
+    return 1 + count_nodes(node.left) + count_nodes(node.right)
+
+
+def search(node, target):
+    if node is None:
+        return False
+    if node.value == target:
+        return True
+    return search(node.left, target) or search(node.right, target)</code></pre>
         </section>
 
-        <!-- ===== SLIDE 22: GAME 4 — WHICH IS BETTER? (MCQ) ===== -->
         <section>
-          <h2>🎮 GAME 4: Which is Better?</h2>
-          <div class="callout" style="margin-bottom: 1em">
-            <strong>Scenario:</strong> You are building an app that
-            <strong>frequently inserts data in the middle</strong> of a
-            collection.
+          <h2>Binary Search Tree Rule</h2>
+          <div class="callout" style="text-align: center; font-size: 0.92em">
+            Left subtree values &lt; root &lt; right subtree values
           </div>
-          <p style="font-size: 0.82em">Which structure should you use?</p>
+          <pre><code class="language-text">         [8]
+        /   \
+      [3]   [10]
+     /   \     \
+   [1]   [6]   [14]
+        /   \
+      [4]   [7]</code></pre>
+        </section>
+
+        <section>
+          <h2>BST Insert</h2>
+          <pre><code class="language-python">def insert(node, value):
+    if node is None:
+        return TreeNode(value)
+
+    if value &lt; node.value:
+        node.left = insert(node.left, value)
+    elif value &gt; node.value:
+        node.right = insert(node.right, value)
+
+    return node</code></pre>
+          <p style="font-size: 0.78em; color: #9ca3af">Time complexity: O(h), where h is tree height.</p>
+        </section>
+
+        <section>
+          <h2>Game 4: Final Boss Debug</h2>
+          <pre><code class="language-python">def inorder(node):
+    if node = None:
+        return
+    inorder(node.right)
+    print(node.value)
+    inorder(node.left)
+
+def height(node):
+    if node is None:
+        return 0
+    return max(height(node.left), height(node.right))</code></pre>
+          <p style="font-size: 0.8em">Which option correctly identifies the bugs?</p>
           <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g4" data-correct="false">
-              A. Python List
-            </button>
-            <button class="mcq-btn mcq-btn-g4" data-correct="true">
-              B. Linked List
-            </button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="false">A. Only one bug: assignment instead of comparison</button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="true">B. Three bugs: '=' vs '==', left/right swapped, missing +1 in height</button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="false">C. Two bugs: swap children and return -1 for None</button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="false">D. No bugs, code is correct</button>
           </div>
           <p id="g4-feedback" class="token-game-feedback" aria-live="polite"></p>
         </section>
 
-
-
-        <!-- ===== SLIDE 23: GAME 5 — TRUE OR FALSE ===== -->
         <section>
-          <h2>🎮 GAME 5: True or False</h2>
-          <p style="font-size: 0.8em">
-            Click <strong>True</strong> or <strong>False</strong> for each
-            statement:
-          </p>
-          <div class="tf-game">
-            <div class="tf-row" data-answered="false">
-              <p class="tf-statement">
-                1️⃣ &nbsp; A linked list node stores data and a reference to
-                the next node.
-              </p>
-              <div class="tf-btns">
-                <button class="tf-btn" data-value="true">True</button>
-                <button class="tf-btn" data-value="false">False</button>
-              </div>
-              <span class="tf-result"></span>
-            </div>
-            <div class="tf-row" data-answered="false">
-              <p class="tf-statement">
-                2️⃣ &nbsp; Python lists are faster than linked lists for
-                insertions in the middle.
-              </p>
-              <div class="tf-btns">
-                <button class="tf-btn" data-value="true">True</button>
-                <button class="tf-btn" data-value="false">False</button>
-              </div>
-              <span class="tf-result"></span>
-            </div>
-            <div class="tf-row" data-answered="false">
-              <p class="tf-statement">
-                3️⃣ &nbsp; The last node in a linked list points to
-                <code class="inline">None</code>.
-              </p>
-              <div class="tf-btns">
-                <button class="tf-btn" data-value="true">True</button>
-                <button class="tf-btn" data-value="false">False</button>
-              </div>
-              <span class="tf-result"></span>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== SLIDE 24: SUMMARY ===== -->
-        <section>
-          <h2>📋 Summary</h2>
-          <p style="font-size: 0.85em">Today you learned:</p>
+          <h2>Summary</h2>
           <table>
             <tr>
               <th>Concept</th>
-              <th>Definition</th>
+              <th>Key Idea</th>
             </tr>
             <tr>
-              <td><strong>Node</strong></td>
-              <td>Object holding data + reference to next node</td>
+              <td>Recursion</td>
+              <td>Base case plus recursive case</td>
             </tr>
             <tr>
-              <td><strong>Linked List</strong></td>
-              <td>Chain of nodes connected by references</td>
+              <td>Tree</td>
+              <td>Hierarchical nodes connected by edges</td>
             </tr>
             <tr>
-              <td><strong>head</strong></td>
-              <td>Reference to the first node</td>
+              <td>Binary Tree</td>
+              <td>At most two children per node</td>
             </tr>
             <tr>
-              <td><strong>Traversal</strong></td>
-              <td>
-                Visiting nodes one by one, following
-                <code>next</code>
-              </td>
+              <td>Traversal</td>
+              <td>Pre, in, and post order visits</td>
             </tr>
             <tr>
-              <td><strong>Insertion</strong></td>
-              <td>Create node, update pointer(s)</td>
-            </tr>
-            <tr>
-              <td><strong>Deletion</strong></td>
-              <td>
-                Skip target by updating previous node's
-                <code>next</code>
-              </td>
+              <td>BST</td>
+              <td>Left &lt; Root &lt; Right</td>
             </tr>
           </table>
         </section>
 
-
-
-
-
-        <!-- ===== SLIDE 25: CHALLENGE EXERCISE ===== -->
-        <section
-          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
-        >
-          <h2>🚀 Challenge Exercise</h2>
-          <p style="font-size: 0.85em">Create a program that:</p>
+        <section>
+          <h2>What Is Next</h2>
           <div class="two-col">
             <div class="card">
-              <h4>Requirements</h4>
-              <ol
-                style="
-                  list-style: decimal;
-                  padding-left: 1.5em;
-                  margin: 0;
-                  font-size: 0.9em;
-                "
-              >
-                <li>Builds a linked list</li>
-                <li>Adds 5 numbers</li>
-                <li>Prints all values</li>
-              </ol>
+              <h4>Next Topics</h4>
+              <ul>
+                <li>Heaps</li>
+                <li>Balanced trees</li>
+                <li>Graphs and traversals</li>
+              </ul>
             </div>
             <div class="card">
-              <h4>🌟 Bonus</h4>
-              <p>
-                Add a <strong>delete</strong> function that removes a node by
-                value.
-              </p>
+              <h4>Practice</h4>
+              <ol style="list-style: decimal; margin: 0; padding-left: 1.3em">
+                <li>Find max value in a BST</li>
+                <li>Check if tree is symmetric</li>
+                <li>Compare two trees for equality</li>
+              </ol>
             </div>
           </div>
         </section>
 
-        <!-- ===== SLIDE 26: CLOSING THOUGHT / THANK YOU ===== -->
         <section
-          data-background-gradient="linear-gradient(135deg, #0f0c29, #302b63, #24243e)"
+          data-background-gradient="linear-gradient(135deg, #0f172a, #1e293b, #0b1120)"
         >
-          <h1>Thank You! 🔗</h1>
+          <h1>Thank You</h1>
           <br />
           <div class="callout" style="font-size: 1em; text-align: center">
-            You are no longer just <em>using</em> data structures —<br />
-            you are now <strong>engineering them.</strong>
+            Recursion and trees are core tools for elegant problem solving.
           </div>
           <br />
-          <p style="color: #aaa; margin-top: 0.5em">Questions?</p>
+          <p style="color: #9ca3af; margin-top: 0.5em">Questions?</p>
           <br />
           <div class="tag-row">
-            <span class="tag">Node</span>
-            <span class="tag">linked list</span>
-            <span class="tag">head</span>
+            <span class="tag">recursion</span>
+            <span class="tag">call stack</span>
+            <span class="tag">tree</span>
             <span class="tag">traversal</span>
-            <span class="tag">OOP</span>
+            <span class="tag">bst</span>
           </div>
         </section>
-
       </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
-      // ===== COPY CODE BUTTONS =====
       const fallbackCopyText = (text) => {
         const textArea = document.createElement("textarea");
         textArea.value = text;
@@ -1093,18 +923,16 @@ while current.next:
         });
       };
 
-      // ===== CONFETTI =====
       const launchConfetti = () => {
         const burst = document.createElement("div");
         burst.className = "confetti-burst";
         document.body.appendChild(burst);
-        const colors = ["#00d9a3", "#ff6b6b", "#facc15", "#60a5fa", "#e879f9"];
+        const colors = ["#22d3ee", "#f97316", "#facc15", "#60a5fa", "#34d399"];
         for (let i = 0; i < 85; i++) {
           const piece = document.createElement("div");
           piece.className = "confetti-piece";
           piece.style.left = `${Math.random() * 100}%`;
-          piece.style.background =
-            colors[Math.floor(Math.random() * colors.length)];
+          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
           piece.style.animationDelay = `${Math.random() * 200}ms`;
           piece.style.animationDuration = `${700 + Math.random() * 600}ms`;
           burst.appendChild(piece);
@@ -1112,7 +940,6 @@ while current.next:
         setTimeout(() => burst.remove(), 1500);
       };
 
-      // ===== TOKEN BUILDER GAME FACTORY =====
       const makeTokenGame = (gameId, rounds, successMsg) => {
         const bank = document.getElementById(`${gameId}-bank`);
         const answer = document.getElementById(`${gameId}-answer`);
@@ -1210,10 +1037,7 @@ while current.next:
             renderRound();
             return;
           }
-          setFeedback(
-            `Challenge complete! Final score: ${score}/${rounds.length}`,
-            "success",
-          );
+          setFeedback(`Challenge complete! Final score: ${score}/${rounds.length}`, "success");
           checkBtn.disabled = true;
         };
 
@@ -1230,7 +1054,7 @@ while current.next:
             launchConfetti();
             setTimeout(nextRound, 750);
           } else {
-            setFeedback("Not quite. Check the order and tokens.", "error");
+            setFeedback("Not quite. Check order and token choices.", "error");
           }
         });
 
@@ -1244,38 +1068,6 @@ while current.next:
         renderRound();
       };
 
-      // ===== GAME 3: BUILD THE CODE — Token rounds (Linked List) =====
-      makeTokenGame(
-        "g3",
-        [
-          {
-            prompt: "Create a Node with data 5 and store it in variable a.",
-            target: ["a", "=", "Node(", "5", ")"],
-            tokens: ["a", "=", "Node(", "5", ")", "b", "10", "node(", "Node"],
-          },
-          {
-            prompt: "Link node b after node a (make a.next point to b).",
-            target: ["a.next", "=", "b"],
-            tokens: ["a.next", "=", "b", "b.next", "a", "a.data", "None"],
-          },
-          {
-            prompt: "Start traversal: set current equal to head.",
-            target: ["current", "=", "head"],
-            tokens: [
-              "current",
-              "=",
-              "head",
-              "next",
-              "current.next",
-              "head.next",
-              "start",
-            ],
-          },
-        ],
-        "Correct! That's a valid linked list operation.",
-      );
-
-      // ===== MCQ GAME FACTORY =====
       const makeMCQ = (gameId, correctFeedback, wrongFeedback) => {
         let answered = false;
         document.querySelectorAll(`.mcq-btn-${gameId}`).forEach((btn) => {
@@ -1304,53 +1096,46 @@ while current.next:
         });
       };
 
-      // ===== GAME 1: MCQ — Predict the Output =====
       makeMCQ(
         "g1",
-        "✅ Correct! a.next points to b, so a.next.data is b.data = 10.",
-        "❌ Not quite. a.next points to b, and b.data = 10. Answer: B.",
+        "Correct. The base case is the stop condition n == 0.",
+        "Not quite. The base case is 'if n == 0: return 1'.",
       );
 
-      // ===== GAME 2: MCQ — Fill in the Blank =====
       makeMCQ(
         "g2",
-        "✅ Correct! The end of a linked list is marked by None.",
-        "❌ Not quite. The last node's next is None, so the loop stops there. Answer: B.",
+        "Correct. Because print runs after recursion, output is 2 4 6.",
+        "Not quite. The function prints while returning, so answer is 2 4 6.",
       );
 
-      // ===== GAME 4: MCQ — Which is Better? =====
+      makeTokenGame(
+        "g3",
+        [
+          {
+            prompt: "Pre-order sequence for the shown tree (Root Left Right)",
+            target: ["1", "2", "4", "5", "3"],
+            tokens: ["1", "2", "3", "4", "5", "6", "0"],
+          },
+          {
+            prompt: "In-order sequence for the shown tree (Left Root Right)",
+            target: ["4", "2", "5", "1", "3"],
+            tokens: ["1", "2", "3", "4", "5", "7", "9"],
+          },
+          {
+            prompt: "Post-order sequence for the shown tree (Left Right Root)",
+            target: ["4", "5", "2", "3", "1"],
+            tokens: ["1", "2", "3", "4", "5", "8", "0"],
+          },
+        ],
+        "Correct traversal order.",
+      );
+
       makeMCQ(
         "g4",
-        "✅ Correct! Linked Lists are faster for middle insertions — no shifting needed.",
-        "❌ Not quite. Python Lists require shifting; Linked Lists just update pointers. Answer: B.",
+        "Correct. Those are exactly the three bugs in the snippet.",
+        "Not quite. Review comparison operator, traversal direction, and +1 in height.",
       );
 
-      // ===== GAME 5: TRUE OR FALSE =====
-      const tfCorrect = [true, false, true];
-      document.querySelectorAll(".tf-row").forEach((row, i) => {
-        row.querySelectorAll(".tf-btn").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            if (row.dataset.answered === "true") return;
-            row.dataset.answered = "true";
-            const clicked = btn.dataset.value === "true";
-            const correct = clicked === tfCorrect[i];
-            btn.classList.add(correct ? "correct" : "wrong");
-            if (!correct) {
-              const correctVal = tfCorrect[i] ? "true" : "false";
-              row
-                .querySelector(`.tf-btn[data-value='${correctVal}']`)
-                .classList.add("correct");
-            }
-            const result = row.querySelector(".tf-result");
-            result.textContent = correct ? "✅ Correct!" : "❌ Not quite.";
-            result.style.color = correct ? "#4ade80" : "#f87171";
-            if (correct) launchConfetti();
-            row.querySelectorAll(".tf-btn").forEach((b) => (b.disabled = true));
-          });
-        });
-      });
-
-      // ===== REVEAL.JS INIT =====
       Reveal.initialize({
         hash: true,
         slideNumber: "c/t",
