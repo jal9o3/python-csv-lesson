@@ -1,546 +1,620 @@
-# Trees & Recursion in Python
+# Python CSV Module
+### Reading & Writing Data Like a Pro
 
-> *"To understand recursion, you must first understand recursion."*
-
----
-
-## What We'll Cover Today
-
-1. 🔁 What is Recursion?
-2. 🌳 What is a Tree?
-3. 🧩 Tree Terminology
-4. 💻 Implementing Trees in Python
-5. 🔍 Tree Traversals
-6. 🎮 Interactive Challenges
+**IT Fundamentals — Data Handling Unit**
 
 ---
 
-## Part 1: Recursion
+## What is a CSV File?
 
-### A Function That Calls Itself
+**CSV = Comma-Separated Values**
 
-Recursion is when a function **calls itself** to solve a smaller version of the same problem.
+- A plain text file that stores **tabular data**
+- Each line is a **row**
+- Values in each row are separated by **commas**
+- The first row is usually a **header**
+
+> Think of it as a spreadsheet saved as plain text.
+
+---
+
+## What Does a CSV Look Like?
+
+**students.csv**
+
+```
+name,age,grade
+Alice,18,90
+Bob,19,85
+Carol,18,92
+Diana,20,78
+```
+
+- Line 1 → **Header row** (column names)
+- Lines 2–5 → **Data rows**
+- Each value is separated by a **comma**
+
+---
+
+## Where Do We See CSV in Real Life?
+
+| Use Case | Example |
+|---|---|
+| 📊 Spreadsheets | Exported Excel/Google Sheets |
+| 🏫 School Records | Student grade lists |
+| 🛒 E-commerce | Product catalogs |
+| 🏥 Health | Patient records |
+| 🌐 Open Data | Government datasets |
+
+CSV is one of the most common data formats in the world.
+
+---
+
+## 🎮 GAME — Spot the Valid CSV!
+
+**Which of these is a properly formatted CSV?**
+
+> Vote by raising your hand for A, B, or C!
+
+**A.**
+```
+name | age | grade
+Alice | 18 | 90
+```
+
+**B.**
+```
+name,age,grade
+Alice,18,90
+Bob,19,85
+```
+
+**C.**
+```
+name=Alice age=18 grade=90
+name=Bob age=19 grade=85
+```
+
+---
+
+## 🎮 ANSWER — Spot the Valid CSV!
+
+✅ **B is correct!**
+
+```
+name,age,grade    ← header row, comma-separated
+Alice,18,90       ← data rows, same structure
+Bob,19,85
+```
+
+❌ **A** uses pipes `|` not commas — that's a different format (TSV-like)
+
+❌ **C** uses `key=value` pairs — that's not CSV at all
+
+---
+
+## The Python `csv` Module
+
+Python has a **built-in module** just for CSV files.
 
 ```python
-def countdown(n):
-    if n == 0:
-        print("Blast off! 🚀")
-        return
-    print(n)
-    countdown(n - 1)  # calls itself!
-
-countdown(5)
+import csv
 ```
 
-**Output:** `5 4 3 2 1 Blast off! 🚀`
+No installation needed — it's part of Python's **standard library**.
+
+**What can it do?**
+
+- 📖 **Read** data from CSV files
+- ✏️ **Write** data to CSV files
+- 🛡️ Handle tricky cases (commas inside values, quotes, etc.)
 
 ---
 
-## The Two Rules of Recursion
+## Opening a CSV File
 
-Every recursive function **must** have:
-
-### 1. 🛑 A Base Case
-The condition where the function **stops** calling itself.
-
-### 2. 🔄 A Recursive Case
-The part where the function **calls itself** with a simpler input.
-
-> Without a base case → **Infinite loop → Stack Overflow 💥**
-
----
-
-## 🎮 Game: Spot the Base Case!
-
-### Look at this code. What is the base case?
+Always use `open()` with the right arguments:
 
 ```python
-def factorial(n):
-    if n == 0:
-        return 1
-    return n * factorial(n - 1)
+with open('students.csv', 'r', newline='') as file:
+    # do something here
 ```
 
-**Think for 30 seconds, then discuss with your neighbor!**
+| Argument | Purpose |
+|---|---|
+| `'students.csv'` | File name (or full path) |
+| `'r'` | Mode: **r**ead |
+| `newline=''` | Prevents extra blank lines (important on Windows!) |
 
-- A) `return n * factorial(n - 1)`
-- B) `if n == 0: return 1`  ✅
-- C) `def factorial(n):`
-- D) There is no base case
-
-*Follow-up: What happens if you call `factorial(-1)`?*
+> 💡 Always use `with open(...)` — it automatically closes the file for you.
 
 ---
 
-## Visualizing the Call Stack
+## `csv.reader` — Reading Rows
 
-### `factorial(4)` step by step:
+`csv.reader` reads a CSV file **one row at a time** as a **list**.
 
-```
-factorial(4)
-  → 4 * factorial(3)
-        → 3 * factorial(2)
-              → 2 * factorial(1)
-                    → 1 * factorial(0)
-                          → returns 1
-                    → returns 1 * 1 = 1
-              → returns 2 * 1 = 2
-        → returns 3 * 2 = 6
-  → returns 4 * 6 = 24
+```python
+import csv
+
+with open('students.csv', 'r', newline='') as file:
+    reader = csv.reader(file)
+    for row in reader:
+        print(row)
 ```
 
-Each call **waits** for the one below it. This is the **call stack**.
+**Output:**
+```
+['name', 'age', 'grade']
+['Alice', '18', '90']
+['Bob', '19', '85']
+['Carol', '18', '92']
+```
+
+Each row is a **Python list** of strings.
 
 ---
 
-## Recursion vs. Iteration
+## Skipping the Header Row
 
-| | Recursion | Iteration |
+The header row is usually not data — skip it with `next()`:
+
+```python
+import csv
+
+with open('students.csv', 'r', newline='') as file:
+    reader = csv.reader(file)
+    next(reader)          # ← skip the header row
+    for row in reader:
+        name  = row[0]
+        age   = row[1]
+        grade = row[2]
+        print(f"{name} is {age} years old with grade {grade}.")
+```
+
+**Output:**
+```
+Alice is 18 years old with grade 90.
+Bob is 19 years old with grade 85.
+Carol is 18 years old with grade 92.
+```
+
+---
+
+## 🎮 GAME — Predict the Output!
+
+**Given this CSV file (`scores.csv`):**
+```
+player,score
+Rey,150
+Sam,200
+```
+
+**And this code:**
+```python
+import csv
+with open('scores.csv', 'r', newline='') as f:
+    reader = csv.reader(f)
+    next(reader)
+    for row in reader:
+        print(row[0], "scored", row[1])
+```
+
+**What will be printed? (30 seconds — write your answer!)**
+
+---
+
+## 🎮 ANSWER — Predict the Output!
+
+✅ **Correct output:**
+
+```
+Rey scored 150
+Sam scored 200
+```
+
+**Why?**
+- `next(reader)` skips `['player', 'score']`
+- First iteration: `row = ['Rey', '150']` → `row[0]` = `'Rey'`, `row[1]` = `'150'`
+- Second iteration: `row = ['Sam', '200']`
+
+> ⚠️ Note: all values are **strings** — even numbers!
+> Use `int(row[1])` to convert to integer.
+
+---
+
+## `csv.DictReader` — Smarter Reading
+
+`DictReader` reads each row as a **dictionary** instead of a list.
+
+- Keys come from the **header row** automatically
+- No need for `row[0]`, `row[1]` — use **column names** instead!
+
+```python
+import csv
+
+with open('students.csv', 'r', newline='') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        print(row['name'], "—", row['grade'])
+```
+
+**Output:**
+```
+Alice — 90
+Bob — 85
+Carol — 92
+```
+
+Much more **readable** than `row[0]`, `row[2]`! 🎉
+
+---
+
+## `csv.reader` vs `csv.DictReader`
+
+| Feature | `csv.reader` | `csv.DictReader` |
 |---|---|---|
-| **Uses** | Function calls | Loops |
-| **Base case** | Required | Loop condition |
-| **Memory** | Call stack | Loop variables |
-| **Readability** | Often cleaner | More explicit |
-| **Risk** | Stack overflow | Infinite loop |
+| Row type | `list` | `dict` |
+| Access by | Index `row[0]` | Key `row['name']` |
+| Handles header | Manually (`next()`) | Automatically |
+| Best for | Simple / small files | Named columns |
+
+> 💡 When in doubt, use `DictReader` — your code will be easier to read and maintain.
+
+---
+
+## `csv.writer` — Writing Rows
+
+Use `csv.writer` to create or write to a CSV file.
 
 ```python
-# Iterative                  # Recursive
-def sum_iter(n):              def sum_rec(n):
-    total = 0                     if n == 0:
-    for i in range(n+1):              return 0
-        total += i                return n + sum_rec(n-1)
-    return total
+import csv
+
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['name', 'age', 'grade'])   # header
+    writer.writerow(['Alice', 18, 90])
+    writer.writerow(['Bob', 19, 85])
 ```
+
+**Result — output.csv:**
+```
+name,age,grade
+Alice,18,90
+Bob,19,85
+```
+
+- `'w'` mode **overwrites** the file (use `'a'` to append)
+- `writerow()` writes **one row** at a time
 
 ---
 
-## 🎮 Game: Trace the Recursion
+## Writing Multiple Rows at Once
 
-### What does this print? Work it out on paper!
+Use `writerows()` to write a **list of rows** in one call:
 
 ```python
-def mystery(n):
-    if n <= 0:
-        return
-    mystery(n - 2)
-    print(n)
+import csv
 
-mystery(6)
+students = [
+    ['Alice', 18, 90],
+    ['Bob', 19, 85],
+    ['Carol', 18, 92],
+]
+
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['name', 'age', 'grade'])
+    writer.writerows(students)       # ← writes all rows at once
 ```
 
-**Hint:** The print happens *after* the recursive call!
-
-*Answer:* `2  4  6`  
-*(prints on the way **back up** the call stack)*
-
----
-
-## Part 2: Trees 🌳
-
-### Trees Are Everywhere
-
-- 📁 **File systems** — folders inside folders
-- 🌐 **HTML/DOM** — tags nested inside tags
-- 🏢 **Org charts** — CEO → Managers → Employees
-- 🔤 **Decision trees** — branching yes/no questions
-- 💾 **Databases** — B-trees for fast searching
-
-> A **tree** is a hierarchical data structure made of **nodes** connected by **edges**.
-
----
-
-## Tree Terminology 🧩
-
-```
-          [A]          ← Root
-         /   \
-       [B]   [C]       ← Children of A
-      /   \     \
-    [D]   [E]   [F]    ← Leaves
-```
-
-| Term | Meaning |
+| Method | Writes |
 |---|---|
-| **Root** | Top node (no parent) |
-| **Node** | Each element in the tree |
-| **Edge** | Connection between nodes |
-| **Leaf** | Node with no children |
-| **Parent / Child** | Relative nodes |
-| **Height** | Longest root-to-leaf path |
-| **Depth** | Distance from root |
+| `writerow(row)` | One row (a list) |
+| `writerows(rows)` | Many rows (a list of lists) |
 
 ---
 
-## 🎮 Game: Count the Tree!
+## 🎮 GAME — Fill in the Blank!
 
-### Given this tree, answer the questions:
+**Complete the code to write this CSV:**
 
 ```
-            [10]
-           /    \
-         [5]    [20]
-        /   \      \
-      [3]   [7]    [25]
-                  /
-               [22]
+subject,score
+Math,95
+Science,88
+English,91
 ```
-
-In your notebook, write down:
-1. **How many nodes** are there? *(Answer: 7)*
-2. **What is the height** of the tree? *(Answer: 3)*
-3. **What are the leaves?** *(Answer: 3, 7, 22)*
-4. **What is the depth of node 22?** *(Answer: 3)*
-
----
-
-## Binary Trees
-
-A **Binary Tree** is a tree where each node has **at most 2 children**: a **left** and a **right** child.
 
 ```python
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
+import csv
+
+data = [
+    ['Math', 95],
+    ['Science', 88],
+    ['English', 91],
+]
+
+with open('grades.csv', '___', newline='') as file:
+    writer = csv.___(file)
+    writer.___([ 'subject', 'score' ])
+    writer.___(data)
 ```
 
-### Building a tree manually:
-
-```python
-root = Node(10)
-root.left = Node(5)
-root.right = Node(20)
-root.left.left = Node(3)
-root.left.right = Node(7)
-```
+**Fill in the 4 blanks! (60 seconds)**
 
 ---
 
-## The `TreeNode` Class in Full
+## 🎮 ANSWER — Fill in the Blank!
 
 ```python
-class TreeNode:
-    def __init__(self, value):
-        self.value = value
-        self.left = None    # left child
-        self.right = None   # right child
+import csv
 
-    def __repr__(self):
-        return f"TreeNode({self.value})"
+data = [
+    ['Math', 95],
+    ['Science', 88],
+    ['English', 91],
+]
 
-
-# Create this tree:
-#       1
-#      / \
-#     2   3
-
-root = TreeNode(1)
-root.left = TreeNode(2)
-root.right = TreeNode(3)
-
-print(root)        # TreeNode(1)
-print(root.left)   # TreeNode(2)
+with open('grades.csv', 'w', newline='') as file:      # ← 'w'
+    writer = csv.writer(file)                           # ← writer
+    writer.writerow(['subject', 'score'])               # ← writerow
+    writer.writerows(data)                              # ← writerows
 ```
+
+✅ `'w'` — write mode
+✅ `csv.writer` — creates a writer object
+✅ `writerow` — writes the single header row
+✅ `writerows` — writes all data rows at once
 
 ---
 
-## Part 3: Tree Traversals 🔍
+## `csv.DictWriter` — Writing with Column Names
 
-### How do we *visit* every node?
+`DictWriter` lets you write rows as **dictionaries**.
 
-There are **three classic** ways to traverse a binary tree:
+```python
+import csv
 
-| Traversal | Order | Mnemonic |
+students = [
+    {'name': 'Alice', 'age': 18, 'grade': 90},
+    {'name': 'Bob',   'age': 19, 'grade': 85},
+]
+
+fields = ['name', 'age', 'grade']
+
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.DictWriter(file, fieldnames=fields)
+    writer.writeheader()          # ← writes the header row
+    writer.writerows(students)
+```
+
+- `fieldnames` defines the **column order**
+- `writeheader()` writes the header automatically from `fieldnames`
+
+---
+
+## Key Parameters You Should Know
+
+Customize how your CSV is read/written:
+
+```python
+csv.reader(file, delimiter=';')      # use semicolons instead of commas
+csv.reader(file, delimiter='\t')     # use tabs (TSV files)
+```
+
+| Parameter | Default | Purpose |
 |---|---|---|
-| **Pre-order** | Root → Left → Right | **P**arents first |
-| **In-order** | Left → Root → Right | **I**n-between |
-| **Post-order** | Left → Right → Root | **P**arents last |
+| `delimiter` | `,` | Character separating values |
+| `quotechar` | `"` | Character for quoting fields |
+| `skipinitialspace` | `False` | Skip space after delimiter |
 
-> All three use **recursion** naturally! 🎉
+**Example — reading a semicolon-separated file:**
+```python
+with open('european_data.csv', 'r', newline='') as f:
+    reader = csv.reader(f, delimiter=';')
+```
 
 ---
 
-## Pre-order Traversal
+## Values That Contain Commas
 
-### Visit Root → Left → Right
+What happens when a value **itself** contains a comma?
+
+```
+name,address,age
+Alice,"Naga City, Camarines Sur",18
+```
+
+The `csv` module handles this **automatically** using quotes:
 
 ```python
-def preorder(node):
-    if node is None:     # base case!
-        return
-    print(node.value)    # visit root first
-    preorder(node.left)  # then left subtree
-    preorder(node.right) # then right subtree
+import csv
+with open('contacts.csv', 'r', newline='') as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
 ```
 
+**Output:**
 ```
-       [A]
-      /   \
-    [B]   [C]
-   /   \
- [D]   [E]
+['name', 'address', 'age']
+['Alice', 'Naga City, Camarines Sur', '18']
 ```
 
-**Pre-order result:** `A  B  D  E  C`
-
-*Use case: Copying a tree, serializing structure*
+The comma inside quotes is **not** treated as a delimiter. ✅
 
 ---
 
-## In-order Traversal
+## 🎮 GAME — True or False Buzzer!
 
-### Visit Left → Root → Right
+**Stand up for TRUE, stay seated for FALSE.**
+
+**Round 1:** `csv` is a third-party module — you must `pip install` it first.
+
+**Round 2:** `csv.DictReader` skips the header row automatically.
+
+**Round 3:** `writerows()` can only write one row at a time.
+
+**Round 4:** `newline=''` in `open()` is recommended when working with CSV files.
+
+**Round 5:** All values read by `csv.reader` are returned as **strings**.
+
+---
+
+## 🎮 ANSWERS — True or False Buzzer!
+
+| Round | Statement | Answer |
+|---|---|---|
+| 1 | `csv` requires `pip install` | ❌ **FALSE** — it's built-in |
+| 2 | `DictReader` skips header automatically | ✅ **TRUE** |
+| 3 | `writerows()` writes one row at a time | ❌ **FALSE** — it writes many |
+| 4 | `newline=''` is recommended | ✅ **TRUE** |
+| 5 | All values from `csv.reader` are strings | ✅ **TRUE** |
+
+---
+
+## Common Errors & How to Fix Them
+
+| Error | Cause | Fix |
+|---|---|---|
+| `FileNotFoundError` | Wrong file name or path | Check spelling, use full path |
+| Extra blank lines in output | Missing `newline=''` | Add `newline=''` to `open()` |
+| Values include quote marks | Using wrong `quotechar` | Set `quotechar` parameter |
+| Numbers treated as strings | `csv.reader` always returns strings | Convert: `int()`, `float()` |
+| Wrong columns in DictWriter | `fieldnames` mismatch | Check your dict keys match `fieldnames` |
+
+---
+
+## 🎮 GAME — Debug the Code!
+
+**This code has 3 bugs. Find them all! (2 minutes)**
 
 ```python
-def inorder(node):
-    if node is None:     # base case!
-        return
-    inorder(node.left)   # left subtree first
-    print(node.value)    # then root
-    inorder(node.right)  # then right subtree
+import CSV                             # line 1
+
+students = [
+    {'name': 'Alice', 'grade': 90},
+    {'name': 'Bob',   'grade': 85},
+]
+
+with open('out.csv', 'r') as file:    # line 8
+    writer = csv.DictWriter(file)     # line 9
+    writer.writeheader()
+    writer.writerows(students)
 ```
 
-```
-       [5]
-      /   \
-    [3]   [7]
-```
-
-**In-order result:** `3  5  7`
-
-> 💡 **Key insight:** In-order traversal of a **Binary Search Tree**
-> always gives values in **sorted order**!
+Hint: Look at the import, the file mode, and the writer setup.
 
 ---
 
-## Post-order Traversal
+## 🎮 ANSWER — Debug the Code!
 
-### Visit Left → Right → Root
+**Bug 1 — Line 1:** Module name must be **lowercase**
+```python
+# ❌ Wrong              ✅ Fixed
+import CSV        →    import csv
+```
+
+**Bug 2 — Line 8:** Wrong file mode — should be `'w'` not `'r'`
+```python
+# ❌ Wrong              ✅ Fixed
+open('out.csv', 'r')  →  open('out.csv', 'w', newline='')
+```
+
+**Bug 3 — Line 9:** `DictWriter` requires `fieldnames`
+```python
+# ❌ Wrong                          ✅ Fixed
+csv.DictWriter(file)  →  csv.DictWriter(file, fieldnames=['name','grade'])
+```
+
+---
+
+## Real-World Example: Student Gradebook
+
+**Task:** Read a grade file, compute the average, and save a report.
 
 ```python
-def postorder(node):
-    if node is None:     # base case!
-        return
-    postorder(node.left)   # left subtree first
-    postorder(node.right)  # right subtree
-    print(node.value)      # root LAST
-```
+import csv
 
-```
-       [A]
-      /   \
-    [B]   [C]
-```
+totals, count = 0, 0
 
-**Post-order result:** `B  C  A`
+with open('grades.csv', 'r', newline='') as f:
+    reader = csv.DictReader(f)
+    results = []
+    for row in reader:
+        score = int(row['score'])
+        totals += score
+        count += 1
+        results.append({'name': row['name'], 'score': score,
+                        'passed': 'Yes' if score >= 75 else 'No'})
 
-*Use case: Deleting a tree (delete children before parent),
-evaluating expression trees*
+with open('report.csv', 'w', newline='') as f:
+    writer = csv.DictWriter(f, fieldnames=['name', 'score', 'passed'])
+    writer.writeheader()
+    writer.writerows(results)
+
+print(f"Class average: {totals / count:.2f}")
+```
 
 ---
 
-## 🎮 Game: Traversal Race!
+## Quick Reference Cheat Sheet
 
-### Trace all three traversals on this tree:
+```python
+import csv
 
+# READ with reader
+with open('file.csv', 'r', newline='') as f:
+    for row in csv.reader(f):
+        print(row)           # row is a list
+
+# READ with DictReader
+with open('file.csv', 'r', newline='') as f:
+    for row in csv.DictReader(f):
+        print(row['column']) # row is a dict
+
+# WRITE with writer
+with open('file.csv', 'w', newline='') as f:
+    w = csv.writer(f)
+    w.writerow(['col1', 'col2'])
+    w.writerows(data)
+
+# WRITE with DictWriter
+with open('file.csv', 'w', newline='') as f:
+    w = csv.DictWriter(f, fieldnames=['col1','col2'])
+    w.writeheader()
+    w.writerows(data)
 ```
-           [1]
-          /   \
-        [2]   [3]
-       /   \
-     [4]   [5]
-```
 
-Race your neighbor! First to correctly write all three wins 🏆
+---
 
-| Traversal | Your Answer |
+## Lesson Recap
+
+| Concept | What You Learned |
 |---|---|
-| Pre-order | `1  2  4  5  3` |
-| In-order | `4  2  5  1  3` |
-| Post-order | `4  5  2  3  1` |
-
-*Check: pre-order always starts with the root!*
-
----
-
-## 🎮 Game: Build-a-Tree!
-
-### Given this pre-order and in-order output, draw the tree!
-
-```
-Pre-order:  [A, B, D, E, C, F]
-In-order:   [D, B, E, A, F, C]
-```
-
-**Rules:**
-- Pre-order → first element is always the **root**
-- In-order → root splits the list into **left** and **right** subtrees
-- Work in groups of 3. Draw the tree on paper.
-
-*(Answer)*
-```
-         [A]
-        /   \
-      [B]   [C]
-     /   \ /
-   [D] [E][F]
-```
+| CSV format | Plain text, comma-separated, rows & columns |
+| `import csv` | Built-in — no install needed |
+| `csv.reader` | Reads rows as **lists** |
+| `csv.DictReader` | Reads rows as **dicts** (uses header as keys) |
+| `csv.writer` | Writes rows from **lists** |
+| `csv.DictWriter` | Writes rows from **dicts** |
+| `newline=''` | Always include this when opening CSV files |
+| `delimiter` | Change separator character if needed |
 
 ---
 
-## Recursive Tree Height
+## What's Next?
 
-### How tall is a tree? Recursion makes this elegant!
+**You can now work with real-world data! 🎉**
 
-```python
-def height(node):
-    # Base case: empty tree has height -1 (or 0 by convention)
-    if node is None:
-        return -1
+**Practice Challenge:**
+> Create a CSV file of your 5 favorite movies (title, year, rating).
+> Write a Python script to read the file and print only the movies rated 8 or higher.
 
-    # Recursive case: height = 1 + max(left height, right height)
-    left_height = height(node.left)
-    right_height = height(node.right)
+**Coming Up Next:**
+- 🗄️ Working with **JSON** files
+- 🐼 Introduction to **pandas** for data analysis
+- 🌐 Fetching CSV data from the **web**
 
-    return 1 + max(left_height, right_height)
-
-# Test it:
-root = TreeNode(10)
-root.left = TreeNode(5)
-root.left.left = TreeNode(3)
-print(height(root))  # Output: 2
-```
-
----
-
-## Counting Nodes Recursively
-
-```python
-def count_nodes(node):
-    if node is None:       # base case
-        return 0
-    return (1 +
-            count_nodes(node.left) +   # count left
-            count_nodes(node.right))   # count right
-
-# Searching for a value:
-def search(node, target):
-    if node is None:           # not found
-        return False
-    if node.value == target:   # found!
-        return True
-    return (search(node.left, target) or
-            search(node.right, target))
-```
-
-> **Notice the pattern:** base case + recursive case on left + recursive case on right
-
----
-
-## Binary Search Trees (BST)
-
-A **BST** is a binary tree with one special rule:
-
-> For any node:
-> - All values in the **left** subtree are **smaller**
-> - All values in the **right** subtree are **larger**
-
-```
-         [8]
-        /   \
-      [3]   [10]
-     /   \     \
-   [1]   [6]   [14]
-        /   \
-      [4]   [7]
-```
-
-**Search is fast!** At each node, go left or right — no need to check both.
-Time complexity: **O(h)** where h = height of tree.
-
----
-
-## BST Insert
-
-```python
-def insert(node, value):
-    # Base case: found an empty spot
-    if node is None:
-        return TreeNode(value)
-
-    # Recursive case: go left or right
-    if value < node.value:
-        node.left = insert(node.left, value)
-    elif value > node.value:
-        node.right = insert(node.right, value)
-    # If equal, we ignore (no duplicates)
-
-    return node
-
-# Usage:
-root = None
-for val in [8, 3, 10, 1, 6]:
-    root = insert(root, val)
-```
-
----
-
-## 🎮 Final Boss: Debug the Tree! 🐛
-
-### This code has **3 bugs**. Find them all!
-
-```python
-def inorder(node):
-    if node = None:          # Bug 1
-        return
-    inorder(node.right)      # Bug 2
-    print(node.value)
-    inorder(node.left)       # Bug 2 continued
-
-def height(node):
-    if node is None:
-        return 0
-    return max(height(node.left),   # Bug 3
-               height(node.right))
-```
-
-**Discuss with your table. You have 3 minutes!**
-
-*Bugs: (1) `=` should be `==`  (2) right/left are swapped  (3) missing `+ 1`*
-
----
-
-## Summary: The Big Picture 🗺️
-
-| Concept | Key Idea |
-|---|---|
-| **Recursion** | Function calls itself; needs base + recursive case |
-| **Call Stack** | Each call waits for the next to finish |
-| **Tree** | Hierarchical structure of nodes |
-| **Binary Tree** | At most 2 children per node |
-| **Pre-order** | Root → Left → Right |
-| **In-order** | Left → Root → Right (sorted for BST!) |
-| **Post-order** | Left → Right → Root |
-| **BST** | Left < Root < Right at every node |
-
----
-
-## What's Next? 🚀
-
-### Topics that build on today:
-
-- 🔴 **Red-Black Trees** — Self-balancing BSTs
-- 🗄️ **Heaps** — Priority queues, heap sort
-- 🔗 **Graphs** — Trees without the "no cycles" rule
-- 🌐 **Tries** — Trees for strings/autocomplete
-- 🧠 **Decision Trees** — Machine learning fundamentals
-
-### Practice Problems:
-1. Write a function that finds the **maximum value** in a BST
-2. Write a function that checks if a binary tree is **symmetric**
-3. Given two trees, check if they are **identical**
-
----
-
-## Thank You! 🌳
+> "Data is the new oil — and CSV is the pipeline."

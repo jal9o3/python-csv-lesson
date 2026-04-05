@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trees and Recursion in Python - Computer Programming 2</title>
+    <title>Python CSV Module - Computer Programming 2</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css"
@@ -322,343 +322,306 @@
         <section
           data-background-gradient="linear-gradient(135deg, #0f172a, #1e293b, #0b1120)"
         >
-          <h1>Trees and Recursion</h1>
-          <p class="subtitle">in Python</p>
+          <h1>Python CSV Module</h1>
+          <p class="subtitle">Reading and Writing Data Like a Pro</p>
           <br />
           <p style="color: #9ca3af; font-size: 0.8em">
-            Hierarchical Data Structures and Self-Calling Functions
+            IT Fundamentals - Data Handling Unit
           </p>
           <br />
           <div class="tag-row">
-            <span class="tag">recursion</span>
-            <span class="tag">tree</span>
-            <span class="tag">traversal</span>
-            <span class="tag">bst</span>
             <span class="tag">python</span>
+            <span class="tag">csv</span>
+            <span class="tag">reader</span>
+            <span class="tag">writer</span>
+            <span class="tag">data</span>
           </div>
           <br />
           <p style="color: #6b7280; font-size: 0.62em">Jerome Loria</p>
-          <p style="color: #6b7280; font-size: 0.62em">March 2026</p>
+          <p style="color: #6b7280; font-size: 0.62em">April 2026</p>
         </section>
 
         <section>
           <h2>What We Will Cover</h2>
           <div class="two-col">
             <div class="card">
-              <h4>Part 1: Recursion</h4>
+              <h4>CSV Basics</h4>
               <ul>
-                <li>Function calling itself</li>
-                <li>Base and recursive case</li>
-                <li>Call stack behavior</li>
+                <li>What CSV files are</li>
+                <li>How rows and headers work</li>
+                <li>Real-world CSV use cases</li>
               </ul>
             </div>
             <div class="card">
-              <h4>Part 2: Trees</h4>
+              <h4>Python csv Module</h4>
               <ul>
-                <li>Terminology</li>
-                <li>Binary tree and BST</li>
-                <li>Tree traversals and recursion</li>
+                <li>Read with reader and DictReader</li>
+                <li>Write with writer and DictWriter</li>
+                <li>Fix common CSV coding mistakes</li>
               </ul>
             </div>
           </div>
           <br />
           <div class="callout">
-            Goal: Connect recursion to tree algorithms so each concept reinforces
-            the other.
+            Goal: use Python to process CSV data confidently and correctly.
           </div>
         </section>
 
         <section>
-          <h2>Recursion: A Function That Calls Itself</h2>
-          <pre><code class="language-python">def countdown(n):
-    if n == 0:
-        print("Blast off!")
-        return
-    print(n)
-    countdown(n - 1)
-
-countdown(5)</code></pre>
-          <div class="callout">
-            Output: <code class="inline">5 4 3 2 1 Blast off!</code>
-          </div>
-        </section>
-
-        <section>
-          <h2>The Two Rules of Recursion</h2>
+          <h2>What Is a CSV File?</h2>
           <div class="two-col">
             <div class="card">
-              <h4>1. Base Case</h4>
-              <p>The condition that stops the function from calling itself.</p>
+              <h4>CSV = Comma-Separated Values</h4>
+              <ul>
+                <li>Plain text format for tabular data</li>
+                <li>Each line is a row</li>
+                <li>Commas separate values</li>
+              </ul>
             </div>
             <div class="card">
-              <h4>2. Recursive Case</h4>
-              <p>Calls itself with a smaller or simpler input.</p>
+              <h4>Typical Structure</h4>
+              <ul>
+                <li>Row 1: header names</li>
+                <li>Rows 2+: actual records</li>
+                <li>Easy to share across tools</li>
+              </ul>
             </div>
           </div>
           <br />
-          <div class="warn">
-            Missing base case leads to infinite recursion and a stack overflow.
-          </div>
+          <div class="callout">Think of CSV as a spreadsheet saved as plain text.</div>
         </section>
 
         <section>
-          <h2>Game 1: Spot the Base Case</h2>
-          <pre><code class="language-python">def factorial(n):
-    if n == 0:
-        return 1
-    return n * factorial(n - 1)</code></pre>
-          <p style="font-size: 0.82em">Which line is the base case?</p>
+          <h2>What Does CSV Look Like?</h2>
+          <pre><code class="language-text">name,age,grade
+Alice,18,90
+Bob,19,85
+Carol,18,92
+Diana,20,78</code></pre>
+          <table>
+            <tr>
+              <th>Line</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>Line 1</td>
+              <td>Header row (column names)</td>
+            </tr>
+            <tr>
+              <td>Lines 2+</td>
+              <td>Data rows with matching column order</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Where Do We See CSV?</h2>
+          <table>
+            <tr>
+              <th>Use Case</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>Spreadsheets</td>
+              <td>Excel or Google Sheets exports</td>
+            </tr>
+            <tr>
+              <td>School Records</td>
+              <td>Student grades and attendance</td>
+            </tr>
+            <tr>
+              <td>E-commerce</td>
+              <td>Product catalogs and prices</td>
+            </tr>
+            <tr>
+              <td>Open Data</td>
+              <td>Government datasets</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Game 1: Spot the Valid CSV</h2>
+          <p style="font-size: 0.82em">Which block is properly formatted CSV?</p>
+          <pre><code class="language-text">A)
+name | age | grade
+Alice | 18 | 90
+
+B)
+name,age,grade
+Alice,18,90
+Bob,19,85
+
+C)
+name=Alice age=18 grade=90</code></pre>
           <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">A. return n * factorial(n - 1)</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="true">B. if n == 0: return 1</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">C. def factorial(n):</button>
-            <button class="mcq-btn mcq-btn-g1" data-correct="false">D. There is no base case</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">A</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="true">B</button>
+            <button class="mcq-btn mcq-btn-g1" data-correct="false">C</button>
           </div>
           <p id="g1-feedback" class="token-game-feedback" aria-live="polite"></p>
         </section>
 
         <section>
-          <h2>Visualizing the Call Stack</h2>
-          <pre><code class="language-text">factorial(4)
-  -> 4 * factorial(3)
-      -> 3 * factorial(2)
-          -> 2 * factorial(1)
-              -> 1 * factorial(0)
-                  -> returns 1
-              -> returns 1
-          -> returns 2
-      -> returns 6
-  -> returns 24</code></pre>
-          <div class="callout">
-            Calls go down the stack first, then results return on the way back up.
+          <h2>Reveal: Why B Is Correct</h2>
+          <div class="callout">B follows standard CSV rules: comma-separated values with a header row.</div>
+          <div class="two-col">
+            <div class="card">
+              <h4>Why A is wrong</h4>
+              <p>It uses pipes <code class="inline">|</code>, not commas.</p>
+            </div>
+            <div class="card">
+              <h4>Why C is wrong</h4>
+              <p>It uses key-value text, not CSV columns.</p>
+            </div>
           </div>
         </section>
 
         <section>
-          <h2>Recursion vs Iteration</h2>
+          <h2>The Python csv Module</h2>
+          <pre><code class="language-python">import csv</code></pre>
+          <div class="two-col">
+            <div class="card">
+              <h4>Built-In</h4>
+              <p>No installation needed. It is part of Python's standard library.</p>
+            </div>
+            <div class="card">
+              <h4>Core Tasks</h4>
+              <ul>
+                <li>Read rows from CSV files</li>
+                <li>Write rows to CSV files</li>
+                <li>Handle quotes and delimiters safely</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Opening a CSV File Correctly</h2>
+          <pre><code class="language-python">with open('students.csv', 'r', newline='') as file:
+    # process the file here</code></pre>
           <table>
             <tr>
-              <th>Aspect</th>
-              <th>Recursion</th>
-              <th>Iteration</th>
+              <th>Argument</th>
+              <th>Purpose</th>
             </tr>
             <tr>
-              <td>Uses</td>
-              <td>Function calls</td>
-              <td>Loops</td>
+              <td>'students.csv'</td>
+              <td>File name or path</td>
             </tr>
             <tr>
-              <td>Stop condition</td>
-              <td>Base case</td>
-              <td>Loop condition</td>
+              <td>'r'</td>
+              <td>Read mode</td>
             </tr>
             <tr>
-              <td>Memory</td>
-              <td>Call stack</td>
-              <td>Loop variables</td>
-            </tr>
-            <tr>
-              <td>Common risk</td>
-              <td>Stack overflow</td>
-              <td>Infinite loop</td>
+              <td>newline=''</td>
+              <td>Prevents blank-line issues across platforms</td>
             </tr>
           </table>
         </section>
 
         <section>
-          <h2>Game 2: Trace the Recursion</h2>
-          <pre><code class="language-python">def mystery(n):
-    if n &lt;= 0:
-        return
-    mystery(n - 2)
-    print(n)
+          <h2>csv.reader and Header Skipping</h2>
+          <pre><code class="language-python">import csv
 
-mystery(6)</code></pre>
-          <p style="font-size: 0.82em">What is printed?</p>
+with open('students.csv', 'r', newline='') as file:
+    reader = csv.reader(file)
+    next(reader)  # skip header row
+    for row in reader:
+        name = row[0]
+        age = row[1]
+        grade = row[2]
+        print(f"{name} is {age} years old with grade {grade}.")</code></pre>
+          <div class="callout">Each row from <code class="inline">csv.reader</code> is a list of strings.</div>
+        </section>
+
+        <section>
+          <h2>Game 2: Predict the Output</h2>
+          <pre><code class="language-python">import csv
+with open('scores.csv', 'r', newline='') as f:
+    reader = csv.reader(f)
+    next(reader)
+    for row in reader:
+        print(row[0], "scored", row[1])</code></pre>
+          <p style="font-size: 0.82em">If scores.csv has Rey=150 and Sam=200, what prints?</p>
           <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">A. 6 4 2</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="true">B. 2 4 6</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">C. 6 2 4</button>
-            <button class="mcq-btn mcq-btn-g2" data-correct="false">D. Nothing</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">A. 150 scored Rey / 200 scored Sam</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="true">B. Rey scored 150 / Sam scored 200</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">C. Only header is printed</button>
+            <button class="mcq-btn mcq-btn-g2" data-correct="false">D. Nothing prints</button>
           </div>
           <p id="g2-feedback" class="token-game-feedback" aria-live="polite"></p>
         </section>
 
         <section>
-          <h2>Trees Are Everywhere</h2>
-          <div class="two-col">
-            <div class="card">
-              <h4>Real Examples</h4>
-              <ul>
-                <li>File systems</li>
-                <li>HTML / DOM</li>
-                <li>Org charts</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h4>More Examples</h4>
-              <ul>
-                <li>Decision trees</li>
-                <li>Database indexes</li>
-                <li>Expression parsing</li>
-              </ul>
-            </div>
-          </div>
-          <br />
+          <h2>Reveal: Output Explanation</h2>
+          <pre><code class="language-text">Rey scored 150
+Sam scored 200</code></pre>
           <div class="callout">
-            A tree is a hierarchical structure of nodes connected by edges.
+            <code class="inline">next(reader)</code> skips the header, then each row is read in order.
           </div>
         </section>
 
         <section>
-          <h2>Tree Terminology</h2>
-          <pre><code class="language-text">          [A]        <- Root
-         /   \
-       [B]   [C]     <- Children of A
-      /   \     \
-    [D]   [E]   [F]  <- Leaves</code></pre>
+          <h2>DictReader vs reader</h2>
+          <pre><code class="language-python">import csv
+
+with open('students.csv', 'r', newline='') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        print(row['name'], "-", row['grade'])</code></pre>
           <table>
             <tr>
-              <th>Term</th>
-              <th>Meaning</th>
+              <th>Feature</th>
+              <th>csv.reader</th>
+              <th>csv.DictReader</th>
             </tr>
             <tr>
-              <td>Root</td>
-              <td>Top node with no parent</td>
+              <td>Row type</td>
+              <td>list</td>
+              <td>dict</td>
             </tr>
             <tr>
-              <td>Leaf</td>
-              <td>Node with no children</td>
+              <td>Access style</td>
+              <td>row[0]</td>
+              <td>row['name']</td>
             </tr>
             <tr>
-              <td>Depth</td>
-              <td>Distance from root</td>
-            </tr>
-            <tr>
-              <td>Height</td>
-              <td>Longest root-to-leaf path length</td>
+              <td>Header handling</td>
+              <td>manual next(reader)</td>
+              <td>automatic</td>
             </tr>
           </table>
         </section>
 
         <section>
-          <h2>Count the Tree</h2>
-          <pre><code class="language-text">            [10]
-           /    \
-         [5]    [20]
-        /   \      \
-      [3]   [7]    [25]
-                  /
-               [22]</code></pre>
-          <div class="callout" style="text-align: center">
-            Nodes: 7 | Height: 3 | Leaves: 3, 7, 22 | Depth of 22: 3
-          </div>
-        </section>
+          <h2>Writing CSV: writer and writerows</h2>
+          <pre><code class="language-python">import csv
 
-        <section>
-          <h2>Binary Trees and TreeNode</h2>
-          <pre><code class="language-python">class TreeNode:
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
+students = [
+    ['Alice', 18, 90],
+    ['Bob', 19, 85],
+    ['Carol', 18, 92],
+]
 
-    def __repr__(self):
-        return f"TreeNode({self.value})"</code></pre>
-          <div class="callout">
-            Binary tree rule: every node has at most two children.
-          </div>
-        </section>
-
-        <section>
-          <h2>Build a Small Tree</h2>
-          <pre><code class="language-python">#       1
-#      / \
-#     2   3
-root = TreeNode(1)
-root.left = TreeNode(2)
-root.right = TreeNode(3)
-
-print(root)       # TreeNode(1)
-print(root.left)  # TreeNode(2)</code></pre>
-        </section>
-
-        <section>
-          <h2>Traversal Orders</h2>
-          <table>
-            <tr>
-              <th>Traversal</th>
-              <th>Order</th>
-              <th>Mnemonic</th>
-            </tr>
-            <tr>
-              <td>Pre-order</td>
-              <td>Root -> Left -> Right</td>
-              <td>Parents first</td>
-            </tr>
-            <tr>
-              <td>In-order</td>
-              <td>Left -> Root -> Right</td>
-              <td>In-between</td>
-            </tr>
-            <tr>
-              <td>Post-order</td>
-              <td>Left -> Right -> Root</td>
-              <td>Parents last</td>
-            </tr>
-          </table>
-          <div class="callout">
-            Traversals are natural examples of recursion.
-          </div>
-        </section>
-
-        <section>
-          <h2>Pre-order Traversal</h2>
-          <pre><code class="language-python">def preorder(node):
-    if node is None:
-        return
-    print(node.value)
-    preorder(node.left)
-    preorder(node.right)</code></pre>
-          <p style="font-size: 0.8em">Example result: <code class="inline">A B D E C</code></p>
-        </section>
-
-        <section>
-          <h2>In-order Traversal</h2>
-          <pre><code class="language-python">def inorder(node):
-    if node is None:
-        return
-    inorder(node.left)
-    print(node.value)
-    inorder(node.right)</code></pre>
-          <div class="callout">
-            In a binary search tree, in-order traversal returns sorted values.
-          </div>
-        </section>
-
-        <section>
-          <h2>Post-order Traversal</h2>
-          <pre><code class="language-python">def postorder(node):
-    if node is None:
-        return
-    postorder(node.left)
-    postorder(node.right)
-    print(node.value)</code></pre>
-          <p style="font-size: 0.8em">Useful for deleting trees from leaves up to root.</p>
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['name', 'age', 'grade'])
+    writer.writerows(students)</code></pre>
+          <div class="callout">Use <code class="inline">writerow</code> for one row, <code class="inline">writerows</code> for many rows.</div>
         </section>
 
         <section>
           <p style="font-size: 0.75em; margin-bottom: 0.5rem">
-            <strong>Game 3: Traversal Race</strong> - Build each answer using tokens.
+            <strong>Game 3: Fill in the Blanks</strong> - Build each answer using tokens.
           </p>
-          <pre><code class="language-text">           [1]
-          /   \
-        [2]   [3]
-       /   \
-     [4]   [5]</code></pre>
+          <pre><code class="language-python">with open('grades.csv', '___', newline='') as file:
+    writer = csv.___(file)
+    writer.___(['subject', 'score'])
+    writer.___(data)</code></pre>
           <div class="token-game">
             <div class="token-game-progress">
-              <span id="g3-round">Round 1 of 3</span>
+              <span id="g3-round">Round 1 of 2</span>
               <span id="g3-score">Score: 0</span>
             </div>
             <div style="text-align: center; font-size: 0.76em; margin-bottom: 0.5rem">
@@ -674,153 +637,210 @@ print(root.left)  # TreeNode(2)</code></pre>
           </div>
         </section>
 
-        <!-- <section>
-          <h2>Build-a-Tree Challenge</h2>
-          <pre><code class="language-text">Pre-order: [A, B, D, E, C, F]
-In-order:  [D, B, E, A, F, C]</code></pre>
+        <section>
+          <h2>DictWriter with fieldnames</h2>
+          <pre><code class="language-python">import csv
+
+students = [
+    {'name': 'Alice', 'age': 18, 'grade': 90},
+    {'name': 'Bob', 'age': 19, 'grade': 85},
+]
+
+fields = ['name', 'age', 'grade']
+
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.DictWriter(file, fieldnames=fields)
+    writer.writeheader()
+    writer.writerows(students)</code></pre>
+        </section>
+
+        <section>
+          <h2>Key CSV Parameters</h2>
           <div class="two-col">
             <div class="card">
-              <h4>Hint 1</h4>
-              <p>First item in pre-order is the root.</p>
+              <h4>Useful Parameters</h4>
+              <ul>
+                <li><code class="inline">delimiter</code> (default comma)</li>
+                <li><code class="inline">quotechar</code> (default double quote)</li>
+                <li><code class="inline">skipinitialspace</code></li>
+              </ul>
             </div>
             <div class="card">
-              <h4>Hint 2</h4>
-              <p>In-order splits into left and right around the root.</p>
+              <h4>Example</h4>
+              <pre><code class="language-python">with open('european.csv', 'r', newline='') as f:
+    reader = csv.reader(f, delimiter=';')</code></pre>
             </div>
           </div>
-          <br />
-          <div class="callout" style="text-align: center">
-            Answer tree: root A, left subtree B(D, E), right subtree C(F, -)
-          </div>
-        </section> -->
-
-        <section>
-          <h2>Recursive Tree Height</h2>
-          <pre><code class="language-python">def height(node):
-    if node is None:
-        return -1
-
-    left_height = height(node.left)
-    right_height = height(node.right)
-    return 1 + max(left_height, right_height)</code></pre>
+          <div class="callout">Quoted values allow commas inside one field, such as addresses.</div>
         </section>
 
         <section>
-          <h2>Count Nodes and Search</h2>
-          <pre><code class="language-python">def count_nodes(node):
-    if node is None:
-        return 0
-    return 1 + count_nodes(node.left) + count_nodes(node.right)
+          <h2>Game 4: Debug the CSV Code</h2>
+          <pre><code class="language-python">import CSV
 
+students = [
+    {'name': 'Alice', 'grade': 90},
+    {'name': 'Bob', 'grade': 85},
+]
 
-def search(node, target):
-    if node is None:
-        return False
-    if node.value == target:
-        return True
-    return search(node.left, target) or search(node.right, target)</code></pre>
-        </section>
-
-        <section>
-          <h2>Binary Search Tree Rule</h2>
-          <div class="callout" style="text-align: center; font-size: 0.92em">
-            Left subtree values &lt; root &lt; right subtree values
-          </div>
-          <pre><code class="language-text">         [8]
-        /   \
-      [3]   [10]
-     /   \     \
-   [1]   [6]   [14]
-        /   \
-      [4]   [7]</code></pre>
-        </section>
-
-        <section>
-          <h2>BST Insert</h2>
-          <pre><code class="language-python">def insert(node, value):
-    if node is None:
-        return TreeNode(value)
-
-    if value &lt; node.value:
-        node.left = insert(node.left, value)
-    elif value &gt; node.value:
-        node.right = insert(node.right, value)
-
-    return node</code></pre>
-          <p style="font-size: 0.78em; color: #9ca3af">Time complexity: O(h), where h is tree height.</p>
-        </section>
-
-        <section>
-          <h2>Game 4: Final Boss Debug</h2>
-          <pre><code class="language-python">def inorder(node):
-    if node = None:
-        return
-    inorder(node.right)
-    print(node.value)
-    inorder(node.left)
-
-def height(node):
-    if node is None:
-        return 0
-    return max(height(node.left), height(node.right))</code></pre>
-          <p style="font-size: 0.8em">Which option correctly identifies the bugs?</p>
+with open('out.csv', 'r') as file:
+    writer = csv.DictWriter(file)
+    writer.writeheader()
+    writer.writerows(students)</code></pre>
+          <p style="font-size: 0.8em">Which option correctly identifies the issue set?</p>
           <div class="mcq-options">
-            <button class="mcq-btn mcq-btn-g4" data-correct="false">A. Only one bug: assignment instead of comparison</button>
-            <button class="mcq-btn mcq-btn-g4" data-correct="true">B. Three bugs: '=' vs '==', left/right swapped, missing +1 in height</button>
-            <button class="mcq-btn mcq-btn-g4" data-correct="false">C. Two bugs: swap children and return -1 for None</button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="false">A. Only one bug: import name</button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="true">B. Three bugs: import case, wrong mode, missing fieldnames</button>
+            <button class="mcq-btn mcq-btn-g4" data-correct="false">C. Only two bugs: mode and writerows</button>
             <button class="mcq-btn mcq-btn-g4" data-correct="false">D. No bugs, code is correct</button>
           </div>
           <p id="g4-feedback" class="token-game-feedback" aria-live="polite"></p>
         </section>
 
         <section>
-          <h2>Summary</h2>
+          <h2>Reveal: Debug Fixes</h2>
+          <pre><code class="language-python">import csv
+
+with open('out.csv', 'w', newline='') as file:
+    writer = csv.DictWriter(file, fieldnames=['name', 'grade'])
+    writer.writeheader()
+    writer.writerows(students)</code></pre>
+          <div class="warn">Remember: module name is lowercase <code class="inline">csv</code>.</div>
+        </section>
+
+        <section>
+          <h2>Common Errors and Fixes</h2>
           <table>
             <tr>
-              <th>Concept</th>
-              <th>Key Idea</th>
+              <th>Error</th>
+              <th>Cause</th>
+              <th>Fix</th>
             </tr>
             <tr>
-              <td>Recursion</td>
-              <td>Base case plus recursive case</td>
+              <td>FileNotFoundError</td>
+              <td>Wrong file path</td>
+              <td>Check name and location</td>
             </tr>
             <tr>
-              <td>Tree</td>
-              <td>Hierarchical nodes connected by edges</td>
+              <td>Extra blank lines</td>
+              <td>Missing newline=''</td>
+              <td>Add newline='' in open()</td>
             </tr>
             <tr>
-              <td>Binary Tree</td>
-              <td>At most two children per node</td>
+              <td>Numbers read as strings</td>
+              <td>csv returns text values</td>
+              <td>Convert with int() or float()</td>
             </tr>
             <tr>
-              <td>Traversal</td>
-              <td>Pre, in, and post order visits</td>
-            </tr>
-            <tr>
-              <td>BST</td>
-              <td>Left &lt; Root &lt; Right</td>
+              <td>DictWriter column mismatch</td>
+              <td>fieldnames mismatch</td>
+              <td>Align dict keys and fieldnames</td>
             </tr>
           </table>
         </section>
 
         <section>
-          <h2>What Is Next</h2>
+          <h2>Real-World Example: Grade Report</h2>
+          <pre><code class="language-python">import csv
+
+totals, count = 0, 0
+results = []
+
+with open('grades.csv', 'r', newline='') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        score = int(row['score'])
+        totals += score
+        count += 1
+        results.append({
+            'name': row['name'],
+            'score': score,
+            'passed': 'Yes' if score &gt;= 75 else 'No'
+        })
+
+with open('report.csv', 'w', newline='') as f:
+    writer = csv.DictWriter(f, fieldnames=['name', 'score', 'passed'])
+    writer.writeheader()
+    writer.writerows(results)
+
+print(f"Class average: {totals / count:.2f}")</code></pre>
+        </section>
+
+        <section>
+          <h2>Quick Reference Cheat Sheet</h2>
+          <pre><code class="language-python">import csv
+
+# read: list rows
+with open('file.csv', 'r', newline='') as f:
+    for row in csv.reader(f):
+        print(row)
+
+# read: dict rows
+with open('file.csv', 'r', newline='') as f:
+    for row in csv.DictReader(f):
+        print(row['column'])
+
+# write: list rows
+with open('file.csv', 'w', newline='') as f:
+    w = csv.writer(f)
+    w.writerow(['col1', 'col2'])
+    w.writerows(data)
+
+# write: dict rows
+with open('file.csv', 'w', newline='') as f:
+    w = csv.DictWriter(f, fieldnames=['col1', 'col2'])
+    w.writeheader()
+    w.writerows(data)</code></pre>
+        </section>
+
+        <section>
+          <h2>Lesson Recap</h2>
+          <table>
+            <tr>
+              <th>Concept</th>
+              <th>What You Learned</th>
+            </tr>
+            <tr>
+              <td>CSV format</td>
+              <td>Comma-separated text rows with headers</td>
+            </tr>
+            <tr>
+              <td>csv.reader</td>
+              <td>Reads rows as lists</td>
+            </tr>
+            <tr>
+              <td>csv.DictReader</td>
+              <td>Reads rows as dictionaries by header names</td>
+            </tr>
+            <tr>
+              <td>csv.writer / DictWriter</td>
+              <td>Writes CSV from list or dict records</td>
+            </tr>
+            <tr>
+              <td>newline=''</td>
+              <td>Important to avoid blank-line issues</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Practice Prompts</h2>
           <div class="two-col">
             <div class="card">
-              <h4>Next Topics</h4>
-              <ul>
-                <li>Heaps</li>
-                <li>Balanced trees</li>
-                <li>Graphs and traversals</li>
-              </ul>
+              <h4>Try This Now</h4>
+              <ol style="list-style: decimal; margin: 0; padding-left: 1.3em">
+                <li>Create a movies.csv with title, year, rating</li>
+                <li>Print only movies with rating 8 or higher</li>
+                <li>Export a passed or failed report from scores.csv</li>
+              </ol>
             </div>
             <div class="card">
-              <h4>Practice</h4>
-              <ol style="list-style: decimal; margin: 0; padding-left: 1.3em">
-                <li>Find max value in a BST</li>
-                <li>Check if tree is symmetric</li>
-                <li>Compare two trees for equality</li>
-              </ol>
+              <h4>Coming Up Next</h4>
+              <ul>
+                <li>Working with JSON files</li>
+                <li>Intro to pandas</li>
+                <li>Reading CSV from web sources</li>
+              </ul>
             </div>
           </div>
         </section>
@@ -831,17 +851,17 @@ def height(node):
           <h1>Thank You</h1>
           <br />
           <div class="callout" style="font-size: 1em; text-align: center">
-            Recursion and trees are core tools for elegant problem solving.
+            Data is the new oil and CSV is one of its most useful pipelines.
           </div>
           <br />
           <p style="color: #9ca3af; margin-top: 0.5em">Questions?</p>
           <br />
           <div class="tag-row">
-            <span class="tag">recursion</span>
-            <span class="tag">call stack</span>
-            <span class="tag">tree</span>
-            <span class="tag">traversal</span>
-            <span class="tag">bst</span>
+            <span class="tag">csv</span>
+            <span class="tag">reader</span>
+            <span class="tag">dictreader</span>
+            <span class="tag">writer</span>
+            <span class="tag">dictwriter</span>
           </div>
         </section>
       </div>
@@ -1098,42 +1118,32 @@ def height(node):
 
       makeMCQ(
         "g1",
-        "Correct. The base case is the stop condition n == 0.",
-        "Not quite. The base case is 'if n == 0: return 1'.",
+        "Correct. B is the valid comma-separated CSV format.",
+        "Not quite. B is valid CSV because values are comma-separated with a header.",
       );
 
       makeMCQ(
         "g2",
-        "Correct. Because print runs after recursion, output is 2 4 6.",
-        "Not quite. The function prints while returning, so answer is 2 4 6.",
+        "Correct. The output is Rey scored 150 and Sam scored 200.",
+        "Not quite. row[0] is the name and row[1] is the score.",
       );
 
       makeTokenGame(
         "g3",
         [
           {
-            prompt: "Pre-order sequence for the shown tree (Root Left Right)",
-            target: ["1", "2", "4", "5", "3"],
-            tokens: ["1", "2", "3", "4", "5", "6", "0"],
-          },
-          {
-            prompt: "In-order sequence for the shown tree (Left Root Right)",
-            target: ["4", "2", "5", "1", "3"],
-            tokens: ["1", "2", "3", "4", "5", "7", "9"],
-          },
-          {
-            prompt: "Post-order sequence for the shown tree (Left Right Root)",
-            target: ["4", "5", "2", "3", "1"],
-            tokens: ["1", "2", "3", "4", "5", "8", "0"],
+            prompt: "Round 1: Fill blanks in order for open mode and writer methods",
+            target: ["w", "writer", "writerow", "writerows"],
+            tokens: ["writer", "append", "w", "writerows", "read", "writerow", "DictReader"],
           },
         ],
-        "Correct traversal order.",
+        "Correct sequence.",
       );
 
       makeMCQ(
         "g4",
-        "Correct. Those are exactly the three bugs in the snippet.",
-        "Not quite. Review comparison operator, traversal direction, and +1 in height.",
+        "Correct. Three bugs: import case, mode, and missing fieldnames.",
+        "Not quite. Check the import name, open mode, and DictWriter fieldnames.",
       );
 
       Reveal.initialize({
